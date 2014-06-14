@@ -6,8 +6,8 @@
 (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
 ;; paredit with eldoc
 (eldoc-add-command
  'paredit-backward-delete
  'paredit-close-round)
-
