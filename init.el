@@ -94,7 +94,7 @@
 (setq c-default-style "linux"
       c-basic-offset 4)
 
-(setq inferior-lisp-program "/usr/bin/clisp")
+(setq inferior-lisp-program "/usr/bin/sbcl")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
