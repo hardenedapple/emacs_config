@@ -5,15 +5,24 @@
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
+;; Add command line option to use evil or not
+(setq my-switch-found (member "--no-use-evil" command-line-args))
+(setq command-line-args (delete "--no-use-evil" command-line-args))
+
 (when (not package-archive-contents)
    (package-refresh-contents))
 
 ;; In a let as I don't like polluting the namespace.
 (let*
     ;; Note order matters here (evil-leader has to be loaded before evil)
-    ((common-packages
-      '(undo-tree paredit yasnippet goto-chg
-                  evil-leader evil evil-exchange evil-args surround))
+    ((always-loaded
+      '(undo-tree paredit yasnippet goto-chg))
+
+     (evil-extras
+      '(evil-leader evil evil-exchange evil-args surround))
+
+     (common-packages
+         (if my-switch-found always-loaded (append always-loaded evil-extras)))
 
      (install-packages
       common-packages)
@@ -21,7 +30,7 @@
      (require-packages
       (append '(epa-file eldoc) common-packages)))
 
-  
+
   (defun symbol-to-packages-name (package)
     (concat "~/.emacs.d/plugin_configurations/"
             (replace-regexp-in-string "-" "_" (symbol-name package))
@@ -35,7 +44,11 @@
   (dolist (p require-packages)
     (require p))
 
-  (dolist (p (mapcar #'symbol-to-packages-name (append '(windmove ido) common-packages)))
+  ;; Note that slime is requires in the _conf file, as need to add it's load
+  ;;      path the list
+  (dolist (p (mapcar #'symbol-to-packages-name
+                     (append '(windmove ido slime)
+                             common-packages)))
     (load p)))
 
 ;; General settings
@@ -55,7 +68,6 @@
 ;; use spaces instead of tabs
 (setq-default auto-fill-function 'do-auto-fill)
 (setq-default indent-tabs-mode nil)
-(define-key evil-insert-state-map (kbd "RET") 'newline-and-indent)
 (setq-default fill-column 80)
 
 ;; remove scrollbar, menubar, and toolbar in gui
@@ -108,4 +120,4 @@
           ((backward-up-list arg)))))
 
 ;; Remap C-M-u to account for comments and strings
-(global-set-key [remap backward-up-list] 'backward-up-sexp)  
+(global-set-key [remap backward-up-list] 'backward-up-sexp)
