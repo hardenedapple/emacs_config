@@ -30,8 +30,8 @@
 ;; Not sure about overriding evil's completion mappings
 ;; Am doing it so I have basically emacs when in insert mode
 (setcdr evil-insert-state-map nil)
+(define-key evil-insert-state-map (kbd "C-r") 'evil-paste-from-register)
 (define-key evil-insert-state-map (kbd "C-w") 'evil-delete-backward-word)
-(define-key evil-insert-state-map (kbd "C-o") 'evil-execute-in-normal-state)
 (define-key evil-insert-state-map (kbd "C-z") 'evil-emacs-state)
 (define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
 (define-key evil-insert-state-map (kbd "<mouse-2>") 'evil-normal-state)
