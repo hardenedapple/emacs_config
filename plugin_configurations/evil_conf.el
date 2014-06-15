@@ -27,10 +27,16 @@
 (define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
 
 ;; Change the insert mode mappings to reflect the fact I'm in emacs
-(define-key evil-insert-state-map (kbd "C-k") nil)
-(define-key evil-insert-state-map (kbd "C-a") nil)
-(define-key evil-insert-state-map (kbd "C-e") nil)
-(define-key evil-insert-state-map (kbd "C-y") nil)
+;; Not sure about overriding evil's completion mappings
+;; Am doing it so I have basically emacs when in insert mode
+(setcdr evil-insert-state-map nil)
+(define-key evil-insert-state-map (kbd "C-w") 'evil-delete-backward-word)
+(define-key evil-insert-state-map (kbd "C-o") 'evil-execute-in-normal-state)
+(define-key evil-insert-state-map (kbd "C-z") 'evil-emacs-state)
+(define-key evil-insert-state-map (kbd "<escape>") 'evil-normal-state)
+(define-key evil-insert-state-map (kbd "<mouse-2>") 'evil-normal-state)
+(define-key evil-insert-state-map (kbd "C-x C-n") 'evil-complete-next-line)
+(define-key evil-insert-state-map (kbd "C-x C-p") 'evil-complete-previous-line)
 ;; (define-key evil-insert-state-map "  " 'execute-extended-command)
 
 (define-key evil-insert-state-map (kbd "RET") nil)
