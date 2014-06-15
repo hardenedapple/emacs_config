@@ -3,5 +3,5 @@
 (require 'slime-autoloads)
 (setq slime-contribs '(slime-fancy slime-highlight-edits))
 
-;;(define-key slime-mode-map "\C-cs" 'slime-selector)
+(define-key global-map (kbd "C-c s") 'slime-selector)
 (setq slime-autodoc-use-multiline-p t)
