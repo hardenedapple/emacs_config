@@ -5,6 +5,9 @@
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
+;; I keep my single packages in this directory
+(add-to-list 'load-path "~/.emacs.d/packages/")
+
 ;; Add command line option to use evil or not
 (setq my-switch-found (member "--no-use-evil" command-line-args))
 (setq command-line-args (delete "--no-use-evil" command-line-args))
@@ -13,43 +16,66 @@
    (package-refresh-contents))
 
 ;; In a let as I don't like polluting the namespace.
-(let*
+(let
     ;; Note order matters here (evil-leader has to be loaded before evil)
     ((always-loaded
       '(undo-tree paredit yasnippet goto-chg))
 
-     (evil-extras
-      '(evil-leader evil evil-exchange evil-args surround))
+     (all-depending-on-evil
+      (if my-switch-found
+          '(wrap-region)
+        '(evil-leader evil evil-exchange evil-args surround)))
 
-     (common-packages
-         (if my-switch-found always-loaded (append always-loaded evil-extras)))
+     (require-and-configure
+      (append '(buffer-move)
+       (if my-switch-found
+           '(transpose-frame)
+         '())))
 
-     (install-packages
-      common-packages)
+     (require-only
+      '(epa-file eldoc))
 
-     (require-packages
-      (append '(epa-file eldoc) common-packages)))
+     ;; NOTE slime is only here because the configuration file requires slime
+     ;;      itself, it does this because the load path has to be modified
+     ;;      before can get at the slime folder
+     (configure-only
+      '(windmove ido slime)))
+
+  (let
+      ;; NOTE: order matters here as well - wrap-region after paredit means
+      ;;       paredit's open brace command isn't overwritten
+      ((common-packages
+        (append all-depending-on-evil always-loaded)))
+    
+    (let
+        ((install-packages
+          common-packages)
+
+         (require-packages
+          (append require-only require-and-configure common-packages))
+
+         (configuration-packages
+          (append configure-only require-and-configure common-packages)))
 
 
-  (defun symbol-to-packages-name (package)
-    (concat "~/.emacs.d/plugin_configurations/"
-            (replace-regexp-in-string "-" "_" (symbol-name package))
-            "_conf.el"))
 
-  ;; Install packages, require packages, load configuration
-  (dolist (p install-packages)
-    (when (not (package-installed-p p))
-      (package-install p)))
+      (defun package-to-configuration-file (package)
+        (concat "~/.emacs.d/plugin_configurations/"
+                (replace-regexp-in-string "-" "_" (symbol-name package))
+                "_conf.el"))
 
-  (dolist (p require-packages)
-    (require p))
+      ;; Install packages, require packages, load configuration
 
-  ;; Note that slime is requires in the _conf file, as need to add it's load
-  ;;      path the list
-  (dolist (p (mapcar #'symbol-to-packages-name
-                     (append '(windmove ido slime)
-                             common-packages)))
-    (load p)))
+      (dolist (p install-packages)
+        (when (not (package-installed-p p))
+          (package-install p)))
+
+      (dolist (p require-packages)
+        (require p))
+
+      (dolist (p (mapcar #'package-to-configuration-file
+                         configuration-packages))
+        (load p)))))
 
 ;; General settings
 (setq inhibit-startup-message t)
