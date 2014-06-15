@@ -11,12 +11,20 @@
 (my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
 (my-move-key evil-normal-state-map evil-normal-state-map " ")
 
+;; Normal mode mappings
+(defun copy-to-end-of-line ()
+  (interactive)
+  (evil-yank (point) (point-at-eol)))
+
+;; Override the prefix key to allow the scrolling.
+(define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
+(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+
 ;; Remove some of the scrolling commands in evil to leave the default emacs ones
 (define-key evil-motion-state-map (kbd "C-e") nil)
 (define-key evil-motion-state-map (kbd "C-y") nil)
-
-;; Override the prefix key to allow the scrolling.
-;; (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up)
+(define-key evil-motion-state-map (kbd "'") 'evil-goto-mark)
+(define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
 
 ;; Change the insert mode mappings to reflect the fact I'm in emacs
 (define-key evil-insert-state-map (kbd "C-k") nil)
