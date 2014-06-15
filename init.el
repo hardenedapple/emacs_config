@@ -5,12 +5,12 @@
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
-;; I keep my single packages in this directory
+;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
 ;; Add command line option to use evil or not
-(setq my-switch-found (member "--no-use-evil" command-line-args))
-(setq command-line-args (delete "--no-use-evil" command-line-args))
+(setq my-switch-found (member "--use-evil" command-line-args))
+(setq command-line-args (delete "--use-evil" command-line-args))
 
 (when (not package-archive-contents)
    (package-refresh-contents))
@@ -23,14 +23,14 @@
 
      (all-depending-on-evil
       (if my-switch-found
-          '(wrap-region)
-        '(evil-leader evil evil-exchange evil-args surround)))
+          '(evil-leader evil evil-exchange evil-args surround)
+        '(wrap-region)))
 
      (require-and-configure
       (append '(buffer-move)
        (if my-switch-found
-           '(transpose-frame)
-         '())))
+           '()
+         '(transpose-frame))))
 
      (require-only
       '(epa-file eldoc))
