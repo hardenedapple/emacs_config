@@ -54,12 +54,12 @@
          (require-packages
           (append require-only require-and-configure common-packages))
 
-         (configuration-packages
+         (config-packages
           (append configure-only require-and-configure common-packages)))
 
 
 
-      (defun package-to-configuration-file (package)
+      (defun package-to-config-file (package)
         (concat "~/.emacs.d/plugin_configurations/"
                 (replace-regexp-in-string "-" "_" (symbol-name package))
                 "_conf.el"))
@@ -73,8 +73,7 @@
       (dolist (p require-packages)
         (require p))
 
-      (dolist (p (mapcar #'package-to-configuration-file
-                         configuration-packages))
+      (dolist (p (mapcar #'package-to-config-file config-packages))
         (load p)))))
 
 ;; General settings
