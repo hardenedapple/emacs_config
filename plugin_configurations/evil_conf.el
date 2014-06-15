@@ -39,4 +39,28 @@
 (define-key evil-insert-state-map (kbd "C-x C-p") 'evil-complete-previous-line)
 ;; (define-key evil-insert-state-map "  " 'execute-extended-command)
 
-(define-key evil-insert-state-map (kbd "RET") nil)
+
+;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
+(defun evil-unimpaired-newline-below ()
+  "Insert a new line below the point without moving it."
+  (interactive)
+  (save-excursion
+    (evil-insert-newline-below)
+    (evil-force-normal-state)))
+
+(defun evil-unimpaired-newline-above ()
+  "Insert a new line below the point without moving it."
+  (interactive)
+  (save-excursion
+    (evil-insert-newline-above)
+    (evil-force-normal-state)))
+
+;; (defun evil-unimpaired-swap-lines ()
+;;   (interactive)
+;;   (evil-delete-line)
+;;   (evil-paste-after 1))
+
+(define-key evil-normal-state-map "] " 'evil-unimpaired-newline-below)
+(define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
+
+;; (define-key evil-normal-state-map "]e" 'evil-unimpaired-swap-lines)
