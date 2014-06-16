@@ -64,11 +64,13 @@
       (load p))))
 
 ;; General settings
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (setq inhibit-startup-message t)
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
 (setq auto-save-default nil)
-(setq backup-inhibited t)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; Add line numbers to buffer and show column number in status line
 (global-linum-mode t)
@@ -103,7 +105,7 @@
 ;; make searches case-sensitive by default
 (setq-default case-fold-search nil)
 
-;; Filetype specific things.
+;; C mode specific things.
 (setq c-default-style "linux"
       c-basic-offset 4)
 
