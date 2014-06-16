@@ -19,7 +19,7 @@
 ;; In a let as I don't like polluting the namespace.
 (let
     ((common-packages
-      '(undo-tree paredit yasnippet goto-chg wrap-region magit ediff
+      '(undo-tree paredit yasnippet goto-chg wrap-region magit
                   evil-leader evil evil-exchange evil-args surround))
 
      (require-and-configure
@@ -32,7 +32,7 @@
      ;;      itself, it does this because the load path has to be modified
      ;;      before can get at the slime folder
      (configure-only
-     '(windmove ido slime)))
+     '(windmove ido slime ediff)))
 
   (let
       ((install-packages
