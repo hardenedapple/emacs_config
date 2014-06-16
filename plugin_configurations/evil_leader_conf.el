@@ -3,4 +3,3 @@
 ;; *Messages* etc (i.e. in initial buffers)
 (global-evil-leader-mode)
 
-

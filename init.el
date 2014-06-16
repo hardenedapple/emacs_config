@@ -8,29 +8,22 @@
 ;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
-;; Add command line option to use evil or not
-(setq my-switch-found (member "--use-evil" command-line-args))
-(setq command-line-args (delete "--use-evil" command-line-args))
+
+;; ;; Add command line option to choose something
+;; (setq my-switch-found (member "--my-switch" command-line-args))
+;; (setq command-line-args (delete "--my-switch" command-line-args))
 
 (when (not package-archive-contents)
    (package-refresh-contents))
 
 ;; In a let as I don't like polluting the namespace.
 (let
-    ;; Note order matters here (evil-leader has to be loaded before evil)
-    ((always-loaded
-      '(undo-tree paredit yasnippet goto-chg))
-
-     (all-depending-on-evil
-      (if my-switch-found
-          '(evil-leader evil evil-exchange evil-args surround)
-        '(wrap-region)))
+    ((common-packages
+      '(undo-tree paredit yasnippet goto-chg wrap-region
+                  evil-leader evil evil-exchange evil-args surround))
 
      (require-and-configure
-      (append '(buffer-move)
-       (if my-switch-found
-           '()
-         '(transpose-frame))))
+      '(buffer-move transpose-frame))
 
      (require-only
       '(epa-file eldoc))
@@ -39,42 +32,36 @@
      ;;      itself, it does this because the load path has to be modified
      ;;      before can get at the slime folder
      (configure-only
-      '(windmove ido slime)))
+     '(windmove ido slime)))
 
   (let
-      ;; NOTE: order matters here as well - wrap-region after paredit means
-      ;;       paredit's open brace command isn't overwritten
-      ((common-packages
-        (append all-depending-on-evil always-loaded)))
-    
-    (let
-        ((install-packages
-          common-packages)
+      ((install-packages
+        common-packages)
 
-         (require-packages
-          (append require-only require-and-configure common-packages))
+       (require-packages
+        (append require-only require-and-configure common-packages))
 
-         (config-packages
-          (append configure-only require-and-configure common-packages)))
+       (config-packages
+        (append configure-only require-and-configure common-packages)))
 
 
 
-      (defun package-to-config-file (package)
-        (concat "~/.emacs.d/plugin_configurations/"
-                (replace-regexp-in-string "-" "_" (symbol-name package))
-                "_conf.el"))
+    (defun package-to-config-file (package)
+      (concat "~/.emacs.d/plugin_configurations/"
+              (replace-regexp-in-string "-" "_" (symbol-name package))
+              "_conf.el"))
 
-      ;; Install packages, require packages, load configuration
+    ;; Install packages, require packages, load configuration
 
-      (dolist (p install-packages)
-        (when (not (package-installed-p p))
-          (package-install p)))
+    (dolist (p install-packages)
+      (when (not (package-installed-p p))
+        (package-install p)))
 
-      (dolist (p require-packages)
-        (require p))
+    (dolist (p require-packages)
+      (require p))
 
-      (dolist (p (mapcar #'package-to-config-file config-packages))
-        (load p)))))
+    (dolist (p (mapcar #'package-to-config-file config-packages))
+      (load p))))
 
 ;; General settings
 (setq inhibit-startup-message t)
