@@ -32,7 +32,7 @@
      ;;      itself, it does this because the load path has to be modified
      ;;      before can get at the slime folder
      (configure-only
-     '(windmove ido slime ediff)))
+     '(windmove ido slime ediff cua)))
 
   (let
       ((install-packages

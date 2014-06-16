@@ -23,9 +23,7 @@ Plugins to get / understand:
        el-get            - an "extra" package manager for emacs packages.
        Elscreen.el       - Maybe tabs for emacs.
        smex.el           - ido like M-x
-       Ediff.el
        Org-mode
-       cua-mode
 
 
 Plugins to look for:
