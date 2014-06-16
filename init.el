@@ -19,7 +19,7 @@
 ;; In a let as I don't like polluting the namespace.
 (let
     ((common-packages
-      '(undo-tree paredit yasnippet goto-chg wrap-region magit
+      '(undo-tree paredit yasnippet goto-chg wrap-region magit ediff
                   evil-leader evil evil-exchange evil-args surround))
 
      (require-and-configure
