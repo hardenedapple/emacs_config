@@ -1,0 +1,73 @@
+Configuration file:
+       Get slime to work with the normal packaging system.
+       Check that slime and paredit aren't shadowing each other too much.
+       Problem with fonts using --daemon and emacsclient
+
+Things to add to emacs:
+       Open multiple help files at the same time.
+       Easier remove/move/copy/mkdir commands (without having to go into dired)
+       Autocompletion method - show possible options
+                               add option to only complete longest shared text
+       Add "git submodule foreach git pull" to the Magit submodule buffer
+
+Slime/paredit rebindings:
+      In emacs mode, swap character and sexp motions
+      In evil mode, swap word and WORD motions, then swap WORD and sexp motions.
+
+Things to figure out:
+       VC   - Version control interface for emacs.
+              Is a general version, so not that great, but still worth learning.
+
+
+Plugins to get / understand:
+       el-get            - an "extra" package manager for emacs packages.
+       Elscreen.el       - Maybe tabs for emacs.
+       smex.el           - ido like M-x
+       Ediff.el
+       Org-mode
+       cua-mode
+
+
+Plugins to look for:
+       folding          - Need this quite badly.
+
+
+Evil mode:
+       Visual mode indentation keeping the visual selection.
+       I want submodes - like Submode.vim
+
+       Map paredit mappings into evil normal mode.
+       Though not sure it's possible with the <( and >) mappings
+        i.e.
+            W   - Move sexp
+            B   - Move sexp
+            gE  - Move sexp
+            E   - Move sexp
+            w   - Move WORD
+            b   - Move WORD
+            e   - Move WORD
+            ge  - Move WORD
+
+       Keys that are valid mappings (i.e. don't directly overwrite anything):
+           z .. {p,q,u,y,B,I,J,K,P,Q,S,T,U,V,Y,Z}
+           Z .. [^ZQ]
+           [ .. something
+           ] .. something
+           c .. something
+           d .. something
+           y .. something
+           g .. something
+           \ .. something
+
+          Keys that I feel comfortable replacing in evil, not going to in vim:
+              Q
+              gQ
+              spelling commands.
+
+       Plugins to replace:
+            Unimpaired
+
+Things not in evil:
+       C-x C-(anything not linewise)
+       [I, ]I, [D, ]D, [d, ]d, [i, ]i
+       gp, gP
