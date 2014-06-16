@@ -65,7 +65,8 @@
 
 ;; General settings
 (setq inhibit-startup-message t)
-(set-frame-font "Tamsyn 10" nil t)
+(setq default-frame-alist '((font . "Tamsyn-10")))
+(set-default-font "Tamsyn-10")
 (setq auto-save-default nil)
 (setq backup-inhibited t)
 
