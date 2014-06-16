@@ -11,12 +11,13 @@ Things to add to emacs:
        Add "git submodule foreach git pull" to the Magit submodule buffer
 
 Slime/paredit rebindings:
-      In emacs mode, swap character and sexp motions
+      In emacs mode, find some different bindings (C-M-<key> is a bit of a pain).
       In evil mode, swap word and WORD motions, then swap WORD and sexp motions.
 
 Things to figure out:
        VC   - Version control interface for emacs.
-              Is a general version, so not that great, but still worth learning.
+              Is a general version, so doesn't have all the git abilities, but
+              still worth learning.
 
 
 Plugins to get / understand:
