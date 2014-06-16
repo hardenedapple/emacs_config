@@ -1,8 +1,8 @@
 ;; Emacs package managers
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
 ;; I keep single file packages in this directory
@@ -19,7 +19,7 @@
 ;; In a let as I don't like polluting the namespace.
 (let
     ((common-packages
-      '(undo-tree paredit yasnippet goto-chg wrap-region
+      '(undo-tree paredit yasnippet goto-chg wrap-region magit
                   evil-leader evil evil-exchange evil-args surround))
 
      (require-and-configure
