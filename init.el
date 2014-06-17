@@ -1,4 +1,4 @@
-;; Emacs package managers
+;; Set up packages and load configurations.
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")
@@ -8,11 +8,6 @@
 ;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
-
-;; ;; Add command line option to choose something
-;; (setq my-switch-found (member "--my-switch" command-line-args))
-;; (setq command-line-args (delete "--my-switch" command-line-args))
-
 (when (not package-archive-contents)
    (package-refresh-contents))
 
@@ -21,49 +16,36 @@
     ((common-packages
       '(undo-tree paredit yasnippet goto-chg wrap-region magit
                   evil-leader evil evil-exchange evil-args surround))
-
-     (require-and-configure
-      '(buffer-move transpose-frame))
-
      (require-only
-      '(epa-file eldoc))
-
-     ;; NOTE slime is only here because the configuration file requires slime
-     ;;      itself, it does this because the load path has to be modified
-     ;;      before can get at the slime folder
-     (configure-only
-     '(windmove ido slime ediff cua)))
+      '(buffer-move transpose-frame epa-file eldoc)))
 
   (let
-      ((install-packages
-        common-packages)
+      ((require-packages
+        (append require-only common-packages)))
 
-       (require-packages
-        (append require-only require-and-configure common-packages))
+     ;; Install packages, require packages
 
-       (config-packages
-        (append configure-only require-and-configure common-packages)))
-
-
-
-    (defun package-to-config-file (package)
-      (concat "~/.emacs.d/plugin_configurations/"
-              (replace-regexp-in-string "-" "_" (symbol-name package))
-              "_conf.el"))
-
-    ;; Install packages, require packages, load configuration
-
-    (dolist (p install-packages)
+    (dolist (p common-packages)
       (when (not (package-installed-p p))
         (package-install p)))
 
     (dolist (p require-packages)
-      (require p))
+      (require p))))
 
-    (dolist (p (mapcar #'package-to-config-file config-packages))
-      (load p))))
+;; Load all files in the directory plugin_configurations
+;; Name of file denotes order it's loaded in.
+;; Note order matters in two ways here:
+;;    wrap-region after paredit to not overwrite '('
+;;    evil-leader before evil so works in initial buffers.
+(dolist (file
+         (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
+  (load file))
 
-;; General settings
+
+;; Settings always run regardless of extra plugins.
+;; Have loaded the extra plugins and done all configurations for the extras.
+;; Now I do general settings.
+
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (setq inhibit-startup-message t)
 (setq default-frame-alist '((font . "Tamsyn-10")))
@@ -116,8 +98,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
- '(custom-enabled-themes (quote (wombat))))
+ '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"]))
+ ;; '(custom-enabled-themes (quote (wombat))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

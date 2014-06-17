@@ -27,6 +27,7 @@
 
 
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
+;; Remember to add counts to this function.
 (defun evil-unimpaired-newline-below ()
   "Insert a new line below the point without moving it."
   (interactive)

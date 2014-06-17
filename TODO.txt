@@ -1,7 +1,7 @@
 Configuration file:
        Get slime to work with the normal packaging system.
        Check that slime and paredit aren't shadowing each other too much.
-       Problem with fonts using --daemon and emacsclient
+       If loading emacs in terminal, disable colour scheme.
 
 Things to add to emacs:
        Open multiple help files at the same time.
