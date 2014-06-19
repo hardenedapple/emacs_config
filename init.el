@@ -13,19 +13,19 @@
 
 ;; In a let as I don't like polluting the namespace.
 (let
-    ((common-packages
+    ((elpa-packages
       '(undo-tree paredit yasnippet goto-chg wrap-region magit
                   evil-leader evil evil-exchange evil-args surround))
-     (require-only
+     (built-in-packages
       '(buffer-move transpose-frame epa-file eldoc)))
 
   (let
       ((require-packages
-        (append require-only common-packages)))
+        (append built-in-packages elpa-packages)))
 
      ;; Install packages, require packages
 
-    (dolist (p common-packages)
+    (dolist (p elpa-packages)
       (when (not (package-installed-p p))
         (package-install p)))
 
@@ -37,9 +37,9 @@
 ;; Note order matters in two ways here:
 ;;    wrap-region after paredit to not overwrite '('
 ;;    evil-leader before evil so works in initial buffers.
-(dolist (file
+(dolist (conf-file
          (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
-  (load file))
+  (load conf-file))
 
 
 ;; Settings always run regardless of extra plugins.
