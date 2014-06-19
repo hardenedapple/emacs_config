@@ -1,7 +1,7 @@
 ;; Evil-mode, I hate the emacs keybindings
 ;; Move <Return> and <Space> from the "motion" keymap to the normal one.
 ;; This allows other emacs plugins to remap them if they ever want to.
-(evil-mode 1)
+(evil-mode 0)
 
 (defun my-move-key (keymap-from keymap-to key)
   "Move key binding from one keymap to another, deleting from the old location."
