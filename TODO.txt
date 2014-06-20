@@ -1,10 +1,21 @@
 Configuration file:
        Get slime to work with the normal packaging system.
        Check that slime and paredit aren't shadowing each other too much.
-       If loading emacs in terminal, disable colour scheme.
+       Make the check for if is an X frame or in the terminal allow for emacs
+            being run as a daemon.
+            Define a function that looks at the frame, if it's in a terminal
+                   then it removes any theme that's active
+                   otherwise it makes sure a theme is active (and that there is
+                   not more than one theme active)
+            Functions that might be useful:
+                  server-create-tty-frame, server-create-window-system-frame, server-handle-delete-frame
+                  before-make-frame-hook, after-make-frame-functions, after-init-hook
 
 Things to add to emacs:
        Open multiple help files at the same time.
+            Some method of saying "follow this help link in a separate buffer"
+            This would then rename the current buffer as "*Help1*" and then
+                follow the link opening the "*Help*" buffer as usual.
        Easier remove/move/copy/mkdir commands (without having to go into dired)
        Autocompletion method - show possible options
                                add option to only complete longest shared text
@@ -19,8 +30,21 @@ Things to figure out:
               Is a general version, so doesn't have all the git abilities, but
               still worth learning.
 
+Plugins to investigate:
+       ecb               - emacs code browser
+       cedet             - bunch of coding tools
+       flymake           - syntax checking
+       imenu             - list functions in buffer (programmable)
+       iy-go-to-char     - basically f,F,t,T for emacs.
+       ace-jump          - similar to easy-motion
+       expand-region     - select whatever "thing" you're in at the moment
+                            (be it word, string, function, class ...)
+       python packagas
+              elpy
+              jedi
 
 Plugins to get / understand:
+       helm              - fuzzy file finder and more.
        el-get            - an "extra" package manager for emacs packages.
        Elscreen.el       - Maybe tabs for emacs.
        smex.el           - ido like M-x
