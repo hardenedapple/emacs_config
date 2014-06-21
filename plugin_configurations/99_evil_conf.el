@@ -3,13 +3,36 @@
 ;; This allows other emacs plugins to remap them if they ever want to.
 (evil-mode 0)
 
-(defun my-move-key (keymap-from keymap-to key)
-  "Move key binding from one keymap to another, deleting from the old location."
-  (define-key keymap-to key (lookup-key keymap-from key))
-  (define-key keymap-from key nil))
+;;; Variables
+(setq evil-want-C-u-scroll t)
+(setq evil-find-skip-newlines t)
+(setq evil-flash-delay 5)
 
-(my-move-key evil-motion-state-map evil-normal-state-map (kbd "RET"))
-(my-move-key evil-normal-state-map evil-normal-state-map " ")
+;; Set the default mode for certain buffers
+(dolist (mode-state-pair '((inferior-emacs-lisp-mode . emacs)
+                           (nrepl-mode . insert)
+                           (pylookup-mode . emacs)
+                           (comint-mode . normal)
+                           (shell-mode . insert)
+                           (git-commit-mode . insert)
+                           (git-rebase-mode . emacs)
+                           (term-mode . emacs)
+                           (help-mode . emacs)
+                           (helm-grep-mode . emacs)
+                           (grep-mode . emacs)
+                           (bc-menu-mode . emacs)
+                           (magit-mode . emacs)
+                           (magit-branch-manager-mode . emacs)
+                           (rdictcc-buffer-mode . emacs)
+                           (dired-mode . emacs)
+                           (wdired-mode . normal)))
+  (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
+
+
+
+;;; Mappings
+(define-key evil-motion-state-map " " nil)
+(define-key evil-motion-state-map (kbd "RET") nil)
 
 ;; Normal mode mappings
 (defun copy-to-end-of-line ()
@@ -18,47 +41,30 @@
 
 (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
-;; Override the prefix key to allow the scrolling.
-(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-
 ;; Remove some of the scrolling commands in evil to leave the default emacs ones
 (define-key evil-motion-state-map (kbd "'") 'evil-goto-mark)
 (define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
 
-;; Set the default mode for certain buffers
-(dolist (mode-state-pair '((inferior-emacs-lisp-mode . emacs)
-                          (nrepl-mode . insert)
-                          (pylookup-mode . emacs)
-                          (comint-mode . normal)
-                          (shell-mode . insert)
-                          (git-commit-mode . insert)
-                          (git-rebase-mode . emacs)
-                          (term-mode . emacs)
-                          (help-mode . emacs)
-                          (helm-grep-mode . emacs)
-                          (grep-mode . emacs)
-                          (bc-menu-mode . emacs)
-                          (magit-mode . emacs)
-                          (magit-branch-manager-mode . emacs)
-                          (rdictcc-buffer-mode . emacs)
-                          (dired-mode . emacs)
-                          (wdired-mode . normal)))
-  (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
-
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
-(defun evil-unimpaired-newline-below ()
+(defun evil-unimpaired-newline-below (numlines)
   "Insert a new line below the point without moving it."
-  (interactive)
+  (interactive "P")
   (save-excursion
-    (evil-insert-newline-below)
+    (if numlines
+        (dotimes (nullvar numlines)
+          (evil-insert-newline-below))
+      (evil-insert-newline-below))
     (evil-force-normal-state)))
 
-(defun evil-unimpaired-newline-above ()
+(defun evil-unimpaired-newline-above (numlines)
   "Insert a new line below the point without moving it."
-  (interactive)
+  (interactive "P")
   (save-excursion
-    (evil-insert-newline-above)
+    (if numlines
+        (dotimes (nullvar numlines)
+          (evil-insert-newline-above))
+      (evil-insert-newline-above))
     (evil-force-normal-state)))
 
 ;; (defun evil-unimpaired-swap-lines ()
