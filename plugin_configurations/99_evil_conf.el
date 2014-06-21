@@ -25,6 +25,25 @@
 (define-key evil-motion-state-map (kbd "'") 'evil-goto-mark)
 (define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
 
+;; Set the default mode for certain buffers
+(dolist (mode-state-pair '((inferior-emacs-lisp-mode . emacs)
+                          (nrepl-mode . insert)
+                          (pylookup-mode . emacs)
+                          (comint-mode . normal)
+                          (shell-mode . insert)
+                          (git-commit-mode . insert)
+                          (git-rebase-mode . emacs)
+                          (term-mode . emacs)
+                          (help-mode . emacs)
+                          (helm-grep-mode . emacs)
+                          (grep-mode . emacs)
+                          (bc-menu-mode . emacs)
+                          (magit-mode . emacs)
+                          (magit-branch-manager-mode . emacs)
+                          (rdictcc-buffer-mode . emacs)
+                          (dired-mode . emacs)
+                          (wdired-mode . normal)))
+  (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
