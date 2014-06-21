@@ -16,7 +16,6 @@ Things to add to emacs:
             Some method of saying "follow this help link in a separate buffer"
             This would then rename the current buffer as "*Help1*" and then
                 follow the link opening the "*Help*" buffer as usual.
-       Easier remove/move/copy/mkdir commands (without having to go into dired)
        Autocompletion method - show possible options
                                add option to only complete longest shared text
        Add "git submodule foreach git pull" to the Magit submodule buffer
@@ -31,14 +30,17 @@ Things to figure out:
               still worth learning.
 
 Plugins to investigate:
-       ecb               - emacs code browser
-       cedet             - bunch of coding tools
-       flymake           - syntax checking
-       imenu             - list functions in buffer (programmable)
-       iy-go-to-char     - basically f,F,t,T for emacs.
        ace-jump          - similar to easy-motion
+       cedet             - bunch of coding tools
+       ecb               - emacs code browser
        expand-region     - select whatever "thing" you're in at the moment
                             (be it word, string, function, class ...)
+       flymake           - syntax checking
+       imenu             - list functions in buffer (programmable)
+       ido-imenu         - find symbols in buffer and jump to.
+       iy-go-to-char     - basically f,F,t,T for emacs.
+       keychord-mode     - bind commands to two standard keys at once
+
        python packagas
               elpy
               jedi
