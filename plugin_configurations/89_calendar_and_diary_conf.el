@@ -6,4 +6,4 @@
 
 ;;; Diary settings
 (setq diary-file "~/.emacs.d/diary")
-(calendar-set-date-style 'european)
+(setq calendar-date-style 'european)
