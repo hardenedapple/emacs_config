@@ -24,7 +24,6 @@
         (append built-in-packages elpa-packages)))
 
      ;; Install packages, require packages
-
     (dolist (p elpa-packages)
       (when (not (package-installed-p p))
         (package-install p)))
@@ -81,7 +80,7 @@
 
 ;; Make it more likely that split-window-sensibly will split vertically
 (setq split-height-threshold 27)
-(setq split-width-threshold 87) ; 87 is 80 columns of text + line numbers etc
+(setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
 
 
 ;; make searches case-sensitive by default
@@ -99,7 +98,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"]))
- ;; '(custom-enabled-themes (quote (wombat))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -115,6 +113,8 @@
            (goto-char (elt ppss 8))
            (backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
+
+;; Bindings
 
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
