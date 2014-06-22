@@ -7,7 +7,7 @@
 
 ;; Set some keys for evil
 (evil-leader/set-key
- "H" 'buf-move-left
- "J" 'buf-move-down
- "K" 'buf-move-up
- "L" 'buf-move-right)
+ "wh" 'buf-move-left
+ "wj" 'buf-move-down
+ "wk" 'buf-move-up
+ "wl" 'buf-move-right)
