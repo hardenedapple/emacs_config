@@ -1,2 +1,2 @@
 ;; Turn on surround mode everywhere.
-(global-surround-mode 1)
+(global-evil-surround-mode 1)
