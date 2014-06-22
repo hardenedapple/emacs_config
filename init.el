@@ -128,6 +128,17 @@
                   (join-line -1)))
 (global-set-key (kbd "RET") 'newline-and-indent)
 
+;; Move more quickly
+(global-set-key (kbd "C-s-n")
+                (lambda ()
+                  (interactive)
+                  (ignore-errors (next-line 5))))
+
+(global-set-key (kbd "C-s-p")
+                (lambda ()
+                  (interactive)
+                  (ignore-errors (previous-line 5))))
+
 ;; Remove M-r as move-to-window-line-top-bottom, and replace with M-p
 ;;   (done because paredit binds M-r)
 (global-set-key (kbd "M-p") 'move-to-window-line-top-bottom)
