@@ -122,6 +122,10 @@
 
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
+(global-set-key (kbd "M-j")
+                (lambda ()
+                  (interactive)
+                  (join-line -1)))
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 ;; Remove M-r as move-to-window-line-top-bottom, and replace with M-p
