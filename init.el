@@ -50,8 +50,12 @@
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
 (setq auto-save-default nil)
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+(setq-default show-trailing-whitespace t)
+
+(setq backup-directory-alist
+      `((".*" . "~/.emacs.d/backup_files/")))
+(setq auto-save-file-name-transforms
+      `((".*" "~/.emacs.d/backup_files/" t)))
 
 ;; Add line numbers to buffer and show column number in status line
 (global-linum-mode t)
@@ -63,8 +67,10 @@
 ;; Automatically break long lines
 ;; use spaces instead of tabs
 (setq-default auto-fill-function 'do-auto-fill)
-(setq-default indent-tabs-mode nil)
 (setq-default fill-column 80)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 ;; remove scrollbar, menubar, and toolbar in gui
 (scroll-bar-mode -1)
@@ -82,13 +88,10 @@
 (setq split-height-threshold 27)
 (setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
 
-
-;; make searches case-sensitive by default
-(setq-default case-fold-search nil)
-
 ;; C mode specific things.
 (setq c-default-style "linux"
       c-basic-offset 4)
+(c-set-offset 'case-label '+)
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
