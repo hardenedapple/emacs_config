@@ -1,4 +1,9 @@
-Configuration file:
+-*- mode: Outline -*-
+*Next:
+    Learn Org mode      - Use it to reorganise this file
+
+
+*Configuration file:
        Get slime to work with the normal packaging system.
        Check that slime and paredit aren't shadowing each other too much.
        Make the check for if is an X frame or in the terminal allow for emacs
@@ -11,25 +16,25 @@ Configuration file:
                   server-create-tty-frame, server-create-window-system-frame, server-handle-delete-frame
                   before-make-frame-hook, after-make-frame-functions, after-init-hook
 
-Things to add to emacs:
+*Things to add to emacs:
        Open multiple help files at the same time.
             Some method of saying "follow this help link in a separate buffer"
             This would then rename the current buffer as "*Help1*" and then
                 follow the link opening the "*Help*" buffer as usual.
        Autocompletion method - show possible options
                                add option to only complete longest shared text
-       Add "git submodule foreach git pull" to the Magit submodule buffer
+       Look through http://whattheemacsd.com/ and pick + choose
 
-Slime/paredit rebindings:
+*Slime/paredit rebindings:
       In emacs mode, find some different bindings (C-M-<key> is a bit of a pain).
       In evil mode, swap word and WORD motions, then swap WORD and sexp motions.
 
-Things to figure out:
+*Things to figure out:
        VC   - Version control interface for emacs.
               Is a general version, so doesn't have all the git abilities, but
               still worth learning.
 
-Plugins to investigate:
+*Plugins to investigate:
        ace-jump          - similar to easy-motion
        cedet             - bunch of coding tools
        ecb               - emacs code browser
@@ -43,7 +48,7 @@ Plugins to investigate:
               elpy
               jedi
 
-Plugins to get / understand:
+*Plugins to get / understand:
        helm              - fuzzy file finder and more.
        el-get            - an "extra" package manager for emacs packages.
        Elscreen.el       - Maybe tabs for emacs.
@@ -51,15 +56,12 @@ Plugins to get / understand:
        Org-mode
 
 
-Plugins to look for:
+**Plugins to look for:
        folding          - Need this quite badly.
 
 
-Evil mode:
-       Visual mode indentation keeping the visual selection.
-       I want submodes - like Submode.vim
-
-       Map paredit mappings into evil normal mode.
+* Evil mode:
+**Map paredit mappings into evil normal mode.
        Though not sure it's possible with the <( and >) mappings
         i.e.
             W   - Move sexp
@@ -71,26 +73,19 @@ Evil mode:
             e   - Move WORD
             ge  - Move WORD
 
-       Keys that are valid mappings (i.e. don't directly overwrite anything):
-           z .. {p,q,u,y,B,I,J,K,P,Q,S,T,U,V,Y,Z}
-           Z .. [^ZQ]
-           [ .. something
-           ] .. something
-           c .. something
-           d .. something
-           y .. something
-           g .. something
-           \ .. something
+** Porting my vimrc
+          Visual mode indentation keeping the visual selection.
+          Port unimpaired (or at least the part I use often)
+          Get submodes (like submode.vim)
+             evil-define-state
+             (info "(evil) States")
 
-          Keys that I feel comfortable replacing in evil, not going to in vim:
+**Keys that I feel comfortable replacing in evil, not going to in vim:
               Q
               gQ
               spelling commands.
 
-       Plugins to replace:
-            Unimpaired
-
-Things not in evil:
+**Things not in evil that are in vim:
        C-x C-(anything not linewise)
        [I, ]I, [D, ]D, [d, ]d, [i, ]i
        gp, gP
