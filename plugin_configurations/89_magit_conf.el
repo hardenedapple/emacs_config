@@ -5,6 +5,10 @@
   (interactive)
   (magit-stage-item (buffer-file-name)))
 
+;;; git commit mode variables
+(setq git-commit-mode-hook '(turn-on-auto-fill))
+
+
 ;;; Set some keys for evil
 (evil-leader/set-key
   "gg" 'magit-log
