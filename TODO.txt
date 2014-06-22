@@ -33,8 +33,6 @@ Plugins to investigate:
        ace-jump          - similar to easy-motion
        cedet             - bunch of coding tools
        ecb               - emacs code browser
-       expand-region     - select whatever "thing" you're in at the moment
-                            (be it word, string, function, class ...)
        flymake           - syntax checking
        imenu             - list functions in buffer (programmable)
        ido-imenu         - find symbols in buffer and jump to.
