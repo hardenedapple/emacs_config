@@ -54,8 +54,7 @@
     (if numlines
         (dotimes (nullvar numlines)
           (evil-insert-newline-below))
-      (evil-insert-newline-below))
-    (evil-force-normal-state)))
+      (evil-insert-newline-below))))
 
 (defun evil-unimpaired-newline-above (numlines)
   "Insert a new line below the point without moving it."
@@ -64,8 +63,7 @@
     (if numlines
         (dotimes (nullvar numlines)
           (evil-insert-newline-above))
-      (evil-insert-newline-above))
-    (evil-force-normal-state)))
+      (evil-insert-newline-above))))
 
 ;; (defun evil-unimpaired-swap-lines ()
 ;;   (interactive)
