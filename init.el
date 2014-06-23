@@ -9,7 +9,7 @@
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
 (when (not package-archive-contents)
-   (package-refresh-contents))
+  (package-refresh-contents))
 
 ;; In a let as I don't like polluting the namespace.
 (let
@@ -24,7 +24,7 @@
       ((require-packages
         (append require-only elpa-packages)))
 
-     ;; Install packages, require packages
+    ;; Install packages, require packages
     (dolist (p elpa-packages)
       (when (not (package-installed-p p))
         (package-install p)))
@@ -127,9 +127,6 @@ might be bad."
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
-;; Various superfluous white-space. Just say no.
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
-
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
@@ -137,8 +134,8 @@ Including indent-buffer, which should not be called automatically on save."
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
 
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
 
+;;; New line functions
 (defun open-line-below ()
   (interactive)
   (end-of-line)
@@ -152,30 +149,28 @@ Including indent-buffer, which should not be called automatically on save."
   (forward-line -1)
   (indent-for-tab-command))
 
+;; Bindings
+
+(global-set-key (kbd "C-c w") 'cleanup-buffer)
+
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
-;; Bindings
-
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
-(global-set-key (kbd "M-j")
-                (lambda ()
-                  (interactive)
-                  (join-line -1)))
-(global-set-key (kbd "RET") 'newline-and-indent)
+(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
+(global-set-key (kbd "RET") 'indent-new-comment-line)
 
 ;; Move more quickly
-(global-set-key (kbd "C-S-n")
-                (lambda ()
-                  (interactive)
-                  (ignore-errors (next-line 5))))
-
-(global-set-key (kbd "C-S-p")
-                (lambda ()
-                  (interactive)
-                  (ignore-errors (previous-line 5))))
+(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
+(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
 
 ;; Remove M-r as move-to-window-line-top-bottom, and replace with M-a
 ;;   (done because paredit binds M-r and I never move by sentances)
 (global-set-key (kbd "M-a") 'move-to-window-line-top-bottom)
+
+
+
+;;; Hooks
+;; Various superfluous white-space.
+(add-hook 'before-save-hook 'cleanup-buffer-safe)
