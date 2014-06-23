@@ -176,6 +176,6 @@ Including indent-buffer, which should not be called automatically on save."
                   (interactive)
                   (ignore-errors (previous-line 5))))
 
-;; Remove M-r as move-to-window-line-top-bottom, and replace with M-p
-;;   (done because paredit binds M-r)
-(global-set-key (kbd "M-p") 'move-to-window-line-top-bottom)
+;; Remove M-r as move-to-window-line-top-bottom, and replace with M-a
+;;   (done because paredit binds M-r and I never move by sentances)
+(global-set-key (kbd "M-a") 'move-to-window-line-top-bottom)
