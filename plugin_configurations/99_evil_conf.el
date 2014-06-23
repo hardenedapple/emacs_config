@@ -1,4 +1,4 @@
-;; Evil-mode, I hate the emacs keybindings
+;;; Evil-mode, I hate the emacs keybindings
 ;; Move <Return> and <Space> from the "motion" keymap to the normal one.
 ;; This allows other emacs plugins to remap them if they ever want to.
 (evil-mode 0)
@@ -46,7 +46,8 @@
 (define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
 
 ;;; Remove keychords when in evil-mode
-(add-hook 'evil-normal-state-entry-hook (lambda () (key-chord-mode nil)))
+(add-hook 'evil-normal-state-entry-hook (lambda () (key-chord-mode -1)))
+(add-hook 'evil-emacs-state-entry-hook (lambda () (key-chord-mode 1)))
 
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
