@@ -139,14 +139,15 @@ Including indent-buffer, which should not be called automatically on save."
 (defun open-line-below ()
   (interactive)
   (end-of-line)
-  (newline)
-  (indent-for-tab-command))
+  (indent-new-comment-line))
 
 (defun open-line-above ()
   (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
+  (end-of-line)
+  (indent-new-comment-line)
+  (transpose-lines 1)
+  (forward-line -2)
+  (end-of-line)
   (indent-for-tab-command))
 
 ;; Bindings
