@@ -1,5 +1,6 @@
 ;; ido mode - more options for selecting buffers/files
 (ido-mode t)
+(setq ido-enable-flex-matching t)
 
 ;;; Go straight to home
 (add-hook 'ido-setup-hook
