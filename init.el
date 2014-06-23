@@ -14,7 +14,7 @@
 ;; In a let as I don't like polluting the namespace.
 (let
     ((elpa-packages
-      '(undo-tree paredit yasnippet goto-chg elscreen ace-jump-mode
+      '(undo-tree paredit yasnippet key-chord goto-chg elscreen ace-jump-mode
                   wrap-region magit multiple-cursors expand-region
                   evil-leader evil evil-exchange evil-args evil-surround))
      (require-only

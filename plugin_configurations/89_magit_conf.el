@@ -8,6 +8,7 @@
 ;;; git commit mode variables
 (setq git-commit-mode-hook '(turn-on-auto-fill))
 
+(key-chord-define-global ";g" 'magit-status)
 
 ;;; Set some keys for evil
 (evil-leader/set-key

@@ -4,6 +4,8 @@
 (defun ace-jump-char-mode ()
   (interactive)
   (ace-jump-mode 4))
+(key-chord-define-global ";q" 'ace-jump-mode)
+(key-chord-define-global ";j" 'ace-jump-char-mode)
 
 (eval-after-load "ace-jump-mode"
   '(ace-jump-mode-enable-mark-sync))
@@ -12,4 +14,3 @@
 (evil-leader/set-key
   "aw" 'ace-jump-mode
   "ac" 'ace-jump-char-mode)
-
