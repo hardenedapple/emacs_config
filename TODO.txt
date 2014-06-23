@@ -6,8 +6,8 @@
 *Configuration file:
        Get slime to work with the normal packaging system.
        Check that slime and paredit aren't shadowing each other too much.
-       Decide on where to put the move line functions:
-            Would be part of evil-unimpaired, but I want them in emacs as well.
+       Make sure key-chord-mode is never active in evil.
+       Method of switching to magit in the current buffer
        Make the check for if is an X frame or in the terminal allow for emacs
             being run as a daemon.
             Define a function that looks at the frame, if it's in a terminal
