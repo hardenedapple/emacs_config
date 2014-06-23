@@ -25,7 +25,6 @@
                 follow the link opening the "*Help*" buffer as usual.
        Autocompletion method - show possible options
                                add option to only complete longest shared text
-       Look through http://whattheemacsd.com/ and pick + choose
 
 *Slime/paredit rebindings:
       In emacs mode, find some different bindings (C-M-<key> is a bit of a pain).
@@ -38,7 +37,6 @@
 
 * Plugins
 ** Plugins to check out:
-       ace-jump              - similar to easy-motion
        cedet                 - bunch of coding tools
        ecb                   - emacs code browser
        elisp-slime-nav-mode  - M-. and M-, for elisp
@@ -55,7 +53,6 @@
 ** Plugins to get / understand:
        helm              - fuzzy file finder and more.
        el-get            - an "extra" package manager for emacs packages.
-       Elscreen.el       - Maybe tabs for emacs.
        smex.el           - ido like M-x
        Org-mode
 
