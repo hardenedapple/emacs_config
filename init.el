@@ -18,7 +18,7 @@
                   wrap-region magit multiple-cursors expand-region
                   evil-leader evil evil-exchange evil-args evil-surround))
      (require-only
-      '(buffer-move transpose-frame epa-file eldoc)))
+      '(buffer-move transpose-frame epa-file eldoc evil-elscreen)))
 
   (let
       ((require-packages
