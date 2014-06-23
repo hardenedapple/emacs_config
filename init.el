@@ -17,12 +17,12 @@
       '(undo-tree paredit yasnippet goto-chg
                   wrap-region magit multiple-cursors expand-region
                   evil-leader evil evil-exchange evil-args evil-surround))
-     (built-in-packages
+     (require-only
       '(buffer-move transpose-frame epa-file eldoc)))
 
   (let
       ((require-packages
-        (append built-in-packages elpa-packages)))
+        (append require-only elpa-packages)))
 
      ;; Install packages, require packages
     (dolist (p elpa-packages)
