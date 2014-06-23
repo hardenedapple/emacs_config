@@ -3,3 +3,5 @@
 ;; *Messages* etc (i.e. in initial buffers)
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+  "bs" 'ibuffer)
