@@ -36,21 +36,23 @@
               Is a general version, so doesn't have all the git abilities, but
               still worth learning.
 
-*Plugins to investigate:
-       ace-jump          - similar to easy-motion
-       cedet             - bunch of coding tools
-       ecb               - emacs code browser
-       flymake           - syntax checking
-       imenu             - list functions in buffer (programmable)
-       ido-imenu         - find symbols in buffer and jump to.
-       iy-go-to-char     - basically f,F,t,T for emacs.
-       keychord-mode     - bind commands to two standard keys at once
+* Plugins
+** Plugins to check out:
+       ace-jump              - similar to easy-motion
+       cedet                 - bunch of coding tools
+       ecb                   - emacs code browser
+       elisp-slime-nav-mode  - M-. and M-, for elisp
+       flymake               - syntax checking
+       imenu                 - list functions in buffer (programmable)
+       ido-imenu             - find symbols in buffer and jump to.
+       iy-go-to-char         - basically f,F,t,T for emacs.
+       keychord-mode         - bind commands to two standard keys at once
 
        python packagas
               elpy
               jedi
 
-*Plugins to get / understand:
+** Plugins to get / understand:
        helm              - fuzzy file finder and more.
        el-get            - an "extra" package manager for emacs packages.
        Elscreen.el       - Maybe tabs for emacs.
@@ -58,7 +60,7 @@
        Org-mode
 
 
-**Plugins to look for:
+** Plugins to look for:
        folding          - Need this quite badly.
 
 
