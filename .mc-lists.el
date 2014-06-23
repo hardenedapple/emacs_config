@@ -9,6 +9,8 @@
         paredit-backward
         paredit-forward
         paredit-forward-delete
+        paredit-reindent-defun
+        slime-space
         ))
 
 (setq mc/cmds-to-run-once
