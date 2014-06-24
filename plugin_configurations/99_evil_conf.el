@@ -45,6 +45,8 @@
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
+;;; Insert mode mappings
+(define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
 
 ;;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
