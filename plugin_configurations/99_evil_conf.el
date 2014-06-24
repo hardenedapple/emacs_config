@@ -111,3 +111,5 @@
 (define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
 (define-key evil-normal-state-map "]e" 'evil-unimpaired-move-line-down)
 (define-key evil-normal-state-map "[e" 'evil-unimpaired-move-line-up)
+(define-key evil-normal-state-map "]q" 'next-error)
+(define-key evil-normal-state-map "[q" 'previous-error)
