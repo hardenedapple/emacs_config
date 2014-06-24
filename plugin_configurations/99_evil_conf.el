@@ -45,9 +45,16 @@
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
-;;; Remove keychords when in evil-mode
-(add-hook 'evil-normal-state-entry-hook (lambda () (key-chord-mode -1)))
-(add-hook 'evil-emacs-state-entry-hook (lambda () (key-chord-mode 1)))
+
+;;; Remove keychords and wrap-region when in evil-mode
+(add-hook 'evil-normal-state-entry-hook
+          (lambda ()
+            (key-chord-mode -1)
+            (wrap-region-mode -1)))
+(add-hook 'evil-emacs-state-entry-hook
+          (lambda ()
+            (key-chord-mode 1)
+            (wrap-region-mode 1)))
 
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
