@@ -21,11 +21,13 @@
                            (helm-grep-mode . emacs)
                            (grep-mode . emacs)
                            (bc-menu-mode . emacs)
-                           (magit-mode . emacs)
-                           (magit-branch-manager-mode . emacs)
                            (rdictcc-buffer-mode . emacs)
                            (dired-mode . emacs)
-                           (wdired-mode . normal)))
+                           (wdired-mode . normal)
+                           (magit-mode . emacs)
+                           (info-mode . emacs)
+                           (woman-mode . emacs)
+                           (man-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 
