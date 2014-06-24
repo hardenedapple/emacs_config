@@ -1,12 +1,12 @@
 -*- mode: Outline -*-
-*Next:
-    Learn Org mode      - Use it to reorganise this file
+* Next:
+        Make a note of all the keybindings I've set up.
+        Learn Org mode      - Use it to reorganise this file
 
 
-*Configuration file:
+* Configuration file:
        Get slime to work with the normal packaging system.
        Check that slime and paredit aren't shadowing each other too much.
-       Make sure key-chord-mode is never active in evil.
        Method of switching to magit in the current buffer
        Make the check for if is an X frame or in the terminal allow for emacs
             being run as a daemon.
@@ -18,7 +18,7 @@
                   server-create-tty-frame, server-create-window-system-frame, server-handle-delete-frame
                   before-make-frame-hook, after-make-frame-functions, after-init-hook
 
-*Things to add to emacs:
+* Things to add to emacs:
        Open multiple help files at the same time.
             Some method of saying "follow this help link in a separate buffer"
             This would then rename the current buffer as "*Help1*" and then
@@ -26,11 +26,11 @@
        Autocompletion method - show possible options
                                add option to only complete longest shared text
 
-*Slime/paredit rebindings:
+* Slime/paredit rebindings:
       In emacs mode, find some different bindings (C-M-<key> is a bit of a pain).
       In evil mode, swap word and WORD motions, then swap WORD and sexp motions.
 
-*Things to figure out:
+* Things to figure out:
        VC   - Version control interface for emacs.
               Is a general version, so doesn't have all the git abilities, but
               still worth learning.
@@ -61,7 +61,10 @@
 
 
 * Evil mode:
-**Map paredit mappings into evil normal mode.
+** Next
+        Fix evil-elscreen
+
+** Map paredit mappings into evil normal mode.
        Though not sure it's possible with the <( and >) mappings
         i.e.
             W   - Move sexp
@@ -80,12 +83,12 @@
              evil-define-state
              (info "(evil) States")
 
-**Keys that I feel comfortable replacing in evil, not going to in vim:
+** Keys that I feel comfortable replacing in evil, not going to in vim:
               Q
               gQ
               spelling commands.
 
-**Things not in evil that are in vim:
+** Things not in evil that are in vim:
        C-x C-(anything not linewise)
        [I, ]I, [D, ]D, [d, ]d, [i, ]i
        gp, gP
