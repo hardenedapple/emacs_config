@@ -150,12 +150,38 @@ Including indent-buffer, which should not be called automatically on save."
   (end-of-line)
   (indent-for-tab-command))
 
+(defun move-this-line-down (numlines)
+  (interactive "P")
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (if numlines
+          (dotimes (nullvar numlines)
+            (transpose-lines 1))
+       (transpose-lines 1)))
+    (forward-line)
+    (move-to-column col)))
+
+(defun move-this-line-up (numlines)
+  (interactive "P")
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (if numlines
+          (dotimes (nullvar numlines)
+            (transpose-lines -1))
+       (transpose-lines -1)))
+    (move-to-column col)))
+
 ;; Bindings
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
+
+(global-set-key (kbd "<C-s-up>") 'move-this-line-up)
+(global-set-key (kbd "<C-s-down>") 'move-this-line-down)
 
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)

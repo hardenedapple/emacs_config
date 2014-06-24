@@ -78,40 +78,9 @@
           (evil-insert-newline-above))
       (evil-insert-newline-above))))
 
-
-(defun evil-unimpaired-move-line-down (numlines)
-  (interactive "P")
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (if numlines
-          (dotimes (nullvar numlines)
-            (transpose-lines 1))
-       (transpose-lines 1)))
-    (forward-line)
-    (move-to-column col)))
-
-(defun evil-unimpaired-move-line-up (numlines)
-  (interactive "P")
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (if numlines
-          (dotimes (nullvar numlines)
-            (transpose-lines -1))
-       (transpose-lines -1)))
-    (move-to-column col)))
-
-(global-set-key (kbd "<C-s-up>") 'evil-unimpaired-move-line-up)
-(global-set-key (kbd "<C-s-down>") 'evil-unimpaired-move-line-down)
-;; (defun evil-unimpaired-swap-lines ()
-;;   (interactive)
-;;   (evil-delete-line)
-;;   (evil-paste-after 1))
-
 (define-key evil-normal-state-map "] " 'evil-unimpaired-newline-below)
 (define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
-(define-key evil-normal-state-map "]e" 'evil-unimpaired-move-line-down)
-(define-key evil-normal-state-map "[e" 'evil-unimpaired-move-line-up)
+(define-key evil-normal-state-map "]e" 'move-this-line-down)
+(define-key evil-normal-state-map "[e" 'move-this-line-up)
 (define-key evil-normal-state-map "]q" 'next-error)
 (define-key evil-normal-state-map "[q" 'previous-error)
