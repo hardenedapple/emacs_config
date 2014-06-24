@@ -168,8 +168,10 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; Remove M-r as move-to-window-line-top-bottom, and replace with M-a
 ;;   (done because paredit binds M-r and I never move by sentances)
-(global-set-key (kbd "M-a") 'move-to-window-line-top-bottom)
-
+(global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
+(global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
+(global-set-key (kbd "C-S-v") 'cua-scroll-up)
+(global-set-key (kbd "M-S-v") 'cua-scroll-down)
 
 
 ;;; Hooks
