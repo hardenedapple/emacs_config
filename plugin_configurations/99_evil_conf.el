@@ -42,8 +42,8 @@
 (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
 ;; Remove some of the scrolling commands in evil to leave the default emacs ones
-(define-key evil-motion-state-map (kbd "'") 'evil-goto-mark)
-(define-key evil-motion-state-map (kbd "`") 'evil-goto-mark-line)
+(define-key evil-motion-state-map "'" 'evil-goto-mark)
+(define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
 ;;; Remove keychords when in evil-mode
 (add-hook 'evil-normal-state-entry-hook (lambda () (key-chord-mode -1)))
@@ -104,5 +104,3 @@
 (define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
 (define-key evil-normal-state-map "]e" 'evil-unimpaired-move-line-down)
 (define-key evil-normal-state-map "[e" 'evil-unimpaired-move-line-up)
-
-;; (define-key evil-normal-state-map "]e" 'evil-unimpaired-swap-lines)
