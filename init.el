@@ -177,14 +177,15 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 
-(global-set-key (kbd "C-o") 'open-line-below)
-(global-set-key (kbd "C-S-o") 'open-line-above)
-
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)
 (global-set-key (kbd "<C-s-down>") 'move-this-line-down)
 
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
+
+;; Lines
+(global-set-key (kbd "C-o") 'open-line-below)
+(global-set-key (kbd "C-S-o") 'open-line-above)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
