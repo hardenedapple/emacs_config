@@ -60,6 +60,19 @@
             (key-chord-mode 1)
             (wrap-region-mode 1)))
 
+
+(evil-define-motion evil-little-word (count)
+  :type exclusive
+  (let* ((case-fold-search nil)
+         (count (if count count 1)))
+    (while (> count 0)
+      (forward-char)
+      (search-forward-regexp "[_A-Z]\\|\\W" nil t)
+      (backward-char)
+      (decf count))))
+
+(define-key evil-operator-state-map "lw" 'evil-little-word)
+
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
 (defun evil-unimpaired-newline-below (numlines)
