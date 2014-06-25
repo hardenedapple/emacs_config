@@ -12,5 +12,5 @@
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 (evil-leader/set-key
-  "mw" 'ace-jump-mode
-  "mc" 'ace-jump-char-mode)
+  "mw" 'evil-ace-jump-mode
+  "mc" 'evil-ace-jump-char-mode)
