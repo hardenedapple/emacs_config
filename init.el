@@ -192,13 +192,14 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
 
-;; Remove M-r as move-to-window-line-top-bottom, and replace with M-a
-;;   (done because paredit binds M-r and I never move by sentances)
+;; Scrolling
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'cua-scroll-up)
 (global-set-key (kbd "M-S-v") 'cua-scroll-down)
 
+;; Remaps for Dvorak keyboard
+(global-set-key (kbd "C-;") ctl-x-map)
 
 ;;; Hooks
 ;; Various superfluous white-space.
