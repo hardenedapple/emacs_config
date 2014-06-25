@@ -1,39 +1,33 @@
 -*- mode: Outline -*-
 * Next:
         Make a note of all the keybindings I've set up.
-        Learn Org mode      - Use it to reorganise this file
 
+* Check:
+       Are slime and paredit shadowing each other a lot?
+       Why is ace-jump-mode giving errors with character option?
+       How does elscreen compare to winring and escreen?
 
-* Configuration file:
-       Get slime to work with the normal packaging system.
-       Check that slime and paredit aren't shadowing each other too much.
-       Method of switching to magit in the current buffer
-       Make the check for if is an X frame or in the terminal allow for emacs
-            being run as a daemon.
-            Define a function that looks at the frame, if it's in a terminal
-                   then it removes any theme that's active
-                   otherwise it makes sure a theme is active (and that there is
-                   not more than one theme active)
-            Functions that might be useful:
-                  server-create-tty-frame, server-create-window-system-frame, server-handle-delete-frame
-                  before-make-frame-hook, after-make-frame-functions, after-init-hook
+* Configuration File:
+       Check if I should combine some _conf.el files.
 
-* Things to add to emacs:
+* Extras I want:
+       Saving session on disk.
+              http://www.emacswiki.org/emacs/SessionManagement
+       Jump directly to info file when name saved.
+            i.e. have  "(elisp) Command Loop" in a buffer, how to jump directly
+            to it
+       Completion with small pop-up of options (i.e. like vim)
+       Shortcut to switch to magit in current window.
+       Tabs that I can associate buffers to.
+            see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
+       Different theme on terminal to window systems - remember server mode.
+       Different options depending on filetype (e.g. 125 char wide tex buffers)
        Open multiple help files at the same time.
-            Some method of saying "follow this help link in a separate buffer"
-            This would then rename the current buffer as "*Help1*" and then
-                follow the link opening the "*Help*" buffer as usual.
-       Autocompletion method - show possible options
-                               add option to only complete longest shared text
 
-* Slime/paredit rebindings:
-      In emacs mode, find some different bindings (C-M-<key> is a bit of a pain).
-      In evil mode, swap word and WORD motions, then swap WORD and sexp motions.
-
-* Things to figure out:
-       VC   - Version control interface for emacs.
-              Is a general version, so doesn't have all the git abilities, but
-              still worth learning.
+* Things to learn:
+       Winner mode - find out it's capabilities
+       VC mode     - try it out on my work mercurial repo
+       Org mode    - redo this file
 
 * Plugins
 ** Plugins to check out:
@@ -63,6 +57,9 @@
 * Evil mode:
 ** Next
         Fix evil-elscreen
+            At the moment gt and gT don't cycle
+            This is because the function .../tab-next gets the count 1 when
+                 simply pressing gt, and acts like "go to tab 1"
 
 ** Map paredit mappings into evil normal mode.
        Though not sure it's possible with the <( and >) mappings
