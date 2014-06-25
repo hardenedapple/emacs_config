@@ -190,7 +190,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; Move more quickly
 (global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
-(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
 
 ;; Scrolling
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
@@ -199,7 +198,10 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-S-v") 'cua-scroll-down)
 
 ;; Remaps for Dvorak keyboard
+(global-set-key (kbd "C-S-h") (lambda () (interactive) (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-;") ctl-x-map)
+(keyboard-translate ?\C-h ?\C-p)
+(keyboard-translate ?\C-p ?\C-h)
 
 ;;; Hooks
 ;; Various superfluous white-space.
