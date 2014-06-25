@@ -43,7 +43,7 @@
 
 (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
-;; Remove some of the scrolling commands in evil to leave the default emacs ones
+;; swap the goto mark commands
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
@@ -89,18 +89,28 @@
   (interactive "P")
   (save-excursion
     (if numlines
-        (dotimes (nullvar numlines)
-          (evil-insert-newline-below))
-      (evil-insert-newline-below))))
+        (progn
+          (end-of-line)
+          (dotimes (nullvar numlines)
+            (newline)))
+      (progn
+        (end-of-line)
+        (newline)))))
 
 (defun evil-unimpaired-newline-above (numlines)
   "Insert a new line below the point without moving it."
   (interactive "P")
-  (save-excursion
+  (let ((save-col (current-column)))
     (if numlines
-        (dotimes (nullvar numlines)
-          (evil-insert-newline-above))
-      (evil-insert-newline-above))))
+        (progn
+          (beginning-of-line)
+          (dotimes (nullvar numlines)
+            (newline)))
+      (progn
+        (beginning-of-line)
+        (newline)))
+    (move-to-column save-col)))
+
 
 (define-key evil-normal-state-map "] " 'evil-unimpaired-newline-below)
 (define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
