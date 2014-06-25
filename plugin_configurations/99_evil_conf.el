@@ -73,6 +73,14 @@
 
 (define-key evil-operator-state-map "lw" 'evil-little-word)
 
+(defun whitespace-only-p (string)
+  (equal "" (replace-regexp-in-string "[ \t\n]" "" string)))
+
+(defadvice evil-delete (around evil-delete-yank activate)
+  (if (whitespace-only-p (buffer-substring beg end))
+      (ad-set-arg 3 ?_))
+  ad-do-it)
+
 ;; All below will be moved into an "evil-unimpaired.el" plugin with extras.
 ;; Remember to add counts to this function.
 (defun evil-unimpaired-newline-below (numlines)
