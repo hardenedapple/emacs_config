@@ -49,6 +49,7 @@
 
 ;;; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
+(define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
 
 ;;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
