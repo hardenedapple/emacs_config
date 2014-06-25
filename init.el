@@ -203,6 +203,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-;") ctl-x-map)
 (keyboard-translate ?\C-h ?\C-p)
 (keyboard-translate ?\C-p ?\C-h)
+(keyboard-translate ?\C-z ?\C-x)
+(keyboard-translate ?\C-x ?\C-z)
 
 ;;; Hooks
 ;; Various superfluous white-space.
