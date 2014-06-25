@@ -198,7 +198,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-S-v") 'cua-scroll-up)
 (global-set-key (kbd "M-S-v") 'cua-scroll-down)
 
-;; Remaps for Dvorak keyboard
+;;; Remaps for Dvorak keyboard
+;; This would be C-S-p if not dvorak
 (global-set-key (kbd "C-S-h") (lambda () (interactive) (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-;") ctl-x-map)
 (keyboard-translate ?\C-h ?\C-p)
