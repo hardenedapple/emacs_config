@@ -11,6 +11,9 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+;; Have to have this set before requiring evil
+(setq evil-toggle-key "C-c C-z")
+
 ;; In a let as I don't like polluting the namespace.
 (let
     ((elpa-packages
