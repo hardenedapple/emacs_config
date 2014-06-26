@@ -13,21 +13,20 @@
 * Extras I want:
        Saving session on disk.
               http://www.emacswiki.org/emacs/SessionManagement
-       Jump directly to info file when name saved.
-            i.e. have  "(elisp) Command Loop" in a buffer, how to jump directly
-            to it
        Completion with small pop-up of options (i.e. like vim)
        Shortcut to switch to magit in current window.
        Tabs that I can associate buffers to.
             see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
-       Different theme on terminal to window systems - remember server mode.
        Different options depending on filetype (e.g. 125 char wide tex buffers)
+       Different theme on terminal to window systems - remember server mode.
        Open multiple help files at the same time.
 
 * Things to learn:
-       Winner mode - find out it's capabilities
-       VC mode     - try it out on my work mercurial repo
-       Org mode    - redo this file
+       How to set prefix keys, especially in evil.
+       Winner mode            - find out it's capabilities
+       VC mode                - try it out on my work mercurial repo
+       Org mode               - redo this file
+       Buffer menu does more  - (emacs) Several Buffers
 
 * Plugins
 ** Plugins to check out:

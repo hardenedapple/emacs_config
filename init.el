@@ -173,6 +173,10 @@ Including indent-buffer, which should not be called automatically on save."
        (transpose-lines -1)))
     (move-to-column col)))
 
+(defun info-goto-page-in-region (startpt endpt)
+  (interactive "r")
+  (info (buffer-substring startpt endpt)))
+
 ;; Bindings
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
