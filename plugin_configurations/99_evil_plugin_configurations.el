@@ -107,6 +107,8 @@
 
 (define-key evil-normal-state-map "] " 'evil-unimpaired-newline-below)
 (define-key evil-normal-state-map "[ " 'evil-unimpaired-newline-above)
+(define-key evil-normal-state-map "[b" 'next-buffer)
+(define-key evil-normal-state-map "]b" 'previous-buffer)
 (define-key evil-normal-state-map "]e" 'move-this-line-down)
 (define-key evil-normal-state-map "[e" 'move-this-line-up)
 (define-key evil-normal-state-map "]q" 'next-error)
