@@ -111,6 +111,7 @@
 (define-key evil-normal-state-map "[e" 'move-this-line-up)
 (define-key evil-normal-state-map "]q" 'next-error)
 (define-key evil-normal-state-map "[q" 'previous-error)
+(define-key evil-normal-state-map "[Q" (lambda () (interactive) (next-error 1 t)))
 ; Make sure counts work on the error cycling
 ; Add [Q and ]Q
 
