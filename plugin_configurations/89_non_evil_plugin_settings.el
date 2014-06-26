@@ -109,7 +109,7 @@
 
 ;;; List Buffer Settings
 ;;;
-(defalias 'list-buffers 'ibuffer)
+(global-set-key [remap list-buffers] 'ibuffer)
 
 
 ;;; Ido Settings
