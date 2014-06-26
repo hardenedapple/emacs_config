@@ -33,23 +33,22 @@
 * Plugins
 ** Plugins to check out:
        cedet                 - bunch of coding tools
+       el-get                - an "extra" package manager for emacs packages.
        ecb                   - emacs code browser
        elisp-slime-nav-mode  - M-. and M-, for elisp
+       dired+                - Extra functions for dired
        flymake               - syntax checking
+       helm                  - fuzzy file finder and more.
        imenu                 - list functions in buffer (programmable)
        icicles               - has the buffer grep I want
                                (multiple buffer occur) and much more
        ido-imenu             - find symbols in buffer and jump to.
        iy-go-to-char         - basically f,F,t,T for emacs.
+       Org-mode
 
        python packagas
               elpy
               jedi
-
-** Plugins to get / understand:
-       helm              - fuzzy file finder and more.
-       el-get            - an "extra" package manager for emacs packages.
-       Org-mode
 
 
 ** Plugins to look for:
