@@ -7,9 +7,6 @@
        Why is ace-jump-mode giving errors with character option?
        How does elscreen compare to winring and escreen?
 
-* Configuration File:
-       Check if I should combine some _conf.el files.
-
 * Extras I want:
        Saving session on disk.
               http://www.emacswiki.org/emacs/SessionManagement

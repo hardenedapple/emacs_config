@@ -114,6 +114,11 @@
  )
 
 ;;; Functions
+
+(defun info-goto-page-in-region (startpt endpt)
+  (interactive "r")
+  (info (buffer-substring startpt endpt)))
+
 (defun backward-up-sexp (arg)
   (interactive "p")
   (let ((ppss (syntax-ppss)))
@@ -122,6 +127,8 @@
            (backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
 
+
+;; Whitespace and indent
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
@@ -139,7 +146,7 @@ Including indent-buffer, which should not be called automatically on save."
   (indent-region (point-min) (point-max)))
 
 
-;;; New line functions
+;; New line functions
 (defun open-line-below ()
   (interactive)
   (end-of-line)
@@ -154,35 +161,60 @@ Including indent-buffer, which should not be called automatically on save."
   (end-of-line)
   (indent-for-tab-command))
 
+
+;; Move lines around
+
 (defun move-this-line-down (numlines)
   (interactive "P")
   (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (if numlines
-          (dotimes (nullvar numlines)
-            (transpose-lines 1))
-       (transpose-lines 1)))
     (forward-line)
+    (if numlines
+        (dotimes (nullvar numlines)
+          (transpose-lines 1))
+      (transpose-lines 1))
+    (forward-line -1)
     (move-to-column col)))
 
 (defun move-this-line-up (numlines)
   (interactive "P")
   (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (if numlines
-          (dotimes (nullvar numlines)
-            (transpose-lines -1))
-       (transpose-lines -1)))
+    (forward-line)
+    (if numlines
+        (dotimes (nullvar numlines)
+          (transpose-lines -1))
+      (transpose-lines -1))
     (move-to-column col)))
 
-(defun info-goto-page-in-region (startpt endpt)
-  (interactive "r")
-  (info (buffer-substring startpt endpt)))
+
+;; File Handling
+(defun remove-buffer-and-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name))
+    (delete-file filename)
+    (kill-buffer buffer)
+    (message "File '%s' removed" filename)))
+
+(defun rename-buffer-and-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name))
+    (let ((new-name (read-file-name "New name: " filename)))
+      (rename-file filename new-name 1)
+      (rename-buffer new-name t)
+      (set-visited-file-name new-name)
+      (set-buffer-modified-p nil)
+      (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name)))))
+
 
 ;; Bindings
-
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)
