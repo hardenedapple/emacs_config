@@ -5,29 +5,16 @@
 
 ;;; Variables
 (setq evil-want-C-u-scroll t)
+(setq evil-want-C-i-jump t)
+(setq evil-cross-lines t)
 (setq evil-find-skip-newlines t)
 (setq evil-flash-delay 5)
+(setq evil-want-change-word-to-end nil)
 
 ;; Set the default mode for certain buffers
-(dolist (mode-state-pair '((inferior-emacs-lisp-mode . emacs)
-                           (nrepl-mode . insert)
-                           (pylookup-mode . emacs)
-                           (comint-mode . normal)
-                           (shell-mode . insert)
-                           (git-commit-mode . insert)
+(dolist (mode-state-pair '((git-commit-mode . insert)
                            (git-rebase-mode . emacs)
-                           (term-mode . emacs)
-                           (help-mode . emacs)
-                           (helm-grep-mode . emacs)
-                           (grep-mode . emacs)
-                           (bc-menu-mode . emacs)
-                           (rdictcc-buffer-mode . emacs)
-                           (dired-mode . emacs)
-                           (wdired-mode . normal)
-                           (magit-mode . emacs)
-                           (info-mode . emacs)
-                           (woman-mode . emacs)
-                           (man-mode . emacs)))
+                           (helm-grep-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 
