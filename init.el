@@ -220,6 +220,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)
 (global-set-key (kbd "<C-s-down>") 'move-this-line-down)
 
+(define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
+
 ;; Remap C-M-u to account for comments and strings
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
 
