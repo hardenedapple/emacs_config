@@ -15,7 +15,7 @@
 (let
     ((elpa-packages
       '(undo-tree paredit yasnippet key-chord goto-chg elscreen ace-jump-mode
-                  wrap-region magit multiple-cursors expand-region
+                  wrap-region magit multiple-cursors expand-region smex
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround))
      (require-only

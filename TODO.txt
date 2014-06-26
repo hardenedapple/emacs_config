@@ -13,11 +13,13 @@
 * Extras I want:
        Saving session on disk.
               http://www.emacswiki.org/emacs/SessionManagement
-       Completion with small pop-up of options (i.e. like vim)
-       Shortcut to switch to magit in current window.
        Tabs that I can associate buffers to.
             see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
+       Grep all files in a fileset nicely (into *grep* buffer)
+       GrepAdd equivalent.
        Different options depending on filetype (e.g. 125 char wide tex buffers)
+       Shortcut to switch to magit in current window.
+       Completion with small pop-up of options (i.e. like vim)
        Different theme on terminal to window systems - remember server mode.
        Open multiple help files at the same time.
 
@@ -35,6 +37,8 @@
        elisp-slime-nav-mode  - M-. and M-, for elisp
        flymake               - syntax checking
        imenu                 - list functions in buffer (programmable)
+       icicles               - has the buffer grep I want
+                               (multiple buffer occur) and much more
        ido-imenu             - find symbols in buffer and jump to.
        iy-go-to-char         - basically f,F,t,T for emacs.
 
@@ -45,7 +49,6 @@
 ** Plugins to get / understand:
        helm              - fuzzy file finder and more.
        el-get            - an "extra" package manager for emacs packages.
-       smex.el           - ido like M-x
        Org-mode
 
 
