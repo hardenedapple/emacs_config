@@ -7,8 +7,11 @@
         eval-last-sexp
         kill-sexp
         paredit-backward
+        paredit-backward-kill-word
         paredit-forward
         paredit-forward-delete
+        paredit-join-sexps
+        paredit-kill
         paredit-raise-sexp
         paredit-reindent-defun
         slime-space
@@ -16,5 +19,6 @@
 
 (setq mc/cmds-to-run-once
       '(
+        cua-set-rectangle-mark
         transpose-frame
         ))
