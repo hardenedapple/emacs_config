@@ -5,7 +5,11 @@
 (setq mc/cmds-to-run-for-all
       '(
         eval-last-sexp
+        evil-delete
+        evil-delete-line
+        evil-forward-char
         kill-sexp
+        open-line-below
         paredit-backward
         paredit-backward-kill-word
         paredit-forward
