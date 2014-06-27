@@ -158,8 +158,7 @@ Including indent-buffer, which should not be called automatically on save."
   (indent-new-comment-line)
   (transpose-lines 1)
   (forward-line -2)
-  (end-of-line)
-  (indent-for-tab-command))
+  (end-of-line))
 
 
 ;; Move lines around
