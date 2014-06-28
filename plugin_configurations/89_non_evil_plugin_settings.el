@@ -35,6 +35,11 @@
   "wl" 'buf-move-right)
 
 
+;;; Elisp Slime Nav Settings
+;;;
+(dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+        (add-hook hook 'turn-on-elisp-slime-nav-mode))
+
 
 ;;; Elscreen Settings
 ;;;

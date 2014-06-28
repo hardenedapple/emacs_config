@@ -4,12 +4,12 @@
 
 * Check:
        Are slime and paredit shadowing each other a lot?
-       How does elscreen compare to winring and escreen?
 
 * Extras I want:
        Tabs that I can associate buffers to.
             see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
        Grep all files in a fileset nicely (into *grep* buffer)
+       Filter grep and occur lists.
        GrepAdd equivalent.
        Make each namesession create a temporary fileset so I can run commands on it
        Evil surround - deleting surroundings removes everything inside and to
@@ -32,7 +32,6 @@
        cedet                 - bunch of coding tools
        el-get                - an "extra" package manager for emacs packages.
        ecb                   - emacs code browser
-       elisp-slime-nav-mode  - M-. and M-, for elisp
        dired+                - Extra functions for dired
        flymake               - syntax checking
        helm                  - fuzzy file finder and more.
@@ -40,7 +39,6 @@
        icicles               - has the buffer grep I want
                                (multiple buffer occur) and much more
        ido-imenu             - find symbols in buffer and jump to.
-       iy-go-to-char         - basically f,F,t,T for emacs.
        Org-mode
 
        python packagas
