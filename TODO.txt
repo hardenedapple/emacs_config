@@ -4,18 +4,18 @@
 
 * Check:
        Are slime and paredit shadowing each other a lot?
-       Why is ace-jump-mode giving errors with character option?
        How does elscreen compare to winring and escreen?
 
 * Extras I want:
-       Saving session on disk.
-              http://www.emacswiki.org/emacs/SessionManagement
        Tabs that I can associate buffers to.
             see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
        Grep all files in a fileset nicely (into *grep* buffer)
        GrepAdd equivalent.
-       Different options depending on filetype (e.g. 125 char wide tex buffers)
+       Make each namesession create a temporary fileset so I can run commands on it
+       Evil surround - deleting surroundings removes everything inside and to
+              the left of the cursor with it.
        Shortcut to switch to magit in current window.
+                temporarily set same-window-regexps?
        Completion with small pop-up of options (i.e. like vim)
        Different theme on terminal to window systems - remember server mode.
        Open multiple help files at the same time.
