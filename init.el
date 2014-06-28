@@ -22,7 +22,8 @@
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround))
      (require-only
-      '(buffer-move transpose-frame epa-file eldoc evil-elscreen)))
+      '(epa-file eldoc desktop buffer-move transpose-frame evil-elscreen
+                 nameses)))
 
   (let
       ((require-packages
