@@ -169,8 +169,7 @@ Including indent-buffer, which should not be called automatically on save."
   (let ((col (current-column)))
     (forward-line)
     (if numlines
-        (dotimes (nullvar numlines)
-          (transpose-lines 1))
+        (transpose-lines numlines)
       (transpose-lines 1))
     (forward-line -1)
     (move-to-column col)))
@@ -180,9 +179,9 @@ Including indent-buffer, which should not be called automatically on save."
   (let ((col (current-column)))
     (forward-line)
     (if numlines
-        (dotimes (nullvar numlines)
-          (transpose-lines -1))
+        (transpose-lines (- numlines))
       (transpose-lines -1))
+    (forward-line -1)
     (move-to-column col)))
 
 
