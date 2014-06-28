@@ -64,6 +64,11 @@
                   (call-interactively 'self-insert-command))))))
 
 
+;;; Uniquify Settings
+;;;
+(setq uniquify-buffer-name-style 'post-forward)
+
+
 ;;; Windmove Settings
 ;;;
 (windmove-default-keybindings)

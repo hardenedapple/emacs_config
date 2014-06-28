@@ -1,7 +1,5 @@
 elpa/*
 auto-save-list/*
 diary
-*~
-\#*\#
-.\#*
+/nameses-sessions/
 /bookmarks

@@ -11,6 +11,7 @@
        Grep all files in a fileset nicely (into *grep* buffer)
        Filter grep and occur lists.
        GrepAdd equivalent.
+               append-to-buffer
        Make each namesession create a temporary fileset so I can run commands on it
        Evil surround - deleting surroundings removes everything inside and to
               the left of the cursor with it.
@@ -19,6 +20,8 @@
        Completion with small pop-up of options (i.e. like vim)
        Different theme on terminal to window systems - remember server mode.
        Open multiple help files at the same time.
+            C-u C-h to invoke
+            rename-uniquely
 
 * Things to learn:
        How to set prefix keys, especially in evil.
