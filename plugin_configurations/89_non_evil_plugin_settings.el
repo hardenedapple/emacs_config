@@ -8,10 +8,6 @@
 ;;;
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
 
-(defun ace-jump-char-mode ()
-  (interactive)
-  (ace-jump-mode 4))
-
 (key-chord-define-global ";q" 'ace-jump-mode)
 (key-chord-define-global ";j" 'ace-jump-char-mode)
 
