@@ -61,6 +61,11 @@
 (global-set-key [(control ?,)] 'goto-last-change-reverse)
 
 
+;;; Jump Char Settings
+;;;
+(global-set-key (kbd "M-m") 'jump-char-forward)
+(global-set-key (kbd "M-M") 'jump-char-backward)
+
 
 ;;; Key Chord Settings
 ;;;

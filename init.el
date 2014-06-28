@@ -17,10 +17,11 @@
 ;; In a let as I don't like polluting the namespace.
 (let
     ((elpa-packages
-      '(undo-tree paredit yasnippet key-chord goto-chg elscreen ace-jump-mode
-                  wrap-region magit multiple-cursors expand-region smex
-                  window-number evil-leader evil evil-exchange evil-args
-                  evil-surround))
+      '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
+             ace-jump-mode wrap-region magit multiple-cursors expand-region
+             jump-char
+             window-number evil-leader evil evil-exchange evil-args
+             evil-surround))
      (require-only
       '(epa-file eldoc desktop buffer-move transpose-frame evil-elscreen
                  nameses)))
@@ -114,8 +115,8 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;; Functions
 
+;;; Functions
 (defun info-goto-page-in-region (startpt endpt)
   (interactive "r")
   (info (buffer-substring startpt endpt)))
@@ -127,6 +128,13 @@
            (goto-char (elt ppss 8))
            (backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
+
+(defun beginning-of-line-or-indentation ()
+  "Move to the beginning of the line or indentation."
+  (interactive)
+  (if (bolp)
+      (back-to-indentation)
+    (beginning-of-line)))
 
 
 ;; Whitespace and indent
@@ -214,6 +222,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;; Bindings
+
+(global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)

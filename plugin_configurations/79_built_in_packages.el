@@ -15,10 +15,6 @@
 (cua-selection-mode t)
 
 
-;;; Desktop Saving Settings
-;;;
-; want to add a fileset every time I save a session
-
 ;;; Diary Settings
 ;;;
 (setq diary-file "~/.emacs.d/diary")
