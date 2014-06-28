@@ -105,12 +105,11 @@
 ;;; Paredit Settings
 ;;;
 (autoload 'enable-paredit-mode "paredit" "Turn on paredit." t)
-(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
+(dolist (hook '(eval-expression-minibuffer-setup-hook
+               emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
+               lisp-interaction-mode-hook scheme-mode-hook))
+        (add-hook hook #'enable-paredit-mode))
 
 (defun paredit--is-at-start-of-sexp ()
   (and (looking-at "(\\|\\[")
