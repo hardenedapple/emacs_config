@@ -57,7 +57,6 @@
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
 (setq auto-save-default nil)
-(setq-default show-trailing-whitespace t)
 
 (setq backup-directory-alist
       `((".*" . "~/.emacs.d/backup_files/")))
