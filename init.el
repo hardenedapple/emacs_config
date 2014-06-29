@@ -175,22 +175,18 @@ Including indent-buffer, which should not be called automatically on save."
 ;; Move lines around
 
 (defun move-this-line-down (numlines)
-  (interactive "P")
+  (interactive "p")
   (let ((col (current-column)))
     (forward-line)
-    (if numlines
-        (transpose-lines numlines)
-      (transpose-lines 1))
+    (transpose-lines numlines)
     (forward-line -1)
     (move-to-column col)))
 
 (defun move-this-line-up (numlines)
-  (interactive "P")
+  (interactive "p")
   (let ((col (current-column)))
     (forward-line)
-    (if numlines
-        (transpose-lines (- numlines))
-      (transpose-lines -1))
+    (transpose-lines (- numlines))
     (forward-line -1)
     (move-to-column col)))
 
