@@ -151,7 +151,7 @@
      (interactive)
      (window-number-select ,number)))
 
-(dotimes (winnum 6)
+(dotimes (winnum 5)
   (define-key evil-normal-state-map
-    (format "g%d" winnum)
-    (window-number-select-call winnum)))
+    (format "g%d" (1+ winnum))
+    (window-number-select-call (1+ winnum))))
