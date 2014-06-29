@@ -2,22 +2,23 @@
 * Next:
         Make a note of all the keybindings I've set up.
 
-* Check:
-       Are slime and paredit shadowing each other a lot?
-
 * Extras I want:
-       Tabs that I can associate buffers to.
-            see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
        Grep all files in a fileset nicely (into *grep* buffer)
        Filter grep and occur lists.
        GrepAdd equivalent.
                append-to-buffer
-       Make each namesession create a temporary fileset so I can run commands on it
        Evil surround - deleting surroundings removes everything inside and to
               the left of the cursor with it.
        Shortcut to switch to magit in current window.
                 temporarily set same-window-regexps?
        Completion with small pop-up of options (i.e. like vim)
+              look at popup.el
+       Save window configuration for each elscreen tab along with nameses-save
+            Look through the options in Emacs Sessions
+       Make each namesession create a temporary fileset so I can run commands on it
+       Search google/youtube/github for thing under point
+       Tabs that I can associate buffers to.
+            see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
        Different theme on terminal to window systems - remember server mode.
        Open multiple help files at the same time.
             C-u C-h to invoke
@@ -25,10 +26,7 @@
 
 * Things to learn:
        How to set prefix keys, especially in evil.
-       Winner mode            - find out it's capabilities
-       VC mode                - try it out on my work mercurial repo
-       Org mode               - redo this file
-       Buffer menu does more  - (emacs) Several Buffers
+       Org mode               - redo this file as Org-mode
 
 * Plugins
 ** Plugins to check out:
@@ -36,7 +34,8 @@
        el-get                - an "extra" package manager for emacs packages.
        ecb                   - emacs code browser
        dired+                - Extra functions for dired
-       flymake               - syntax checking
+       flymake               - syntax checking (add python, c, and lisp support)
+       projectile            - treats files in git/mercurial repos as seperate
        helm                  - fuzzy file finder and more.
        imenu                 - list functions in buffer (programmable)
        icicles               - has the buffer grep I want
@@ -55,10 +54,8 @@
 
 * Evil mode:
 ** Next
-        Fix evil-elscreen
-            At the moment gt and gT don't cycle
-            This is because the function .../tab-next gets the count 1 when
-                 simply pressing gt, and acts like "go to tab 1"
+       Find out the benefit of evil-define-command
+            Possibly change the evil-unimpaired-newline functions to use it
 
 ** Map paredit mappings into evil normal mode.
        Though not sure it's possible with the <( and >) mappings
