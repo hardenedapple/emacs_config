@@ -77,30 +77,23 @@
 
 ;;; Evil Unimpaired Settings
 ;;;
+;; maybe evil-define-command for these
 (defun evil-unimpaired-newline-below (numlines)
   "Insert a new line below the point without moving it."
-  (interactive "P")
+  (interactive "p")
   (save-excursion
-    (if numlines
-        (progn
-          (end-of-line)
-          (dotimes (nullvar numlines)
-            (newline)))
-      (progn
-        (end-of-line)
+    (progn
+      (end-of-line)
+      (dotimes (nullvar numlines)
         (newline)))))
 
 (defun evil-unimpaired-newline-above (numlines)
   "Insert a new line below the point without moving it."
-  (interactive "P")
+  (interactive "p")
   (let ((save-col (current-column)))
-    (if numlines
-        (progn
-          (beginning-of-line)
-          (dotimes (nullvar numlines)
-            (newline)))
-      (progn
-        (beginning-of-line)
+    (progn
+      (beginning-of-line)
+      (dotimes (nullvar numlines)
         (newline)))
     (move-to-column save-col)))
 
