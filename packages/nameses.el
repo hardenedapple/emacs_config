@@ -21,6 +21,9 @@
 ;; (global-set-key (kbd "C-<f9>")   'nameses-prev)
 ;; (global-set-key (kbd "C-S-<f9>") 'nameses-save)
 
+(defvar nameses-elscreen-name "el-screens"
+  "Where to save the elscreen setup.")
+
 (defvar nameses-dir
   (concat (getenv "HOME") "/.emacs.d/nameses-sessions/")
   "*Directory to save desktop sessions in")
@@ -31,15 +34,39 @@
 (defvar nameses-ido-mode t
   "Whether to use ido-mode")
 
+(defun nameses-elscreen-file (name)
+  (concat (file-name-as-directory (concat nameses-dir name))
+          nameses-elscreen-name))
+
+(defun nameses-setup-screens (name)
+  (let ((elscreen-save-file (nameses-elscreen-file name)))
+    (if (file-readable-p elscreen-save-file)
+        (let ((screens (reverse
+                        (read
+                         (with-temp-buffer
+                           (insert-file-contents elscreen-save-file)
+                           (buffer-string))))))
+          (dolist (screen screens)
+            (setq screen_num (car screen))
+            (setq buffers (split-string (cdr screen) ":"))
+            (if (eq screen_num 0)
+                (switch-to-buffer (car buffers))
+              (elscreen-find-and-goto-by-buffer (car buffers) t t))
+            (setq buffers (cdr buffers))
+            (dolist (buffer buffers)
+              (switch-to-buffer-other-window buffer)))))))
+
 (defun nameses-save (&optional name)
   "Save desktop by name."
   (interactive)
-   (unless name (setq name (read-string "Save session as: ")))
-   (when (nameses-current-name)
-     (desktop-release-lock))
-   (make-directory (concat nameses-dir name) t)
-   (desktop-lazy-complete)               ; Load all buffers before saving
-   (desktop-save (concat nameses-dir name) nil))
+  (unless name (setq name (read-string "Save session as: ")))
+  (when (nameses-current-name)
+    (desktop-release-lock))
+  (make-directory (concat nameses-dir name) t)
+  (desktop-lazy-complete)               ; Load all buffers before saving
+  (if (desktop-save (concat nameses-dir name) nil)
+      (with-temp-file (nameses-elscreen-file name)
+        (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
 
 (defun nameses-prev ()
   "Switch to previous session"
@@ -55,11 +82,11 @@
   (unless (nameses-detect-problems name)
     (when (yes-or-no-p (concat "Really remove session '" name "' ?"))
       (progn
-	(delete-directory (concat nameses-dir name) t)
-	(when (string= nameses-prev-session name)
-	  (setq nameses-prev-session nil))
-	(when (string= (nameses-current-name) name) ; Current session is removed
-	  (setq desktop-dirname nil))))))           ; so reset session name
+        (delete-directory (concat nameses-dir name) t)
+        (when (string= nameses-prev-session name)
+          (setq nameses-prev-session nil))
+        (when (string= (nameses-current-name) name) ; Current session is removed
+          (setq desktop-dirname nil))))))           ; so reset session name
 
 (defun nameses-reset ()
   "Reset session without saving."
@@ -74,30 +101,31 @@
   (catch 'err
     (let ((dirname (file-name-as-directory (concat nameses-dir name))))
       (when (not (file-directory-p dirname))
-	(throw 'err (concat dirname " does not exist")))
+        (throw 'err (concat dirname " does not exist")))
       (when (file-exists-p (concat dirname desktop-base-lock-name))
-	(if (y-or-n-p (concat name " is locked, remove lock?"))
-	    (desktop-release-lock dirname)
-	  (throw 'err (concat name " is locked"))))
+        (if (y-or-n-p (concat name " is locked, remove lock?"))
+            (desktop-release-lock dirname)
+          (throw 'err (concat name " is locked"))))
       (let ((dirfiles (delete "." (delete ".." (directory-files dirname)))))
-	(when (not (equal dirfiles (list desktop-base-file-name)))
-	  (throw 'err (concat dirname " contains extra files")))))))
+        (when (not (equal dirfiles (list desktop-base-file-name nameses-elscreen-name)))
+          (throw 'err (concat dirname " contains extra files")))))))
 
 (defun nameses-load (prefix &optional name)
   "Load session by name. With universal argument, create new session."
   (interactive "P")
   (let ((prev-name (nameses-current-name)))
     (if (equal prefix '(4))
-	(progn
-	  (unless name (setq name (read-string "Create new session: ")))
+        (progn
+          (unless name (setq name (read-string "Create new session: ")))
           (when prev-name (nameses-save prev-name))
-	  (nameses-reset)
-	  (nameses-save name))
+          (nameses-reset)
+          (nameses-save name))
       (progn
-	(unless name (setq name (nameses-select "Load session: ")))
+        (unless name (setq name (nameses-select "Load session: ")))
         (when prev-name (nameses-save prev-name))
-	(nameses-reset)
-	(desktop-read (concat nameses-dir name))))
+        (nameses-reset)
+        (if (desktop-read (concat nameses-dir name))
+            (nameses-setup-screens name))))
     (unless (and nameses-prev-session (string= nameses-prev-session prev-name))
       (setq nameses-prev-session prev-name))))
 
@@ -107,7 +135,7 @@
   (when desktop-dirname
     (let ((dirname (substring desktop-dirname 0 -1))) ; Remove trailing /
       (when (string= (file-name-directory dirname) nameses-dir)
-	(file-name-nondirectory dirname)))))
+        (file-name-nondirectory dirname)))))
 
 (defun nameses-list-all ()
   "Get all stored session names"
