@@ -107,7 +107,9 @@
             (desktop-release-lock dirname)
           (throw 'err (concat name " is locked"))))
       (let ((dirfiles (delete "." (delete ".." (directory-files dirname)))))
-        (when (not (equal dirfiles (list desktop-base-file-name nameses-elscreen-name)))
+        (when (not (or
+                    (equal dirfiles (list desktop-base-file-name nameses-elscreen-name))
+                    (equal dirfiles (list desktop-base-file-name))))
           (throw 'err (concat dirname " contains extra files")))))))
 
 (defun nameses-load (prefix &optional name)
