@@ -24,7 +24,8 @@
              evil-surround))
      (require-only
       '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame evil-elscreen nameses)))
+                 buffer-move transpose-frame evil-elscreen nameses
+                 le-eval-and-insert-results)))
 
   (let
       ((require-packages
