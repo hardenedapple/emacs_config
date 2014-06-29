@@ -1,4 +1,4 @@
-;;; evil-elscreen.el --- evil wrpaaer to use elscreen as tab
+;;; evil-elscreen.el --- evil wrapper to use elscreen as tab
 
 ;; Copyright 2013 Yen-Chin,Lee <coldnew>
 ;;
@@ -53,12 +53,11 @@ If the {file} is nil, create a new tab page with *scratch* buffer, after the cur
 
 (evil-define-command evil-elscreen/tab-find (file)
   "Open a new tab page and edit {file} in 'path', like with :find. "
-  :repear nil
+  :repeat nil
   (interactive "<f>")
   (if file
       (elscreen-find-file file)
-    (message "Error: need argument")
-    ))
+    (message "Error: need argument")))
 
 ;; FIXME: need to add a function that return if command does not exist
 ;;        maybe fix vim:ex-execute-command will do the work
@@ -66,11 +65,11 @@ If the {file} is nil, create a new tab page with *scratch* buffer, after the cur
 ;;   "Execute {cmd} and when it opens a new window open a new tab
 ;;    page instead.  Doesn't work for :diffsplit, :diffpatch,:execute and :normal.
 ;;    Examples: >
-;; 	     :tab split      'opens current buffer in new tab page'"
+;;       :tab split      'opens current buffer in new tab page'"
 ;;   (if text
 ;;       (progn
-;; 	(elscreen-create)
-;; 	(vim:ex-execute-command text))
+;;  (elscreen-create)
+;;  (vim:ex-execute-command text))
 ;;     ;; TODO: If command does not exist, do something
 ;;     ))
 
@@ -118,42 +117,38 @@ If the {file} is nil, create a new tab page with *scratch* buffer, after the cur
 (evil-define-command evil-elscreen/tab-next (&optional count argument)
   ""
   :repeat nil
-  (interactive "p")
+  (interactive "P")
   (if elscreen-display-screen-number
       (progn
-	(if (eq last-command #'evil-beginning-of-line-or-digit-argument)
-	    (setq count 0))
-	(cond
-	 (argument (elscreen-goto (string-to-number argument)))
-	 (count  (elscreen-goto count))
-	 (t (elscreen-next))))
+        (cond
+         (argument (elscreen-goto (string-to-number argument)))
+         (count  (elscreen-goto (1- count)))
+         (t (elscreen-next))))
     ;; If tab does not display number, do the same as vim's :tabnext
     (cond
      (argument (dotimes (dummy (string-to-number argument))
-		 (elscreen-next)))
+                 (elscreen-next)))
      (count (dotimes (dummy count)
-	      (elscreen-next)))
+              (elscreen-next)))
      (t (elscreen-next)))))
 
 
 (evil-define-command evil-elscreen/tab-previous (&optional count argument)
   ""
   :repeat nil
-  (interactive "p")
+  (interactive "P")
   (if elscreen-display-screen-number
       (progn
-	(if (eq last-command #'evil-beginning-of-line-or-digit-argument)
-	    (setq count 0))
-	(cond
-	 (argument (elscreen-goto (string-to-number argument)))
-	 (count (elscreen-goto count))
-	 (t (elscreen-previous))))
+        (cond
+         (argument (elscreen-goto (string-to-number argument)))
+         (count (elscreen-goto (1- count)))
+         (t (elscreen-previous))))
     ;; If tab does not display number, do the same as vim's :tabprevious
     (cond
      (argument (dotimes (dummy (string-to-number argument))
-		 (elscreen-previous)))
+                 (elscreen-previous)))
      (count (dotimes (dummy count)
-	      (elscreen-previous)))
+              (elscreen-previous)))
      (t (elscreen-previous)))))
 
 
