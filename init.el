@@ -134,9 +134,10 @@
 (defun beginning-of-line-or-indentation ()
   "Move to the beginning of the line or indentation."
   (interactive)
-  (if (bolp)
-      (back-to-indentation)
-    (beginning-of-line)))
+  (let ((orig-point (point)))
+    (back-to-indentation)
+   (when (= orig-point (point))
+     (beginning-of-line))))
 
 
 ;; Whitespace and indent
