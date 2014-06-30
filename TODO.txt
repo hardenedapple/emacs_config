@@ -24,6 +24,24 @@
             C-u C-h to invoke
             rename-uniquely
 
+* Check out
+** Stephs emacs config
+*** cjp-library
+         12   - Create a window setup function
+         228  - Find double words
+         305  - wc (count number of words in region)
+         351  - Capitalize title.
+
+*** cjp-settings
+         993 - default-major-mode found by name of file
+                check no problem with evil
+
+*** library-contributed
+        57 - align-repeat
+        44 - fix-horizontal-size
+            ;; Sets current frame or window to width of 80 characters
+            (global-set-key (kbd "C-x W") 'fix-horizontal-size)
+
 * Things to learn:
        How to set prefix keys, especially in evil.
        Org mode               - redo this file as Org-mode
@@ -46,6 +64,8 @@
        python packagas
               elpy
               jedi
+              python-mode
+              ropemacs
 
 
 ** Plugins to look for:
@@ -54,6 +74,8 @@
 
 * Evil mode:
 ** Next
+       Visual mode indentation keeping the visual selection.
+       C-6 switch to previous buffer in current window
        Find out the benefit of evil-define-command
             Possibly change the evil-unimpaired-newline functions to use it
 
@@ -70,7 +92,6 @@
             ge  - Move WORD
 
 ** Porting my vimrc
-          Visual mode indentation keeping the visual selection.
           Port unimpaired (or at least the part I use often)
           Get submodes (like submode.vim)
              evil-define-state
