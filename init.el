@@ -16,12 +16,15 @@
 
 ;; In a let as I don't like polluting the namespace.
 (let
-    ((elpa-packages
+    ((download-only '(zenburn-theme tangotango-theme))
+
+     (elpa-packages
       '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
              ace-jump-mode wrap-region magit multiple-cursors expand-region
              elisp-slime-nav jump-char
              window-number evil-leader evil evil-exchange evil-args
              evil-surround))
+
      (require-only
       '(epa-file eldoc desktop uniquify
                  buffer-move transpose-frame evil-elscreen nameses
@@ -32,7 +35,7 @@
         (append require-only elpa-packages)))
 
     ;; Install packages, require packages
-    (dolist (p elpa-packages)
+    (dolist (p (append download-only elpa-packages))
       (when (not (package-installed-p p))
         (package-install p)))
 
@@ -58,6 +61,7 @@
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
 (setq auto-save-default t)
+(setq auto-save-interval 500)
 
 (setq backup-directory-alist
       `((".*" . "~/.emacs.d/backups/"))
