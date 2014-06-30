@@ -1,5 +1,6 @@
 * Next:
   Make a note of all the keybindings I've set up.
+  [[info:org#Tracking%20TODO%20state%20changes][Continue reading Org manual]]
 
 * I want:
   1) Grep all files in a fileset nicely (into *grep* buffer)
@@ -26,22 +27,20 @@
 * Check out:
 ** Stephs emacs config
 *** cjp-library
-    12   - Create a window setup function
-    228  - Find double words
-    305  - wc (count number of words in region)
-    351  - Capitalize title.
+    + [[file:stephs_emacs/lisp/cjp-library.el::12][Create a window setup function]]
+    + [[file:stephs_emacs/lisp/ibrary.el:228][Find double words]]
+    + [[file:stephs_emacs/lisp/ibrary.el::305][wc (count number of words in region)]]
+    + [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
 
 *** cjp-settings
-    993 - default-major-mode found by name of file
+    [[file:stephs_emacs/lisp/cjp-settings.el:993][default-major-mode found by name of file]]
         check no problem with evil
 
 *** library-contributed
-    + 57 - align-repeat
-    + 44 - fix-horizontal-size
-        :THOUGHTS:
-        ;; Sets current frame or window to width of 80 characters
-        (global-set-key (kbd "C-x W") 'fix-horizontal-size)
-        :END:
+    + [[file:stephs_emacs/lisp/library-contributed.el::57][align-repeat]]
+    + [[file:stephs_emacs/lisp/library-contributed.el::44][fix-horizontal-size]]
+    ;; Sets current frame or window to width of 80 characters
+    (global-set-key (kbd "C-x W") 'fix-horizontal-size)
 
 * Things to learn:
   Learn all about navigating info files.
