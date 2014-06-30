@@ -1,7 +1,7 @@
 ;; Set up packages and load configurations.
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
+(setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
@@ -57,12 +57,13 @@
 (setq inhibit-startup-message t)
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
-(setq auto-save-default nil)
+(setq auto-save-default t)
 
 (setq backup-directory-alist
-      `((".*" . "~/.emacs.d/backup_files/")))
+      `((".*" . "~/.emacs.d/backups/"))
+      backup-by-copying-when-linked t)
 (setq auto-save-file-name-transforms
-      `((".*" "~/.emacs.d/backup_files/" t)))
+      `((".*" "~/.emacs.d/autosaves/" t)))
 
 ;; Add line numbers to buffer and show column number in status line
 (global-linum-mode t)
@@ -84,7 +85,6 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-
 ;; Enable some useful commands disabled by default
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -95,28 +95,17 @@
 (setq split-height-threshold 27)
 (setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
 
-;; C mode specific things.
-(setq c-default-style "linux"
-      c-basic-offset 4)
-(c-set-offset 'case-label '+)
+;; CamelCase word motion
+(global-subword-mode 1)
+(mouse-avoidance-mode 'banish)
 
-(setq inferior-lisp-program "/usr/bin/sbcl")
+;;; Replace yes/no by y/n
+(fset 'yes-or-no-p 'y-or-n-p)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- ;; '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
- '(ibuffer-saved-filter-groups (quote (("Split by files" ("with files" (filename . ".*"))))))
- '(ibuffer-saved-filters (quote (("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode))))))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(setq compilation-window-height 10)
 
+(setq custom-file "~/.emacs.d/customize.el")
+(load custom-file)
 
 ;;; Functions
 (defun info-goto-page-in-region (startpt endpt)

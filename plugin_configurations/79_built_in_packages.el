@@ -14,7 +14,6 @@
 (transient-mark-mode 1)
 (cua-selection-mode t)
 
-
 ;;; Diary Settings
 ;;;
 (setq diary-file "~/.emacs.d/diary")
@@ -49,8 +48,16 @@
 
 ;;; Ido Settings
 ;;;
+(ido-everywhere 1)
+(setq ido-save-directory-list-file "~/.emacs.d/ido.last")
 (ido-mode t)
-(setq ido-enable-flex-matching t)
+(setq ido-everywhere t
+      ido-enable-flex-matching t)
+
+;;; Choose extensions to inore
+;; (setq completion-ignored-extensions
+;;       (cons ".jpg" completion-ignored-extensions))
+
 
 (add-hook 'ido-setup-hook
           (lambda ()

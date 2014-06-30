@@ -157,6 +157,13 @@
             (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)))
 (setq slime-autodoc-use-multiline-p t)
 
+; Stop SLIME's REPL from grabbing DEL (keep balanced paranthesis)
+(defun override-slime-repl-bindings-with-paredit ()
+  (define-key slime-repl-mode-map
+    (read-kbd-macro paredit-backward-delete-key) nil))
+(add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+
+
 
 ;;; Smex Settings
 ;;;
