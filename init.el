@@ -216,8 +216,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; Bindings
 
 ;; Swap these round from usual; I find it more logical
-(define-key ctl-x-4-map "+" 'what-cursor-position)
-(define-key ctl-x-4-map "=" 'balance-windows)
+(define-key ctl-x-map "+" 'what-cursor-position)
+(define-key ctl-x-map "=" 'balance-windows)
 
 ;; Match vim dispatch binding
 (global-set-key (kbd "<f10>") 'compile)
