@@ -17,8 +17,7 @@
   8) Look through the options in Emacs Sessions
   9) Make each namesession create a temporary fileset so I can run commands on it
   10) Search google/youtube/github for thing under point
-  11) Tabs that I can associate buffers to.
-      + see http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists
+  11) [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][Tabs that I can associate buffers to.]]
   12) Different theme on terminal to window systems - remember server mode.
   13) Open multiple help files at the same time.
       + C-u C-h to invoke
@@ -51,17 +50,16 @@
 
 * Plugins:
 ** Plugins to check out:
-       + cedet             :: bunch of coding tools
-       + el-get            :: an "extra" package manager for emacs packages.
-       + ecb               :: emacs code browser
-       + dired+            :: Extra functions for dired
-       + flymake           :: syntax checking (add python, c, and lisp support)
-       + projectile        :: treats files in git/mercurial repos as seperate
-       + imenu             :: list functions in buffer (programmable)
-       + helm              :: fuzzy file finder and more.
-       + icicles           :: has the buffer grep I want
-                           :: (multiple buffer occur) and much more
-       + ido-imenu         :: find symbols in buffer and jump to.
+       + cedet        :: bunch of coding tools
+       + el-get       :: an "extra" package manager for emacs packages.
+       + ecb          :: emacs code browser
+       + dired+       :: Extra functions for dired
+       + flymake      :: syntax checking (add python, c, and lisp support)
+       + projectile   :: treats files in git/mercurial repos as seperate
+       + imenu        :: list functions in buffer (programmable)
+       + helm         :: fuzzy file finder and more.
+       + icicles      :: has the buffer grep I want and much more
+       + ido-imenu    :: find symbols in buffer and jump to.
        + python packagas
          - elpy
          - jedi
@@ -69,7 +67,7 @@
          - ropemacs
 
 ** Plugins to look for:
-       folding          - Need this quite badly.
+       + folding      :: Need this quite badly.
 
 * Evil mode:
 ** Next
