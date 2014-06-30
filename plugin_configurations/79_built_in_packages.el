@@ -71,6 +71,13 @@
                   (call-interactively 'self-insert-command))))))
 
 
+;;; Org Mode Settings
+;;;
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+;;;(setq org-drawers (cons "THOUGHTS" org-drawers))
+
+
 ;;; Uniquify Settings
 ;;;
 (setq uniquify-buffer-name-style 'post-forward)
