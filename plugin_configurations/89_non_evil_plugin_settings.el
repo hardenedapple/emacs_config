@@ -70,6 +70,14 @@
 (global-set-key (kbd "C-+") 'er/contract-region)
 
 
+;;; Jedi Settings
+;;;
+(setq jedi:use-shortcuts t)
+(add-hook 'python-mode-hook 'jedi:setup)
+;; See [[http://tkf.github.io/emacs-jedi/latest/][jedi docs]] for setting
+;; python2
+
+
 ;;; Multiple Cursors Settings
 ;;;
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -160,6 +168,17 @@
  'paredit-backward-delete
  'paredit-close-round)
 
+
+;;; Python mode Settings
+;;;
+(when (featurep 'python) (unload-feature 'python t))
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(setq
+ py-set-fill-column-p t
+ py-electric-colon-active t)
+(setq-default
+ py-shell-name "ipython"
+ py-sexp-function 'py-expression)
 
 ;;; Slime Settings
 ;;;
