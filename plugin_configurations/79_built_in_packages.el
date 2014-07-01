@@ -1,4 +1,3 @@
-
 ;;; Calendar Settings
 ;;;
 (setq calendar-week-start-day 1)
@@ -82,7 +81,10 @@
 ;;;
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
-;;;(setq org-drawers (cons "THOUGHTS" org-drawers))
+(global-set-key (kbd "C-c L") 'org-insert-link-global)
+(global-set-key (kbd "C-c o") 'org-open-at-point-global)
+;; (setq org-drawers (cons "THOUGHTS" org-drawers))
+(setq org-hide-block-startup t)
 
 
 ;;; Uniquify Settings
