@@ -27,7 +27,7 @@
 
      (require-only
       '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame evil-elscreen nameses
+                 buffer-move transpose-frame evil-elscreen nameses idomenu
                  le-eval-and-insert-results)))
 
   (let
@@ -36,7 +36,7 @@
 
     ;; Install packages, require packages
     (dolist (p (append download-only elpa-packages))
-      (when (not (package-installed-p p))
+      (unless (package-installed-p p)
         (package-install p)))
 
     (dolist (p require-packages)
