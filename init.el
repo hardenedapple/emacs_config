@@ -52,64 +52,59 @@
   (load conf-file))
 
 
-;; Settings always run regardless of extra plugins.
-;; Have loaded the extra plugins and done all configurations for the extras.
-;; Now I do general settings.
+;;;; Settings always run regardless of extra plugins.
+;;;; Have loaded the extra plugins and done all configurations for the extras.
+;;;; Now I do general settings.
 
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+;;; User Interface
+;;;
 (setq inhibit-startup-message t)
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
+(setq column-number-mode t)
+(mouse-avoidance-mode 'banish)
+(global-linum-mode t)
+(show-paren-mode 1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
+
+;;; Auto Save / Backups
+;;;
 (setq auto-save-default t)
 (setq auto-save-interval 500)
 
+
+;;; Set the files to use
+;;;
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
+(setq custom-file "~/.emacs.d/customize.el")
 (setq backup-directory-alist
       `((".*" . "~/.emacs.d/backups/"))
       backup-by-copying-when-linked t)
 (setq auto-save-file-name-transforms
       `((".*" "~/.emacs.d/autosaves/" t)))
 
-;; Add line numbers to buffer and show column number in status line
-(global-linum-mode t)
-(setq column-number-mode t)
+(load custom-file)
 
-;; Highlight matching brackets
-(show-paren-mode 1)
 
-;; Automatically break long lines
-;; use spaces instead of tabs
-(setq-default auto-fill-function 'do-auto-fill)
-(setq-default fill-column 80)
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
-
-;; remove scrollbar, menubar, and toolbar in gui
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-
-;; Enable some useful commands disabled by default
+;;; Enable commands
+;;;
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 
-;; Make it more likely that split-window-sensibly will split vertically
-(setq split-height-threshold 27)
-(setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
 
-;; CamelCase word motion
+;;; CamelCase word motion
+;;;
 (global-subword-mode 1)
-(mouse-avoidance-mode 'banish)
+
 
 ;;; Replace yes/no by y/n
+;;;
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(setq compilation-window-height 10)
-
-(setq custom-file "~/.emacs.d/customize.el")
-(load custom-file)
 
 
 ;;; Set Major Mode on filename
@@ -137,7 +132,7 @@
                 (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
 
-;;; Window Shape
+;;; Window Layout
 ;;;
 (define-key ctl-x-map "+" 'what-cursor-position)
 (define-key ctl-x-map "=" 'balance-windows)
@@ -149,6 +144,12 @@
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
+
+;; Make it more likely that split-window-sensibly will split vertically
+(setq split-height-threshold 27)
+(setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
+
+(setq compilation-window-height 10)
 
 
 ;;; Redefining sexp motion
@@ -179,6 +180,14 @@
 
 ;;; Whitespace and indent
 ;;;
+;; Automatically break long lines
+;; use spaces instead of tabs
+(setq-default auto-fill-function 'do-auto-fill)
+(setq-default indent-tabs-mode nil)
+(setq-default fill-column 80)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
+
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
@@ -244,7 +253,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
 
-;; File Handling
+;;; File Handling
+;;;
 (defun remove-buffer-and-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
@@ -279,17 +289,18 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "<C-f10>") 'recompile)
 
 
-;;; Move more quickly
-;;;
-(global-set-key (kbd "C-S-n") (lambda () (interactive)
-                                (ignore-errors (next-line 5))))
-
 ;;; Scrolling
 ;;;
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'cua-scroll-up)
 (global-set-key (kbd "M-S-v") 'cua-scroll-down)
+
+
+;;; Move more quickly
+;;;
+(global-set-key (kbd "C-S-n") (lambda () (interactive)
+                                (ignore-errors (next-line 5))))
 
 ;;; Remaps for Dvorak keyboard
 ;; This would be C-S-p if not dvorak
