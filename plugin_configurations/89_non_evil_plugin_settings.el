@@ -129,8 +129,6 @@
 
 ;;; Paredit Settings
 ;;;
-(autoload 'enable-paredit-mode "paredit" "Turn on paredit." t)
-
 (dolist (hook '(eval-expression-minibuffer-setup-hook
                emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
                lisp-interaction-mode-hook scheme-mode-hook))
