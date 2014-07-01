@@ -111,6 +111,15 @@
 (setq custom-file "~/.emacs.d/customize.el")
 (load custom-file)
 
+
+;;; Set Major Mode on filename
+;;;
+; Lies to set-auto-mode function so it sets major mode based on buffer name
+(setq default-major-mode (lambda ()
+     (let ((buffer-file-name (or buffer-file-name (buffer-name))))
+          (set-auto-mode))))
+
+
 ;;; Info
 ;;;
 (defun info-goto-page-in-region (startpt endpt)
