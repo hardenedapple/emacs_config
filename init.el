@@ -16,7 +16,7 @@
 
 ;; In a let as I don't like polluting the namespace.
 (let
-    ((download-only '(zenburn-theme tangotango-theme))
+    ((download-only '(zenburn-theme tangotango-theme pos-tip auto-complete))
 
      (elpa-packages
       '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
@@ -241,7 +241,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
 ;; Move more quickly
-(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
+(global-set-key (kbd "C-S-n") (lambda () (interactive)
+                                (ignore-errors (next-line 5))))
 
 ;; Scrolling
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
@@ -251,12 +252,15 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; Remaps for Dvorak keyboard
 ;; This would be C-S-p if not dvorak
-(global-set-key (kbd "C-S-h") (lambda () (interactive) (ignore-errors (previous-line 5))))
+(global-set-key (kbd "C-S-h") (lambda () (interactive)
+                                (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-;") ctl-x-map)
+
 (keyboard-translate ?\C-h ?\C-p)
 (keyboard-translate ?\C-p ?\C-h)
 (keyboard-translate ?\C-z ?\C-x)
 (keyboard-translate ?\C-x ?\C-z)
+
 (add-hook 'after-make-frame-functions
           (lambda (f) (with-selected-frame f
                         (keyboard-translate ?\C-h ?\C-p)

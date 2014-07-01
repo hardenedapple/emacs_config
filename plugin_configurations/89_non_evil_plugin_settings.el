@@ -4,6 +4,7 @@
 (wrap-region-global-mode t)
 (add-to-list 'wrap-region-except-modes 'paredit-mode)
 
+
 ;;; Ace jump Mode Settings
 ;;;
 (global-set-key (kbd "C-c SPC") 'ace-jump-mode)
@@ -18,6 +19,22 @@
 (evil-leader/set-key
   "mw" 'evil-ace-jump-word-mode
   "mc" 'evil-ace-jump-char-mode)
+
+
+;;; Auto complete Settings
+;;;
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories
+             "~/.emacs.d/elpa/auto-complete-20140618.2217/dict")
+(ac-config-default)
+
+;; C-n and C-p to choose options
+(setq ac-use-menu-map t)
+(define-key ac-menu-map (kbd "C-n") 'ac-next)
+(define-key ac-menu-map (kbd "C-p") 'ac-previous)
+;; Only complete when I ask you to
+(setq ac-auto-start nil)
+(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 
 
 ;;; Buffer Move Settings

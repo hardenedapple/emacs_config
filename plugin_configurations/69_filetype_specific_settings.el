@@ -4,12 +4,6 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
-;;; Elisp Settings
-;;;
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (turn-on-eldoc-mode)))
-
 ;;; Latex Settings
 ;;;
 (add-hook 'latex-mode-hook

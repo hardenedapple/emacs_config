@@ -26,6 +26,14 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 
+;;; Eldoc Settings
+;;;
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'python-mode-hook 'turn-on-eldoc-mode)
+
+
 ;;; Filesets Settings
 ;;;
 (filesets-init)
@@ -38,7 +46,7 @@
 
 ; Note can run any command on all files in a set once command is in the variable
 ; "filesets_commands"
-; http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands
+; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][source]]
 
 
 ;;; List Buffer Settings
