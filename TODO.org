@@ -1,6 +1,8 @@
-* Next:
+* To Document:
   Make a note of all the keybindings I've set up.
-  [[info:org#Tracking%20TODO%20state%20changes][Continue reading Org manual]]
+
+* To Fix:
+  Figure out why flymake in python-mode isn't doing anything
 
 * I want:
   1) Grep all files in a fileset nicely (into *grep* buffer)
@@ -11,16 +13,13 @@
      + the left of the cursor with it.
   5) Shortcut to switch to magit in current window.
      + temporarily set same-window-regexps?
-  6) Completion with small pop-up of options (i.e. like vim)
-     + popup.el
-     + autocomplete
-  7) Save window configuration for each elscreen tab along with nameses-save
-  8) Look through the options in Emacs Sessions
-  9) Make each namesession create a temporary fileset so I can run commands on it
-  10) Search google/youtube/github for thing under point
-  11) [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][Tabs that I can associate buffers to.]]
-  12) Different theme on terminal to window systems - remember server mode.
-  13) Open multiple help files at the same time.
+  6) Save window configuration for each elscreen tab along with nameses-save
+  7) Look through the options in Emacs Sessions
+  8) Make each namesession create a temporary fileset so I can run commands on it
+  9) Search google/youtube/github for thing under point
+  10) [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][Tabs that I can associate buffers to.]]
+  11) Different theme on terminal to window systems - remember server mode.
+  12) Open multiple help files at the same time.
       + C-u C-h to invoke
       + rename-uniquely
 
@@ -28,42 +27,25 @@
 ** Stephs emacs config
 *** cjp-library
     + [[file:stephs_emacs/lisp/cjp-library.el::12][Create a window setup function]]
-    + [[file:stephs_emacs/lisp/ibrary.el:228][Find double words]]
-    + [[file:stephs_emacs/lisp/ibrary.el::305][wc (count number of words in region)]]
+    + [[file:stephs_emacs/lisp/cjp-library.el::228][Find double words]]
+    + [[file:stephs_emacs/lisp/cjp-library.el::305][wc (count number of words in region)]]
     + [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
 
-*** cjp-settings
-    [[file:stephs_emacs/lisp/cjp-settings.el:993][default-major-mode found by name of file]]
-        check no problem with evil
-
-*** library-contributed
-    + [[file:stephs_emacs/lisp/library-contributed.el::57][align-repeat]]
-    + [[file:stephs_emacs/lisp/library-contributed.el::44][fix-horizontal-size]]
-    ;; Sets current frame or window to width of 80 characters
-    (global-set-key (kbd "C-x W") 'fix-horizontal-size)
-
 * Things to learn:
+  [[info:org#Tracking%20your%20habits][Continue reading Org manual]]
   Learn all about navigating info files.
+  EDE (hopefully help with Makefiles)
   How to set prefix keys, especially in evil.
-  Org mode               - redo this file as Org-mode
 
 * Plugins:
 ** Plugins to check out:
-       + cedet        :: bunch of coding tools
        + el-get       :: an "extra" package manager for emacs packages.
        + ecb          :: emacs code browser
        + dired+       :: Extra functions for dired
-       + flymake      :: syntax checking (add python, c, and lisp support)
+       + direx        :: Tree viewer - can be used for viewing tree of code
        + projectile   :: treats files in git/mercurial repos as seperate
-       + imenu        :: list functions in buffer (programmable)
        + helm         :: fuzzy file finder and more.
        + icicles      :: has the buffer grep I want and much more
-       + ido-imenu    :: find symbols in buffer and jump to.
-       + python packagas
-         - elpy
-         - jedi
-         - python-mode
-         - ropemacs
 
 ** Plugins to look for:
        + folding      :: Need this quite badly.
