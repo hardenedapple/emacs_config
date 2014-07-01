@@ -4,12 +4,19 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-sexp
+        cua-delete-region
+        dabbrev-expand
         eval-last-sexp
         evil-delete
         evil-delete-line
         evil-forward-char
         kill-sexp
         open-line-below
+        org-delete-char
+        org-end-of-line
+        org-self-insert-command
+        org-yank
         paredit-backward
         paredit-backward-kill-word
         paredit-forward
