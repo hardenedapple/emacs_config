@@ -111,11 +111,39 @@
 (setq custom-file "~/.emacs.d/customize.el")
 (load custom-file)
 
-;;; Functions
+;;; Info
+;;;
 (defun info-goto-page-in-region (startpt endpt)
   (interactive "r")
   (info (buffer-substring startpt endpt)))
 
+
+;;; Align
+;;;
+(defun align-repeat (start end regexp)
+  "repeat alignment with respect to
+     the given regular expression"
+  (interactive "r\nsAlign regexp: ")
+  (align-regexp start end
+                (concat "\\(\\s-*\\)" regexp) 1 1 t))
+
+
+;;; Window Shape
+;;;
+(define-key ctl-x-map "+" 'what-cursor-position)
+(define-key ctl-x-map "=" 'balance-windows)
+
+(defun fix-window-horizontal-size ()
+  "Set the window's size to 80 (or prefix arg WIDTH) columns wide."
+  (interactive)
+  (enlarge-window (- 82 (window-width)) 'horizontal))
+
+(define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
+(define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
+
+
+;;; Redefining sexp motion
+;;;
 (defun backward-up-sexp (arg)
   (interactive "p")
   (let ((ppss (syntax-ppss)))
@@ -124,16 +152,24 @@
            (backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
 
+(global-set-key [remap backward-up-list] 'backward-up-sexp)
+
+
+;;; Indentation Motion
+;;;
 (defun beginning-of-line-or-indentation ()
   "Move to the beginning of the line or indentation."
   (interactive)
   (let ((orig-point (point)))
     (back-to-indentation)
-   (when (= orig-point (point))
-     (beginning-of-line))))
+    (when (= orig-point (point))
+      (beginning-of-line))))
+
+(global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
 
 
-;; Whitespace and indent
+;;; Whitespace and indent
+;;;
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
@@ -150,8 +186,14 @@ Including indent-buffer, which should not be called automatically on save."
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
 
+(global-set-key (kbd "C-c w") 'cleanup-buffer)
+(add-hook 'before-save-hook 'cleanup-buffer-safe)
 
-;; New line functions
+
+;;; Lines
+;;;
+
+;; New lines
 (defun open-line-below ()
   (interactive)
   (end-of-line)
@@ -165,9 +207,11 @@ Including indent-buffer, which should not be called automatically on save."
   (forward-line -2)
   (end-of-line))
 
+(global-set-key (kbd "C-o") 'open-line-below)
+(global-set-key (kbd "C-S-o") 'open-line-above)
+
 
 ;; Move lines around
-
 (defun move-this-line-down (numlines)
   (interactive "p")
   (let ((col (current-column)))
@@ -183,6 +227,12 @@ Including indent-buffer, which should not be called automatically on save."
     (transpose-lines (- numlines))
     (forward-line -1)
     (move-to-column col)))
+
+(global-set-key (kbd "<C-s-up>") 'move-this-line-up)
+(global-set-key (kbd "<C-s-down>") 'move-this-line-down)
+
+(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
+(global-set-key (kbd "RET") 'indent-new-comment-line)
 
 
 ;; File Handling
@@ -213,38 +263,20 @@ Including indent-buffer, which should not be called automatically on save."
       (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name)))))
 
 
-;; Bindings
 
-;; Swap these round from usual; I find it more logical
-(define-key ctl-x-map "+" 'what-cursor-position)
-(define-key ctl-x-map "=" 'balance-windows)
-
-;; Match vim dispatch binding
+;;; Compile Shortcut
+;;;
 (global-set-key (kbd "<f10>") 'compile)
 (global-set-key (kbd "<C-f10>") 'recompile)
 
-;; My functions
-(global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
-(global-set-key (kbd "C-c w") 'cleanup-buffer)
 
-(global-set-key (kbd "<C-s-up>") 'move-this-line-up)
-(global-set-key (kbd "<C-s-down>") 'move-this-line-down)
-
-(global-set-key [remap backward-up-list] 'backward-up-sexp)
-
-;; Lines
-(global-set-key (kbd "C-o") 'open-line-below)
-(global-set-key (kbd "C-S-o") 'open-line-above)
-(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-(global-set-key (kbd "RET") 'indent-new-comment-line)
-
-(define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
-
-;; Move more quickly
+;;; Move more quickly
+;;;
 (global-set-key (kbd "C-S-n") (lambda () (interactive)
                                 (ignore-errors (next-line 5))))
 
-;; Scrolling
+;;; Scrolling
+;;;
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'cua-scroll-up)
@@ -267,7 +299,3 @@ Including indent-buffer, which should not be called automatically on save."
                         (keyboard-translate ?\C-p ?\C-h)
                         (keyboard-translate ?\C-z ?\C-x)
                         (keyboard-translate ?\C-x ?\C-z))))
-
-;;; Hooks
-;; Various superfluous white-space.
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
