@@ -21,7 +21,7 @@
      (elpa-packages
       '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
              ace-jump-mode wrap-region magit multiple-cursors expand-region
-             elisp-slime-nav jump-char popup python-mode jedi
+             elisp-slime-nav jump-char python-mode jedi monky
              window-number evil-leader evil evil-exchange evil-args
              evil-surround))
 
