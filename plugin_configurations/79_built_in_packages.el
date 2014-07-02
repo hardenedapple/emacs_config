@@ -13,6 +13,7 @@
 (transient-mark-mode 1)
 (cua-selection-mode t)
 
+
 ;;; Diary Settings
 ;;;
 (setq diary-file "~/.emacs.d/diary")
@@ -83,6 +84,7 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c L") 'org-insert-link-global)
 (global-set-key (kbd "C-c o") 'org-open-at-point-global)
+(global-set-key (kbd "C-c l") 'org-store-link)
 ;; (setq org-drawers (cons "THOUGHTS" org-drawers))
 (setq org-hide-block-startup t)
 
