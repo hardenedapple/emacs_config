@@ -32,7 +32,7 @@
     + [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
 
 * Things to learn:
-  [[info:org#Tracking%20your%20habits][Continue reading Org manual]]
+  [[info:org#Column%20view][Continue reading Org manual]]
   Learn all about navigating info files.
   EDE (hopefully help with Makefiles)
   How to set prefix keys, especially in evil.
@@ -53,7 +53,6 @@
 * Evil mode:
 ** Next
    Visual mode indentation keeping the visual selection.
-   C-6 switch to previous buffer in current window
    Find out the benefit of evil-define-command
    Possibly change the evil-unimpaired-newline functions to use it
 

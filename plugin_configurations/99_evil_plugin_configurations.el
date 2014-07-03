@@ -40,6 +40,13 @@
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
+;; C-6 go to previous buffer
+(defun switch-to-last-seen-buffer ()
+  "Switch to last open buffer."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+(define-key evil-motion-state-map (kbd "C-6") 'switch-to-last-seen-buffer)
 ; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
 (define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
