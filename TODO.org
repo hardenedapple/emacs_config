@@ -25,14 +25,29 @@
 
 * Check out:
 ** Stephs emacs config
+
 *** cjp-library
     + [[file:stephs_emacs/lisp/cjp-library.el::12][Create a window setup function]]
     + [[file:stephs_emacs/lisp/cjp-library.el::228][Find double words]]
     + [[file:stephs_emacs/lisp/cjp-library.el::305][wc (count number of words in region)]]
     + [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
 
+*** Packages to check out
+
+**** flymake cursor
+     Puts the error message in the minibuffer when point is on an error
+     Apparently usually have to mouse over.
+     Must check if that's built in by now.
+
+**** pydoc info
+     Browse python documentation in info buffers
+
+**** Sunrise Commander
+     Midnight commander clone inside emacs.
+
 * Things to learn:
   [[info:org#Column%20view][Continue reading Org manual]]
+  Read about the re-builder.
   Learn all about navigating info files.
   EDE (hopefully help with Makefiles)
   How to set prefix keys, especially in evil.
@@ -48,11 +63,10 @@
        + icicles      :: has the buffer grep I want and much more
 
 ** Plugins to look for:
-       + folding      :: Need this quite badly.
+       + folding      :: Must be automatic for code.
 
 * Evil mode:
 ** Next
-   Visual mode indentation keeping the visual selection.
    Find out the benefit of evil-define-command
    Possibly change the evil-unimpaired-newline functions to use it
 

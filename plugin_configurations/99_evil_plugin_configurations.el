@@ -47,6 +47,24 @@
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 (define-key evil-motion-state-map (kbd "C-6") 'switch-to-last-seen-buffer)
+
+
+;; indent keeping selection
+(defun indent-keeping-selection (beg end)
+  "Using > or < in visual mode indents and keeps selection at the same time"
+  (interactive "r")
+  (let (deactivate-mark)
+    (evil-shift-right beg end)))
+
+(defun dedent-keeping-selection (beg end)
+  "Using > or < in visual mode indents and keeps selection at the same time"
+  (interactive "r")
+  (let (deactivate-mark)
+    (evil-shift-left beg end)))
+
+(define-key evil-visual-state-map ">" 'indent-keeping-selection)
+(define-key evil-visual-state-map "<" 'dedent-keeping-selection)
+
 ; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
 (define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
@@ -159,6 +177,6 @@
      (window-number-select ,number)))
 
 (dotimes (winnum 5)
-  (define-key evil-normal-state-map
+  (define-key evil-motion-state-map
     (format "g%d" (1+ winnum))
     (window-number-select-call (1+ winnum))))
