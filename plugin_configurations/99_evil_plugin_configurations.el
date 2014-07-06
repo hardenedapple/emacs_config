@@ -157,6 +157,25 @@
 (evil-exchange-install)
 
 
+;;; Evil Numbers Settings
+;;;
+(evil-leader/set-key
+  "nu" 'evil-numbers/inc-at-pt
+  "nd" 'evil-numbers/dec-at-pt)
+
+
+;;; Evil Nerd Commenter Settings
+;;;
+;; WANT
+;; gcd - comment and copy
+;; gci - invert comment status
+;;
+;; This doesn't work - gc is a non prefix key
+;; (define-key evil-normal-state-map "gcd" 'evilnc-copy-and-comment-lines)
+;; (define-key evil-normal-state-map "gci"
+;; 'evilnc-toggle-invert-comment-line-by-line)
+
+
 ;;; Evil Surround Settings
 ;;;
 (global-evil-surround-mode 1)

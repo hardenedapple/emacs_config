@@ -46,7 +46,8 @@
      Midnight commander clone inside emacs.
 
 * Things to learn:
-  [[info:org#Column%20view][Continue reading Org manual]]
+  [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
+  Read about the calc package.
   Read about the re-builder.
   Learn all about navigating info files.
   EDE (hopefully help with Makefiles)
@@ -64,9 +65,14 @@
 
 ** Plugins to look for:
        + folding      :: Must be automatic for code.
+            hs-minor-mode
+            fold-dwim
+            global-semantic-folding-mode
+            outline-minor-mode
 
 * Evil mode:
 ** Next
+   Make the evil-nerd-commenter mappings all with gc<key>
    Find out the benefit of evil-define-command
    Possibly change the evil-unimpaired-newline functions to use it
 

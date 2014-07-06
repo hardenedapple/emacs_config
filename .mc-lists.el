@@ -5,6 +5,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         backward-sexp
+        cua-cut-region
         cua-delete-region
         dabbrev-expand
         eval-last-sexp

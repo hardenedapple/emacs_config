@@ -1,61 +1,3 @@
-;; Set up packages and load configurations.
-(require 'package)
-(setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")))
-(package-initialize)
-
-;; I keep single file packages in this directory
-(add-to-list 'load-path "~/.emacs.d/packages/")
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-;; Have to have this set before requiring evil
-(setq evil-toggle-key "C-c C-z")
-
-;; In a let as I don't like polluting the namespace.
-(let
-    ((download-only '(zenburn-theme tangotango-theme pos-tip auto-complete))
-
-     (elpa-packages
-      '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
-             ace-jump-mode wrap-region magit multiple-cursors expand-region
-             elisp-slime-nav jump-char python-mode jedi monky
-             window-number evil-leader evil evil-exchange evil-args
-             evil-surround))
-
-     (require-only
-      '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame evil-elscreen nameses idomenu
-                 le-eval-and-insert-results)))
-
-  (let
-      ((require-packages
-        (append require-only elpa-packages)))
-
-    ;; Install packages, require packages
-    (dolist (p (append download-only elpa-packages))
-      (unless (package-installed-p p)
-        (package-install p)))
-
-    (dolist (p require-packages)
-      (require p))))
-
-;; Load all files in the directory plugin_configurations
-;; Name of file denotes order it's loaded in.
-;; Note order matters in two ways here:
-;;    wrap-region after paredit to not overwrite '('
-;;    evil-leader before evil so works in initial buffers.
-(dolist (conf-file
-         (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
-  (load conf-file))
-
-
-;;;; Settings always run regardless of extra plugins.
-;;;; Have loaded the extra plugins and done all configurations for the extras.
-;;;; Now I do general settings.
-
 ;;; User Interface
 ;;;
 (setq inhibit-startup-message t)
@@ -78,14 +20,13 @@
 
 ;;; Set the files to use
 ;;;
-(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (setq custom-file "~/.emacs.d/customize.el")
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (setq backup-directory-alist
       `((".*" . "~/.emacs.d/backups/"))
       backup-by-copying-when-linked t)
 (setq auto-save-file-name-transforms
       `((".*" "~/.emacs.d/autosaves/" t)))
-
 (load custom-file)
 
 
@@ -319,3 +260,61 @@ Including indent-buffer, which should not be called automatically on save."
                         (keyboard-translate ?\C-p ?\C-h)
                         (keyboard-translate ?\C-z ?\C-x)
                         (keyboard-translate ?\C-x ?\C-z))))
+
+
+;;; Plugins and everything not default
+;;;
+
+;; Set up packages and load configurations.
+(require 'package)
+(setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")))
+(package-initialize)
+
+;; I keep single file packages in this directory
+(add-to-list 'load-path "~/.emacs.d/packages/")
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+;; Have to have this set before requiring evil
+(setq evil-toggle-key "C-c C-z")
+(setq evilnc-hotkey-comment-operator "gc")
+
+;; In a let as I don't like polluting the namespace.
+(let
+    ((download-only '(monokai-theme tangotango-theme pos-tip auto-complete))
+
+     (elpa-packages
+      '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
+             ace-jump-mode wrap-region magit multiple-cursors expand-region
+             elisp-slime-nav jump-char python-mode jedi monky
+             window-number evil-leader evil evil-exchange evil-args
+             evil-surround evil-visualstar evil-numbers evil-nerd-commenter))
+
+     (require-only
+      '(epa-file eldoc desktop uniquify
+                 buffer-move transpose-frame evil-elscreen nameses idomenu
+                 le-eval-and-insert-results)))
+
+  (let
+      ((require-packages
+        (append require-only elpa-packages)))
+
+    ;; Install packages, require packages
+    (dolist (p (append download-only elpa-packages))
+      (unless (package-installed-p p)
+        (package-install p)))
+
+    (dolist (p require-packages)
+      (require p))))
+
+;; Load all files in the directory plugin_configurations
+;; Name of file denotes order it's loaded in.
+;; Note order matters in two ways here:
+;;    wrap-region after paredit to not overwrite '('
+;;    evil-leader before evil so works in initial buffers.
+(dolist (conf-file
+         (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
+  (load conf-file))
