@@ -86,6 +86,14 @@
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
+(defun split-window-horizontally-equal ()
+  "I get a little annoyed every time I split windows without this."
+  (interactive)
+  (split-window-horizontally)
+  (balance-windows))
+
+(define-key ctl-x-map "3" 'split-window-horizontally-equal)
+
 ;; Make it more likely that split-window-sensibly will split vertically
 (setq split-height-threshold 27)
 (setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
