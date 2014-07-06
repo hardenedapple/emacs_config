@@ -45,7 +45,7 @@
 
 ; Note can run any command on all files in a set once command is in the variable
 ; "filesets_commands"
-; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][source]]
+; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][look here]]
 
 
 ;;; List Buffer Settings
@@ -86,8 +86,10 @@
 (global-set-key (kbd "C-c o") 'org-open-at-point-global)
 (global-set-key (kbd "C-c l") 'org-store-link)
 ;; (setq org-drawers (cons "THOUGHTS" org-drawers))
-(setq org-hide-block-startup t)
-
+(setq org-hide-block-startup t
+      org-startup-indented t
+      org-enforce-todo-checkbox-dependencies t
+      org-agenda-files (list "~/TODO/Someday.org"))
 
 ;;; Uniquify Settings
 ;;;
