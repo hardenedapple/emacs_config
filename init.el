@@ -297,7 +297,7 @@ Including indent-buffer, which should not be called automatically on save."
      (elpa-packages
       '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
              ace-jump-mode wrap-region magit multiple-cursors expand-region
-             elisp-slime-nav jump-char python-mode jedi monky
+             elisp-slime-nav jump-char python-mode jedi monky python-pylint
              window-number evil-leader evil evil-exchange evil-args
              evil-surround evil-visualstar evil-numbers evil-nerd-commenter))
 
