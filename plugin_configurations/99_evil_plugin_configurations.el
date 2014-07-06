@@ -2,10 +2,12 @@
 ;;;
 ; Has to be initialised before evil-mode so is available in *scratch*,
 ; *Messages* etc (i.e. in initial buffers)
+
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
   "nh" 'evil-ex-nohighlight
+  "s"  'save-buffer
   "bs" 'ibuffer)
 
 
