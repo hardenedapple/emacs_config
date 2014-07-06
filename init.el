@@ -288,7 +288,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; Have to have this set before requiring evil
 (setq evil-toggle-key "C-c C-z")
-(setq evilnc-hotkey-comment-operator "gc")
+(setq evilnc-hotkey-comment-operator "")
 
 (setq smart-window-remap-keys nil)
 

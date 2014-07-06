@@ -16,13 +16,12 @@
 (evil-mode 0)
 
 ;; Variables
-(setq evil-want-C-u-scroll t)
-(setq evil-want-C-i-jump t)
 (setq evil-cross-lines t)
-(setq evil-find-skip-newlines t)
 (setq evil-flash-delay 5)
-(setq evil-want-change-word-to-end nil)
 (setq evil-search-module 'evil-search)
+(setq evil-want-C-i-jump t)
+(setq evil-want-C-u-scroll t)
+(setq evil-want-change-word-to-end nil)
 
 ;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
@@ -169,13 +168,29 @@
 ;;; Evil Nerd Commenter Settings
 ;;;
 ;; WANT
-;; gcd - comment and copy
-;; gci - invert comment status
+;;     gcd - comment and copy
+;;     gci - invert comment status
+;; Doesn't work as to make a mapping to gci, need gc to be a prefix command
+;; That means gc mapping wouldn't be available for the main function.
 ;;
-;; This doesn't work - gc is a non prefix key
-;; (define-key evil-normal-state-map "gcd" 'evilnc-copy-and-comment-lines)
-;; (define-key evil-normal-state-map "gci"
-;; 'evilnc-toggle-invert-comment-line-by-line)
+;; To counter this, have everything under the prifix gc, and have the main
+;; function under gcc
+
+(defvar evilnc-key-map (make-sparse-keymap) "Key map for nerd commenter")
+(define-key evil-normal-state-map (kbd "gc") evilnc-key-map)
+(define-key evil-visual-state-map (kbd "gc") evilnc-key-map)
+
+;; Make the function to invert all lines' comment status interactive.
+(evil-define-operator evilnc-invert-comment-once (beg end)
+  "Toggle comment status over a motion."
+  :type 'line
+  :repeat t
+  (evilnc--invert-comment beg end))
+
+(define-key evilnc-key-map "c" 'evilnc-comment-operator)
+(define-key evilnc-key-map "i" 'evilnc-invert-comment-once)
+(define-key evilnc-key-map "d" 'evilnc-copy-and-comment-lines)
+(define-key evilnc-key-map "t" 'evilnc-comment-or-uncomment-to-the-line)
 
 
 ;;; Evil Surround Settings
