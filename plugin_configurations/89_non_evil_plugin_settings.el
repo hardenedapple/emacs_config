@@ -1,3 +1,7 @@
+;;; Colour theme
+;;;
+(load-theme 'monokai)
+
 ;;; Wrap Region Settings
 ;;;
 ;; Have to be before paredit so the exception works
