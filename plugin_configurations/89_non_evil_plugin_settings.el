@@ -88,7 +88,9 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
+(define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
+(define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
+(define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
 
 ;;; Goto chg Settings
 ;;;

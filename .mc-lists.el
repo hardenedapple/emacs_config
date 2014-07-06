@@ -9,9 +9,13 @@
         cua-delete-region
         dabbrev-expand
         eval-last-sexp
+        evil-backward-char
         evil-delete
+        evil-delete-char
         evil-delete-line
+        evil-exit-visual-state
         evil-forward-char
+        evil-paste-before
         kill-sexp
         open-line-below
         org-delete-char
