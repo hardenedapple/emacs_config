@@ -5,6 +5,7 @@
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
+  "nh" 'evil-ex-nohighlight
   "bs" 'ibuffer)
 
 
@@ -19,6 +20,7 @@
 (setq evil-find-skip-newlines t)
 (setq evil-flash-delay 5)
 (setq evil-want-change-word-to-end nil)
+(setq evil-search-module 'evil-search)
 
 ;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
