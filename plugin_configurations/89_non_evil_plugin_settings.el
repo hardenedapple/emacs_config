@@ -39,6 +39,7 @@
 ;; Only complete when I ask you to
 (setq ac-auto-start nil)
 (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+(define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
 
 
 ;;; Buffer Move Settings
