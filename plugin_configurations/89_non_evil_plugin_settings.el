@@ -176,14 +176,19 @@
 
 ;;; Python mode Settings
 ;;;
-(when (featurep 'python) (unload-feature 'python t))
+(when (featurep 'python)
+  (unload-feature 'python t))
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+;; Note: to remove python outline mode, set py-outline-minor-mode to nil
+
 (setq
  py-set-fill-column-p t
  py-electric-colon-active t)
+
 (setq-default
  py-shell-name "ipython"
  py-sexp-function 'py-expression)
+
 
 ;;; Slime Settings
 ;;;
@@ -204,6 +209,23 @@
     (read-kbd-macro paredit-backward-delete-key) nil))
 (add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
 
+
+;;; Smart Operator Settings
+;;;
+(defun smart-operator-c-mode-hook ()
+  (smart-insert-operator-hook)
+  (local-unset-key (kbd "."))
+  (local-unset-key (kbd ":"))
+  (local-set-key (kbd "*") 'c-electric-star))
+
+(add-hook 'c-mode-common-hook 'smart-operator-c-mode-hook)
+
+(defun smart-operator-python-mode-hook ()
+  (smart-insert-operator-hook)
+  (local-unset-key (kbd "."))
+  (local-unset-key (kbd ":")))
+
+(add-hook 'python-mode-hook 'smart-operator-python-mode-hook)
 
 
 ;;; Smex Settings
