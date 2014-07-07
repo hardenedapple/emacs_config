@@ -261,13 +261,19 @@ Including indent-buffer, which should not be called automatically on save."
 (keyboard-translate ?\C-p ?\C-h)
 (keyboard-translate ?\C-z ?\C-x)
 (keyboard-translate ?\C-x ?\C-z)
+(keyboard-translate ?\C-j ?\C-c)
+(keyboard-translate ?\C-w ?\C-c)
+(keyboard-translate ?\C-c ?\C-w)
 
 (add-hook 'after-make-frame-functions
           (lambda (f) (with-selected-frame f
                         (keyboard-translate ?\C-h ?\C-p)
                         (keyboard-translate ?\C-p ?\C-h)
                         (keyboard-translate ?\C-z ?\C-x)
-                        (keyboard-translate ?\C-x ?\C-z))))
+                        (keyboard-translate ?\C-x ?\C-z)
+                        (keyboard-translate ?\C-j ?\C-c)
+                        (keyboard-translate ?\C-w ?\C-c)
+                        (keyboard-translate ?\C-c ?\C-w))))
 
 
 ;;; Plugins and everything not default
