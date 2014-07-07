@@ -176,7 +176,7 @@
 ;; To counter this, have everything under the prifix gc, and have the main
 ;; function under gcc
 
-(defvar evilnc-key-map (make-sparse-keymap) "Key map for nerd commenter")
+(define-prefix-command 'evilnc-key-map)
 (define-key evil-normal-state-map (kbd "gc") evilnc-key-map)
 (define-key evil-visual-state-map (kbd "gc") evilnc-key-map)
 
