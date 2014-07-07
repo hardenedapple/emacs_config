@@ -3,12 +3,19 @@
   Write down all the customisation I might have to change
       (e.g. python shell type)
 
+* Customisation File
+Make all the Dvorak keyboard translations in an alist and call the actual
+translations in a do loop.
+Maybe turn off the C-c / C-w swap when in evil mode.
+    (define-key keyboard-translate-table C-c nil)
+    (Define-key keyboard-translate-table C-w nil)
+
 * To Fix:
   Figure out why flymake in python-mode isn't doing anything
 
 * Things to learn:
   [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
-  Read about the calc package.
+  [[info:calc][Read about the calc package.]]
   Read about the re-builder.
   EDE (hopefully help with Makefiles)
   Semantic (another CEDET tool
