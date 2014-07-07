@@ -109,7 +109,6 @@
 (key-chord-mode 1)
 
 (key-chord-define-global "gt" 'goto-line)
-;; delete-other-windows-vertically
 
 
 ;;; Magit Settings

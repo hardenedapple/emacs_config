@@ -1,8 +1,18 @@
 * To Document:
   Make a note of all the keybindings I've set up.
+  Write down all the customisation I might have to change
+      (e.g. python shell type)
 
 * To Fix:
   Figure out why flymake in python-mode isn't doing anything
+
+* Things to learn:
+  [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
+  Read about the calc package.
+  Read about the re-builder.
+  EDE (hopefully help with Makefiles)
+  Semantic (another CEDET tool
+  Learn all about navigating info files.
 
 * I want:
   1) Grep all files in a fileset nicely (into *grep* buffer)
@@ -17,7 +27,7 @@
   7) Look through the options in Emacs Sessions
   8) Make each namesession create a temporary fileset so I can run commands on it
   9) Search google/youtube/github for thing under point
-  10) [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][Tabs that I can associate buffers to.]]
+  10) Tabs that I can associate buffers to. [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][elscreen]] [[https://github.com/nex3/perspective-el][perspective]]
   11) Different theme on terminal to window systems - remember server mode.
   12) Open multiple help files at the same time.
       + C-u C-h to invoke
@@ -45,38 +55,46 @@
 **** Sunrise Commander
      Midnight commander clone inside emacs.
 
-* Things to learn:
-  [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
-  Read about the calc package.
-  Read about the re-builder.
-  Learn all about navigating info files.
-  EDE (hopefully help with Makefiles)
-  How to set prefix keys, especially in evil.
-
 * Plugins:
 ** Plugins to check out:
-       + el-get       :: an "extra" package manager for emacs packages.
-       + ecb          :: emacs code browser
-       + dired+       :: Extra functions for dired
-       + direx        :: Tree viewer - can be used for viewing tree of code
-       + projectile   :: treats files in git/mercurial repos as seperate
        + helm         :: fuzzy file finder and more.
        + icicles      :: has the buffer grep I want and much more
+       + projectile   :: treats files in git/mercurial repos as seperate
+       + ecb          :: emacs code browser
+       + el-get       :: an "extra" package manager for emacs packages.
+       + dired+       :: Extra functions for dired
+       + direx        :: Tree viewer - can be used for viewing tree of code
+       + perspective  :: another tab emulator - has separate buffer lists for
+                         each tab
 
 ** Plugins to look for:
        + folding      :: Must be automatic for code.
             hs-minor-mode
+                         Has hide and show
+                         Doesn't have motion by folds
+                         Commands built in to evil
+                         Works nicely for more lancuaces than outline mode
             fold-dwim
+                         "Unified interface to folding modes"
+                         Same interface to outline, hs and folding
+                         I don't need this, as I'll only use one method
             global-semantic-folding-mode
+                         apparently in cedet
+                         I can't find it.
             outline-minor-mode
+                         Seems to do the same as hs-minor-mode
+                         Adds in navigation commands
+                         Have no idea why both these modes are in emacs.
+                         Doesn't work well with C
 
 * Evil mode:
 ** Next
-   Make the evil-nerd-commenter mappings all with gc<key>
    Find out the benefit of evil-define-command
-   Possibly change the evil-unimpaired-newline functions to use it
+   Read this [[http://zuttobenkyou.wordpress.com/2011/02/15/some-thoughts-on-emacs-and-vim/][blog post]] for some ideas.
 
 ** Map paredit mappings into evil normal mode.
+   The functions that start at the end of an sexp don't work well due to the
+   paint of the cursor being one off that in emacs.
    Though not sure it's possible with the <( and >) mappings
    i.e.
         W   - Move sexp

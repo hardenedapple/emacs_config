@@ -1,0 +1,10 @@
+* This File
+This file is here to store all variables I think I might need to change
+when switching computers.
+e.g. when not running arch, or when writing in python2, I will need to change
+the py-shell-name variable
+* Python 2/3
++ [[file:plugin_configurations/89_non_evil_plugin_settings.el::/py-shell-name/][py-shell-name]]
+* File names
++ [[file:plugin_configurations/89_non_evil_plugin_settings.el::/magit-repo-dirs/][magit-repo-dirs]]
++ [[file:plugin_configurations/79_built_in_packages.el::/org-agenda-files/][org-agenda-files]]
