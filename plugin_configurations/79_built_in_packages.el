@@ -88,8 +88,11 @@
 ;; (setq org-drawers (cons "THOUGHTS" org-drawers))
 (setq org-hide-block-startup t
       org-startup-indented t
+      org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
-      org-agenda-files (list "~/TODO/Someday.org"))
+      org-agenda-files (list "~/TODO/Someday.org"
+                             "~/TODO/Soon.org"
+                             "~/TODO/Today.org"))
 
 ;;; Uniquify Settings
 ;;;
