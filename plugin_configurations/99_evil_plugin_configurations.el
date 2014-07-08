@@ -1,7 +1,7 @@
-;;; Evil Leader Settings
-;;;
-; Has to be initialised before evil-mode so is available in *scratch*,
-; *Messages* etc (i.e. in initial buffers)
+;;;; Evil Leader Settings
+;;;;
+;; Has to be initialised before evil-mode so is available in *scratch*,
+;; *Messages* etc (i.e. in initial buffers)
 
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
@@ -11,11 +11,11 @@
   "bs" 'ibuffer)
 
 
-;;; Evil Mode Settings
-;;;
+;;;; Evil Mode Settings
+;;;;
 (evil-mode 0)
 
-;; Variables
+;;; Variables
 (setq evil-cross-lines t)
 (setq evil-flash-delay 5)
 (setq evil-search-module 'evil-search)
@@ -23,17 +23,17 @@
 (setq evil-want-C-u-scroll t)
 (setq evil-want-change-word-to-end nil)
 
-;; Set the default mode for certain buffers
+;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
                            (git-rebase-mode . emacs)
                            (helm-grep-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
-;; Mappings
+;;; Mappings
 (define-key evil-motion-state-map " " nil)
 (define-key evil-motion-state-map (kbd "RET") nil)
 
-; Normal mode mappings
+;; Normal mode mappings
 (defun copy-to-end-of-line ()
   (interactive)
   (evil-yank (point) (point-at-eol)))
@@ -43,7 +43,7 @@
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
-;; C-6 go to previous buffer
+;;; C-6 go to previous buffer
 (defun switch-to-last-seen-buffer ()
   "Switch to last open buffer."
   (interactive)
@@ -52,7 +52,7 @@
 (define-key evil-motion-state-map (kbd "C-6") 'switch-to-last-seen-buffer)
 
 
-;; indent keeping selection
+;;; indent keeping selection
 (defun indent-keeping-selection (beg end)
   "Using > or < in visual mode indents and keeps selection at the same time"
   (interactive "r")
@@ -68,11 +68,11 @@
 (define-key evil-visual-state-map ">" 'indent-keeping-selection)
 (define-key evil-visual-state-map "<" 'dedent-keeping-selection)
 
-; Insert mode mappings
+;; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
 (define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
 
-; Remove keychords and wrap-region when in evil-mode
+;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
           (lambda ()
             (key-chord-mode -1)
@@ -103,8 +103,8 @@
   ad-do-it)
 
 
-;;; Evil Folding Settings
-;;;
+;;;; Evil Folding Settings
+;;;;
 (defun fold-close ()
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
@@ -162,9 +162,9 @@
 (define-key evil-normal-state-map "zK" 'fold-shift-up)
 
 
-;;; Evil Unimpaired Settings
-;;;
-;; maybe evil-define-command for these
+;;;; Evil Unimpaired Settings
+;;;;
+;;; maybe evil-define-command for these
 (defun evil-unimpaired-newline-below (numlines)
   "Insert a new line below the point without moving it."
   (interactive "p")
@@ -194,38 +194,38 @@
 (define-key evil-normal-state-map "]q" 'next-error)
 (define-key evil-normal-state-map "[q" 'previous-error)
 (define-key evil-normal-state-map "[Q" (lambda () (interactive) (next-error 1 t)))
-; Make sure counts work on the error cycling
-; Add [Q and ]Q
+;; Make sure counts work on the error cycling
+;; Add [Q and ]Q
 
 
-;;; Evil Args Settings
-;;;
-;; Text objects
+;;;; Evil Args Settings
+;;;;
+;;; Text objects
 (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
 (define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
 
-;; Leader mappings
+;;; Leader mappings
 (evil-leader/set-key
   "ah" 'evil-backward-arg
   "al" 'evil-forward-arg
   "ak" 'evil-jump-out-args)
 
 
-;;; Evil Exchange Settings
-;;;
-; (use gx<motion> to select a range, once selected two ranges they are swapped
+;;;; Evil Exchange Settings
+;;;;
+;; (use gx<motion> to select a range, once selected two ranges they are swapped
 (evil-exchange-install)
 
 
-;;; Evil Numbers Settings
-;;;
+;;;; Evil Numbers Settings
+;;;;
 (evil-leader/set-key
   "nu" 'evil-numbers/inc-at-pt
   "nd" 'evil-numbers/dec-at-pt)
 
 
-;;; Evil Nerd Commenter Settings
-;;;
+;;;; Evil Nerd Commenter Settings
+;;;;
 ;; WANT
 ;;     gcd - comment and copy
 ;;     gci - invert comment status
@@ -239,7 +239,7 @@
 (define-key evil-normal-state-map (kbd "gc") evilnc-key-map)
 (define-key evil-visual-state-map (kbd "gc") evilnc-key-map)
 
-;; Make the function to invert all lines' comment status interactive.
+;;; Make the function to invert all lines' comment status interactive.
 (evil-define-operator evilnc-invert-comment-once (beg end)
   "Toggle comment status over a motion."
   :type 'line
@@ -252,14 +252,14 @@
 (define-key evilnc-key-map "t" 'evilnc-comment-or-uncomment-to-the-line)
 
 
-;;; Evil Surround Settings
-;;;
+;;;; Evil Surround Settings
+;;;;
 (global-evil-surround-mode 1)
 
 
-;;; Window Number Settings
-;;;
-; Colors
+;;;; Window Number Settings
+;;;;
+;; Colors
 (setq window-number-active-background nil)
 (setq window-number-active-foreground nil)
 (setq window-number-inactive-foreground nil)
@@ -267,7 +267,7 @@
 
 (window-number-mode 1)
 
-; Key bindings
+;; Key bindings
 (defun window-number-select-call (number)
   `(lambda ()
      (interactive)

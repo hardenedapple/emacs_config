@@ -1,5 +1,5 @@
-;;; User Interface
-;;;
+;;;; User Interface
+;;;;
 (setq inhibit-startup-message t)
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
@@ -12,14 +12,14 @@
 (menu-bar-mode -1)
 
 
-;;; Auto Save / Backups
-;;;
+;;;; Auto Save / Backups
+;;;;
 (setq auto-save-default t)
 (setq auto-save-interval 500)
 
 
-;;; Set the files to use
-;;;
+;;;; Set the files to use
+;;;;
 (setq custom-file "~/.emacs.d/customize.el")
 (setq abbrev-file-name "~/.emacs.d/abbrev_defs")
 (setq backup-directory-alist
@@ -30,41 +30,41 @@
 (load custom-file)
 
 
-;;; Enable commands
-;;;
+;;;; Enable commands
+;;;;
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 
 
-;;; CamelCase word motion
-;;;
+;;;; CamelCase word motion
+;;;;
 (global-subword-mode 1)
 
 
-;;; Replace yes/no by y/n
-;;;
+;;;; Replace yes/no by y/n
+;;;;
 (fset 'yes-or-no-p 'y-or-n-p)
 
 
-;;; Set Major Mode on filename
-;;;
-; Lies to set-auto-mode function so it sets major mode based on buffer name
+;;;; Set Major Mode on filename
+;;;;
+;; Lies to set-auto-mode function so it sets major mode based on buffer name
 (setq default-major-mode (lambda ()
      (let ((buffer-file-name (or buffer-file-name (buffer-name))))
           (set-auto-mode))))
 
 
-;;; Info
-;;;
+;;;; Info
+;;;;
 (defun info-goto-page-in-region (startpt endpt)
   (interactive "r")
   (info (buffer-substring startpt endpt)))
 
 
-;;; Align
-;;;
+;;;; Align
+;;;;
 (defun align-repeat (start end regexp)
   "repeat alignment with respect to
      the given regular expression"
@@ -73,8 +73,8 @@
                 (concat "\\(\\s-*\\)" regexp) 1 1 t))
 
 
-;;; Window Layout
-;;;
+;;;; Window Layout
+;;;;
 (define-key ctl-x-map "+" 'what-cursor-position)
 (define-key ctl-x-map "=" 'balance-windows)
 
@@ -94,15 +94,15 @@
 
 (define-key ctl-x-map "3" 'split-window-horizontally-equal)
 
-;; Make it more likely that split-window-sensibly will split vertically
+;;; Make it more likely that split-window-sensibly will split vertically
 (setq split-height-threshold 27)
 (setq split-width-threshold 175) ; 2 * 80 columns of text + line numbers etc
 
 (setq compilation-window-height 10)
 
 
-;;; Redefining sexp motion
-;;;
+;;;; Redefining sexp motion
+;;;;
 (defun backward-up-sexp (arg)
   (interactive "p")
   (let ((ppss (syntax-ppss)))
@@ -114,8 +114,8 @@
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
 
 
-;;; Indentation Motion
-;;;
+;;;; Indentation Motion
+;;;;
 (defun beginning-of-line-or-indentation ()
   "Move to the beginning of the line or indentation."
   (interactive)
@@ -127,8 +127,8 @@
 (global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
 
 
-;;; Whitespace and indent
-;;;
+;;;; Whitespace and indent
+;;;;
 ;; Automatically break long lines
 ;; use spaces instead of tabs
 (setq-default auto-fill-function 'do-auto-fill)
@@ -157,10 +157,10 @@ Including indent-buffer, which should not be called automatically on save."
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
 
-;;; Lines
-;;;
+;;;; Lines
+;;;;
 
-;; New lines
+;;; New lines
 (defun open-line-below ()
   (interactive)
   (end-of-line)
@@ -178,7 +178,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
 
-;; Move lines around
+;;; Move lines around
 (defun move-this-line-down (numlines)
   (interactive "p")
   (let ((col (current-column)))
@@ -202,8 +202,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
 
-;;; File Handling
-;;;
+;;;; File Handling
+;;;;
 (defun remove-buffer-and-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
@@ -232,27 +232,27 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 
-;;; Compile Shortcut
-;;;
+;;;; Compile Shortcut
+;;;;
 (global-set-key (kbd "<f10>") 'compile)
 (global-set-key (kbd "<C-f10>") 'recompile)
 
 
-;;; Scrolling
-;;;
+;;;; Scrolling
+;;;;
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'cua-scroll-up)
 (global-set-key (kbd "M-S-v") 'cua-scroll-down)
 
 
-;;; Move more quickly
-;;;
+;;;; Move more quickly
+;;;;
 (global-set-key (kbd "C-S-n") (lambda () (interactive)
                                 (ignore-errors (next-line 5))))
 
-;;; Remaps for Dvorak keyboard
-;; This would be C-S-p if not dvorak
+;;;; Remaps for Dvorak keyboard
+;;; This would be C-S-p if not dvorak
 (global-set-key (kbd "C-S-h") (lambda () (interactive)
                                 (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-;") ctl-x-map)
@@ -276,29 +276,29 @@ Including indent-buffer, which should not be called automatically on save."
                         (keyboard-translate ?\C-c ?\C-w))))
 
 
-;;; Plugins and everything not default
-;;;
+;;;; Plugins and everything not default
+;;;;
 
-;; Set up packages and load configurations.
+;;; Set up packages and load configurations.
 (require 'package)
 (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
-;; I keep single file packages in this directory
+;;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;; Have to have this set before requiring evil
+;;; Have to have this set before requiring evil
 (setq evil-toggle-key "C-c C-z")
 (setq evilnc-hotkey-comment-operator "")
 
 (setq smart-window-remap-keys nil)
 
-;; In a let as I don't like polluting the namespace.
+;;; In a let as I don't like polluting the namespace.
 (let
     ((download-only '(monokai-theme tangotango-theme pos-tip auto-complete))
 
@@ -327,11 +327,11 @@ Including indent-buffer, which should not be called automatically on save."
     (dolist (p require-packages)
       (require p))))
 
-;; Load all files in the directory plugin_configurations
-;; Name of file denotes order it's loaded in.
-;; Note order matters in two ways here:
-;;    wrap-region after paredit to not overwrite '('
-;;    evil-leader before evil so works in initial buffers.
+;;; Load all files in the directory plugin_configurations
+;;; Name of file denotes order it's loaded in.
+;;; Note order matters in two ways here:
+;;;    wrap-region after paredit to not overwrite '('
+;;;    evil-leader before evil so works in initial buffers.
 (dolist (conf-file
          (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
   (load conf-file))

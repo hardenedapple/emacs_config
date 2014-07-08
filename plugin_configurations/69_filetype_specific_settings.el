@@ -1,24 +1,24 @@
-;;; C Settings
-;;;
+;;;; C Settings
+;;;;
 (setq c-default-style "linux"
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
 
-;;; Latex Settings
-;;;
+;;;; Latex Settings
+;;;;
 (add-hook 'latex-mode-hook
           (lambda ()
             (set-fill-column 125)))  ; usually only write latex on large screens
 
 
-;;; Lisp Settings
-;;;
+;;;; Lisp Settings
+;;;;
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
 
-;;; Python Settings
-;;;
+;;;; Python Settings
+;;;;
 ;; Manually set the flymake configuration
 ;; At the moment the pylint flymake option in python-mode isn't doing anything
 (setq pylint "epylint")
@@ -36,6 +36,6 @@
           '("\\.py\\'" flymake-pylint-init))
 
 
-;;; Script Settings
-;;;
+;;;; Script Settings
+;;;;
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
