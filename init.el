@@ -296,6 +296,9 @@ Including indent-buffer, which should not be called automatically on save."
 (setq evil-toggle-key "C-c C-z")
 (setq evilnc-hotkey-comment-operator "")
 
+;;; If you ask it not to remap keys, it maps them to the default function
+;;; instead of just leaving them alone.
+;;; Follow this variable and remove the offending maps
 (setq smart-window-remap-keys nil)
 
 ;;; In a let as I don't like polluting the namespace.
