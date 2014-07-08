@@ -35,10 +35,12 @@ Maybe turn off the C-c / C-w swap when in evil mode.
   8) Make each namesession create a temporary fileset so I can run commands on it
   9) Search google/youtube/github for thing under point
   10) Tabs that I can associate buffers to. [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][elscreen]] [[https://github.com/nex3/perspective-el][perspective]]
-  11) Different theme on terminal to window systems - remember server mode.
+  11) Always open new window as an indirect buffer.
+      + This is only for the use of folding.
   12) Open multiple help files at the same time.
       + C-u C-h to invoke
       + rename-uniquely
+  13) Different theme on terminal to window systems - remember server mode.
 
 * Check out:
 ** Stephs emacs config

@@ -85,11 +85,13 @@
 (global-set-key (kbd "C-c L") 'org-insert-link-global)
 (global-set-key (kbd "C-c o") 'org-open-at-point-global)
 (global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
 ;;; (setq org-drawers (cons "THOUGHTS" org-drawers))
 (setq org-hide-block-startup t
       org-startup-indented t
       org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
+      org-completion-use-ido t
       org-agenda-files (list "~/TODO/Someday.org"
                              "~/TODO/Soon.org"
                              "~/TODO/Today.org"))
