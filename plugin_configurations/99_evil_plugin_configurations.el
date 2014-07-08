@@ -103,6 +103,65 @@
   ad-do-it)
 
 
+;;; Evil Folding Settings
+;;;
+(defun fold-close ()
+  (interactive)
+  (if (or outline-minor-mode (eq major-mode 'outline-mode))
+    (hide-subtree)
+    evil-close-fold))
+
+(defun fold-close-all ()
+  (interactive)
+  (if (or outline-minor-mode (eq major-mode 'outline-mode))
+    (hide-sublevels
+     (cond
+      ((outline-on-heading-p) (outline-level))
+      (t 1)))
+    evil-close-folds))
+
+(defun fold-open ()
+  (interactive)
+  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+    (show-subtree)
+    evil-open-fold))
+
+(defun fold-open-all ()
+  (interactive)
+  (if (or outline-minor-mode (eq major-mode 'outline-mode))
+    (show-all)
+    evil-open-folds))
+
+(defun fold-move-down (num-moves)
+  (interactive "p")
+  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+    (outline-next-visible-heading num-moves)))
+
+(defun fold-move-up (num-moves)
+  (interactive "p")
+  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+    (outline-previous-visible-heading num-moves)))
+
+(defun fold-shift-down (num-shifts)
+  (interactive "p")
+  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+    (outline-move-subtree-down num-shifts)))
+
+(defun fold-shift-up (num-shifts)
+  (interactive "p")
+  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+    (outline-move-subtree-up num-shifts)))
+
+(define-key evil-normal-state-map "zc" 'fold-close)
+(define-key evil-normal-state-map "zm" 'fold-close-all)
+(define-key evil-normal-state-map "zo" 'fold-open)
+(define-key evil-normal-state-map "zr" 'fold-open-all)
+(define-key evil-normal-state-map "zj" 'fold-move-down)
+(define-key evil-normal-state-map "zk" 'fold-move-up)
+(define-key evil-normal-state-map "zJ" 'fold-shift-down)
+(define-key evil-normal-state-map "zK" 'fold-shift-up)
+
+
 ;;; Evil Unimpaired Settings
 ;;;
 ;; maybe evil-define-command for these

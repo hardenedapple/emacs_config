@@ -84,7 +84,6 @@ Maybe turn off the C-c / C-w swap when in evil mode.
             fold-dwim
                          "Unified interface to folding modes"
                          Same interface to outline, hs and folding
-                         I don't need this, as I'll only use one method
             global-semantic-folding-mode
                          apparently in cedet
                          I can't find it.

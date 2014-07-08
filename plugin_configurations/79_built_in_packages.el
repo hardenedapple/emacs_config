@@ -94,6 +94,35 @@
                              "~/TODO/Soon.org"
                              "~/TODO/Today.org"))
 
+
+;;; Outline Minor Mode Settings
+;;;
+;; Outline-minor-mode key map
+(define-prefix-command 'cm-map nil "Outline-")
+;; HIDE
+(define-key cm-map "q" 'hide-sublevels)
+(define-key cm-map "t" 'hide-body)
+(define-key cm-map "o" 'hide-other)
+(define-key cm-map "c" 'hide-entry)
+(define-key cm-map "l" 'hide-leaves)
+(define-key cm-map "d" 'hide-subtree)
+;; SHOW
+(define-key cm-map "a" 'show-all)
+(define-key cm-map "e" 'show-entry)
+(define-key cm-map "i" 'show-children)
+(define-key cm-map "k" 'show-branches)
+(define-key cm-map "s" 'show-subtree)
+;; MOVE
+(define-key cm-map "u" 'outline-up-heading)
+(define-key cm-map "n" 'outline-next-visible-heading)
+(define-key cm-map "p" 'outline-previous-visible-heading)
+(define-key cm-map "f" 'outline-forward-same-level)
+(define-key cm-map "b" 'outline-backward-same-level)
+(define-key cm-map "v" 'outline-move-subtree-down)
+(define-key cm-map "^" 'outline-move-subtree-up)
+(global-set-key (kbd "M-o") cm-map)
+
+
 ;;; Uniquify Settings
 ;;;
 (setq uniquify-buffer-name-style 'post-forward)
