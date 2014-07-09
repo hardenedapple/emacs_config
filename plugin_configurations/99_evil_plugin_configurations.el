@@ -15,6 +15,12 @@
 ;;;;
 (evil-mode 0)
 
+;; Mappings because of my specific keyboard layout
+(define-key evil-motion-state-map "," 'evil-repeat-find-char)
+(define-key evil-motion-state-map ";" 'evil-repeat-find-char-reverse)
+(evil-leader/set-key
+  "'" 'evil-ex)
+
 ;;; Variables
 (setq evil-cross-lines t)
 (setq evil-flash-delay 5)

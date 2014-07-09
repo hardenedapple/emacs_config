@@ -96,6 +96,11 @@
                              "~/TODO/Soon.org"
                              "~/TODO/Today.org"))
 
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key org-mode-map (kbd "C-'") nil)
+            (define-key org-mode-map (kbd "C-;") 'org-cycle-agenda-files)))
+
 
 ;;;; Outline Minor Mode Settings
 ;;;;

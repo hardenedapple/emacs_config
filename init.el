@@ -255,7 +255,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; This would be C-S-p if not dvorak
 (global-set-key (kbd "C-S-h") (lambda () (interactive)
                                 (ignore-errors (previous-line 5))))
-(global-set-key (kbd "C-;") ctl-x-map)
+(global-set-key (kbd "C-'") ctl-x-map)
 
 (keyboard-translate ?\C-h ?\C-p)
 (keyboard-translate ?\C-p ?\C-h)
