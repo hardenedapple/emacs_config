@@ -66,15 +66,12 @@ Maybe turn off the C-c / C-w swap when in evil mode.
 
 * Plugins:
 ** Plugins to check out:
-       + helm         :: fuzzy file finder and more.
        + icicles      :: has the buffer grep I want and much more
        + projectile   :: treats files in git/mercurial repos as seperate
        + ecb          :: emacs code browser
        + el-get       :: an "extra" package manager for emacs packages.
        + dired+       :: Extra functions for dired
        + direx        :: Tree viewer - can be used for viewing tree of code
-       + perspective  :: another tab emulator - has separate buffer lists for
-                         each tab
 
 ** Plugins to look for:
        + folding      :: Must be automatic for code.

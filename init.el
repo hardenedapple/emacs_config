@@ -11,6 +11,10 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+;;;; Recursive minibuffers
+;;;;
+(setq enable-recursive-minibuffers t)
+
 
 ;;;; Auto Save / Backups
 ;;;;
@@ -276,7 +280,7 @@ Including indent-buffer, which should not be called automatically on save."
                         (keyboard-translate ?\C-c ?\C-w))))
 
 
-;;;; Plugins and everything not default
+;;;; Plugins and everything not enabled by default
 ;;;;
 
 ;;; Set up packages and load configurations.
@@ -303,15 +307,15 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; In a let as I don't like polluting the namespace.
 (let
-    ((download-only '(monokai-theme tangotango-theme pos-tip auto-complete))
+    ((download-only '(monokai-theme tangotango-theme pos-tip auto-complete helm))
 
      (elpa-packages
-      '(smex undo-tree paredit yasnippet key-chord goto-chg elscreen
-             ace-jump-mode wrap-region magit multiple-cursors expand-region
-             elisp-slime-nav jump-char python-mode jedi monky python-pylint
-             smart-operator smart-window
-             window-number evil-leader evil evil-exchange evil-args
-             evil-surround evil-visualstar evil-numbers evil-nerd-commenter))
+      '(undo-tree paredit yasnippet key-chord goto-chg elscreen
+                  ace-jump-mode wrap-region magit multiple-cursors expand-region
+                  elisp-slime-nav jump-char python-mode jedi monky python-pylint
+                  smart-operator smart-window
+                  window-number evil-leader evil evil-exchange evil-args
+                  evil-surround evil-visualstar evil-numbers evil-nerd-commenter))
 
      (require-only
       '(epa-file eldoc desktop uniquify

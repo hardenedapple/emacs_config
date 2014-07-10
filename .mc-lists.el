@@ -26,6 +26,7 @@
         paredit-backward-kill-word
         paredit-forward
         paredit-forward-delete
+        paredit-forward-kill-word
         paredit-join-sexps
         paredit-kill
         paredit-raise-sexp

@@ -53,31 +53,6 @@
 (global-set-key [remap list-buffers] 'ibuffer)
 
 
-;;;; Ido Settings
-;;;;
-(ido-everywhere 1)
-(setq ido-save-directory-list-file "~/.emacs.d/ido.last")
-(ido-mode t)
-(setq ido-everywhere t
-      ido-enable-flex-matching t)
-
-;;; Choose extensions to inore
-;; (setq completion-ignored-extensions
-;;       (cons ".jpg" completion-ignored-extensions))
-
-
-(add-hook 'ido-setup-hook
-          (lambda ()
-            ;; Go straight home
-            (define-key ido-file-completion-map
-              (kbd "~")
-              (lambda ()
-                (interactive)
-                (if (looking-back "/")
-                    (insert "~/")
-                  (call-interactively 'self-insert-command))))))
-
-
 ;;;; Org Mode Settings
 ;;;;
 (global-set-key (kbd "C-c a") 'org-agenda)

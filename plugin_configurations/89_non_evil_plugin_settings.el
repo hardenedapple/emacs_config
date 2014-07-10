@@ -75,6 +75,49 @@
 (global-set-key (kbd "C-+") 'er/contract-region)
 
 
+;;;; Helm Settings
+;;;;
+(require 'helm)
+(require 'helm-config)
+(require 'helm-eshell)
+(require 'helm-files)
+(require 'helm-grep)
+
+(define-key helm-map (kbd "C-z") 'helm-select-action)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+
+(define-key helm-grep-mode-map (kbd "<return>") 'helm-grep-mode-jump-other-window)
+(define-key helm-grep-mode-map (kbd "n") 'helm-grep-mode-jump-other-window-forward)
+(define-key helm-grep-mode-map (kbd "p") 'helm-grep-mode-jump-other-window-backward)
+
+(setq
+ helm-google-suggest-use-curl-p t
+ helm-scroll-amount 4
+ helm-quick-update t
+ helm-ff-search-library-in-sexp t
+ helm-move-to-line-cycle-in-source t
+ helm-buffers-fuzzy-matching t)
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-q") 'helm-M-x)
+(global-set-key (kbd "<menu>") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(define-key ctl-x-map "b" 'helm-mini)
+(define-key ctl-x-map (kbd "C-f") 'helm-find-files)
+(define-key helm-command-prefix "g" 'helm-do-grep)
+(define-key helm-command-prefix "o" 'helm-occur)
+
+(define-key 'help-command (kbd "C-f") 'helm-apropos)
+(define-key 'help-command (kbd "r") 'helm-info-emacs)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "M-l") 'helm-eshell-history)))
+
+(add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+(helm-mode 1)
+
+
 ;;;; Jedi Settings
 ;;;;
 (setq jedi:use-shortcuts t)
@@ -225,18 +268,6 @@
   (local-unset-key (kbd ":")))
 
 (add-hook 'python-mode-hook 'smart-operator-python-mode-hook)
-
-
-;;;; Smex Settings
-;;;;
-(smex-initialize)
-
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "C-q") 'smex)
-(global-set-key (kbd "<menu>") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c M-x") 'smex-update)
-
 
 ;;;; Transpose Frame Settings
 ;;;;
