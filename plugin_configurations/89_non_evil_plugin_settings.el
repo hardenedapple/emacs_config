@@ -75,6 +75,12 @@
 (global-set-key (kbd "C-+") 'er/contract-region)
 
 
+;;;; Goto chg Settings
+;;;;
+(global-set-key [(control ?.)] 'goto-last-change)
+(global-set-key [(control ?,)] 'goto-last-change-reverse)
+
+
 ;;;; Helm Settings
 ;;;;
 (require 'helm)
@@ -126,21 +132,6 @@
 ;;; python2
 
 
-;;;; Multiple Cursors Settings
-;;;;
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-(define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
-(define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
-(define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
-
-;;;; Goto chg Settings
-;;;;
-(global-set-key [(control ?.)] 'goto-last-change)
-(global-set-key [(control ?,)] 'goto-last-change-reverse)
-
-
 ;;;; Jump Char Settings
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
@@ -174,6 +165,16 @@
   "gp" 'magit-push
   "gf" 'magit-pull
   "gs" 'magit-status)
+
+
+;;;; Multiple Cursors Settings
+;;;;
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
+(define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
+(define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
 
 
 ;;;; Paredit Settings
