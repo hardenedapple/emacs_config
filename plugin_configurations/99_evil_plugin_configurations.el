@@ -19,6 +19,7 @@
 (define-key evil-motion-state-map "," 'evil-repeat-find-char)
 (define-key evil-motion-state-map ";" 'evil-repeat-find-char-reverse)
 (evil-leader/set-key
+  "z" 'evil-ex
   "'" 'evil-ex)
 
 ;;; Variables
