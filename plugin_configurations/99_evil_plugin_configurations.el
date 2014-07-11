@@ -8,7 +8,7 @@
 (evil-leader/set-key
   "nh" 'evil-ex-nohighlight
   "s"  'save-buffer
-  "bs" 'ibuffer)
+  "bs" 'helm-mini)
 
 
 ;;;; Evil Mode Settings
@@ -49,7 +49,7 @@
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 
-;;; C-6 go to previous buffer
+;; C-6 go to previous buffer
 (defun switch-to-last-seen-buffer ()
   "Switch to last open buffer."
   (interactive)
@@ -58,6 +58,7 @@
 (define-key evil-motion-state-map (kbd "C-6") 'switch-to-last-seen-buffer)
 
 
+;;; Visual state mappings
 ;;; indent keeping selection
 (defun indent-keeping-selection (beg end)
   "Using > or < in visual mode indents and keeps selection at the same time"
@@ -77,6 +78,10 @@
 ;; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
 (define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
+
+;; Ex Mode Mappings
+(define-key evil-ex-map "e" 'helm-find-files)
+(define-key evil-ex-map "b" 'helm-mini)
 
 ;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
