@@ -36,10 +36,7 @@
 
 ;;;; Enable commands
 ;;;;
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'set-goal-column 'disabled nil)
-(put 'erase-buffer 'disabled nil)
+(setq 'disabled-command-function nil)
 
 
 ;;;; CamelCase word motion
