@@ -297,7 +297,6 @@ Including indent-buffer, which should not be called automatically on save."
   (package-refresh-contents))
 
 ;;; Have to have this set before requiring evil
-(setq evil-toggle-key "C-c C-z")
 (setq evilnc-hotkey-comment-operator "")
 
 ;;; If you ask it not to remap keys, it maps them to the default function
