@@ -8,3 +8,6 @@ diary
 /ac-comphist.dat
 /.python-environments/
 /semanticdb/
+/eshell/
+/projectile-bookmarks.eld
+/projectile.cache

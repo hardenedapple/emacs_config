@@ -233,6 +233,22 @@
  py-sexp-function 'py-expression)
 
 
+;;;; Projectile Settings
+;;;;
+(projectile-global-mode)
+(setq projectile-enable-caching t)
+(setq projectile-completion-system 'helm)
+(setq projectile-use-git-grep t)
+(setq projectile-remember-window-configs t)
+
+(defun try-open-projectile-file ()
+  "Attempt to open file using projectile, otherwise normal open-file"
+  (interactive)
+  (if (projectile-project-p)
+      (helm-projectile)
+    (helm-find-files)))
+
+
 ;;;; Slime Settings
 ;;;;
 (add-to-list 'load-path "~/.emacs.d/packages/slime")

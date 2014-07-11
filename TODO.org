@@ -11,9 +11,10 @@ Maybe turn off the C-c / C-w swap when in evil mode.
     (Define-key keyboard-translate-table C-w nil)
 
 * To Fix:
-  Figure out why flymake in python-mode isn't doing anything
+  Figure out why python-mode's inbuilt flymake settings aren't working.
 
 * Things to learn:
+  Get comfortable with helm ond projectile.
   [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
   [[info:calc][Read about the calc package.]]
   Read about the re-builder.
@@ -67,7 +68,6 @@ Maybe turn off the C-c / C-w swap when in evil mode.
 * Plugins:
 ** Plugins to check out:
        + icicles      :: has the buffer grep I want and much more
-       + projectile   :: treats files in git/mercurial repos as seperate
        + ecb          :: emacs code browser
        + el-get       :: an "extra" package manager for emacs packages.
        + dired+       :: Extra functions for dired
