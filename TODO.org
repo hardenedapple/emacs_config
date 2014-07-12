@@ -3,45 +3,34 @@
   Write down all the customisation I might have to change
       (e.g. python shell type)
 
-* Customisation File
-Make all the Dvorak keyboard translations in an alist and call the actual
-translations in a do loop.
-Maybe turn off the C-c / C-w swap when in evil mode.
-    (define-key keyboard-translate-table C-c nil)
-    (Define-key keyboard-translate-table C-w nil)
-
 * To Fix:
   Figure out why python-mode's inbuilt flymake settings aren't working.
 
 * Things to learn:
-  Get comfortable with helm ond projectile.
   [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
   [[info:calc][Read about the calc package.]]
-  Read about the re-builder.
   EDE (hopefully help with Makefiles)
-  Semantic (another CEDET tool
+  Semantic (another CEDET tool)
   Learn all about navigating info files.
 
 * I want:
-  1) Grep all files in a fileset nicely (into *grep* buffer)
-  2) Filter grep and occur lists.
-  3) GrepAdd equivalent.
+  1) Filter grep and occur lists.
+  2) GrepAdd equivalent.
      + append-to-buffer
-  4) Evil surround - deleting surroundings removes everything inside and to
+  3) Evil surround - deleting surroundings removes everything inside and to
      + the left of the cursor with it.
-  5) Shortcut to switch to magit in current window.
+  4) Shortcut to switch to magit in current window.
+     find if a magit buffer exists, then
+     (switch-to-buffer " ... ")
      + temporarily set same-window-regexps?
-  6) Save window configuration for each elscreen tab along with nameses-save
-  7) Look through the options in Emacs Sessions
-  8) Make each namesession create a temporary fileset so I can run commands on it
-  9) Search google/youtube/github for thing under point
-  10) Tabs that I can associate buffers to. [[http://www.emacswiki.org/emacs/ElscreenSeparateBufferLists][elscreen]] [[https://github.com/nex3/perspective-el][perspective]]
-  11) Always open new window as an indirect buffer.
-      + This is only for the use of folding.
-  12) Open multiple help files at the same time.
+  5) Save window configuration for each elscreen tab along with nameses-save
+  6) Look through the options in Emacs Sessions
+  7) Make each namesession create a temporary fileset so I can run commands on it
+  8) Search google/youtube/github for thing under point
+  9) Automatic indirect buffers for folding.
+  10) Open multiple help files at the same time.
       + C-u C-h to invoke
       + rename-uniquely
-  13) Different theme on terminal to window systems - remember server mode.
 
 * Check out:
 ** Stephs emacs config
@@ -67,7 +56,6 @@ Maybe turn off the C-c / C-w swap when in evil mode.
 
 * Plugins:
 ** Plugins to check out:
-       + icicles      :: has the buffer grep I want and much more
        + ecb          :: emacs code browser
        + el-get       :: an "extra" package manager for emacs packages.
        + dired+       :: Extra functions for dired
@@ -112,15 +100,9 @@ Maybe turn off the C-c / C-w swap when in evil mode.
         ge  - Move WORD
 
 ** Porting my vimrc
-   Port unimpaired (or at least the part I use often)
    Get submodes (like submode.vim)
         evil-define-state
         (info "(evil) States")
-
-** Keys that I feel comfortable replacing in evil, not going to in vim:
-   Q
-   gQ
-   spelling commands.
 
 ** Things not in evil that are in vim:
    C-x C-(anything not linewise)
