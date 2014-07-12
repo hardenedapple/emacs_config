@@ -69,9 +69,9 @@
       org-enforce-todo-checkbox-dependencies t
       org-completion-use-ido t
       org-default-notes-file (concat org-directory "/notes.org")
-      org-agenda-files (list "~/TODO/Someday.org"
+      org-agenda-files (list "~/TODO/Today.org"
                              "~/TODO/Soon.org"
-                             "~/TODO/Today.org"))
+                             "~/TODO/Someday.org"))
 
 (add-hook 'org-mode-hook
           (lambda ()
