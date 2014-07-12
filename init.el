@@ -258,23 +258,24 @@ Including indent-buffer, which should not be called automatically on save."
                                 (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-'") ctl-x-map)
 
-(keyboard-translate ?\C-h ?\C-p)
-(keyboard-translate ?\C-p ?\C-h)
-(keyboard-translate ?\C-z ?\C-x)
-(keyboard-translate ?\C-x ?\C-z)
-(keyboard-translate ?\C-j ?\C-c)
-(keyboard-translate ?\C-w ?\C-c)
-(keyboard-translate ?\C-c ?\C-w)
+(defvar dvorak-keyswaps
+  '((?\C-h . ?\C-p)
+    (?\C-p . ?\C-h)
+    (?\C-z . ?\C-x)
+    (?\C-x . ?\C-z)
+    (?\C-j . ?\C-c)
+    (?\C-w . ?\C-c)
+    (?\C-c . ?\C-w)))
+
+(defun apply-my-keyswaps ()
+  (dolist (key-pair dvorak-keyswaps)
+    (keyboard-translate (car key-pair) (cdr key-pair))))
+
+(apply-my-keyswaps)
 
 (add-hook 'after-make-frame-functions
           (lambda (f) (with-selected-frame f
-                        (keyboard-translate ?\C-h ?\C-p)
-                        (keyboard-translate ?\C-p ?\C-h)
-                        (keyboard-translate ?\C-z ?\C-x)
-                        (keyboard-translate ?\C-x ?\C-z)
-                        (keyboard-translate ?\C-j ?\C-c)
-                        (keyboard-translate ?\C-w ?\C-c)
-                        (keyboard-translate ?\C-c ?\C-w))))
+                        (apply-my-keyswaps))))
 
 
 ;;;; Plugins and everything not enabled by default
