@@ -36,7 +36,7 @@
 
 ;;;; Enable commands
 ;;;;
-(setq 'disabled-command-function nil)
+(setq disabled-command-function nil)
 
 
 ;;;; CamelCase word motion
