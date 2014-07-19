@@ -145,6 +145,11 @@
 (key-chord-define-global "gt" 'goto-line)
 
 
+;;;; List Registers Settings
+;;;;
+(define-key ctl-x-r-map "v" 'list-register)
+
+
 ;;;; Magit Settings
 ;;;;
 (setq magit-repo-dirs '("~/.emacs.d" "~/share/repos/useful-files"))
