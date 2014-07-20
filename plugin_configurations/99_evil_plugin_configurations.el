@@ -18,6 +18,22 @@
 ;; Mappings because of my specific keyboard layout
 (define-key evil-motion-state-map "," 'evil-repeat-find-char)
 (define-key evil-motion-state-map ";" 'evil-repeat-find-char-reverse)
+
+(evil-define-motion evil-four-lines-down (count)
+  "Mave the cursor COUNT*4 lines down"
+  :type line
+  (let (line-move-visual)
+    (evil-line-move (* (or count 1) 4))))
+
+(evil-define-motion evil-four-lines-up (count)
+  "Mave the cursor COUNT*4 lines up"
+  :type line
+  (let (line-move-visual)
+    (evil-line-move (- (* (or count 1) 4)))))
+
+(define-key evil-motion-state-map "gj" 'evil-four-lines-down)
+(define-key evil-motion-state-map "gk" 'evil-four-lines-up)
+
 (evil-leader/set-key
   "z" 'evil-ex
   "'" 'evil-ex)
