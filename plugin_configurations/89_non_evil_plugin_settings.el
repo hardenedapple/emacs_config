@@ -41,6 +41,18 @@
 (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 (define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
 
+;; Add ac-source-filename to all buffers
+(defun ac-common-setup ()
+  (add-to-list 'ac-sources 'ac-source-filename))
+
+
+;;;; Auto Complete Etags Settings
+;;;;
+(ac-etags-setup)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (add-to-list 'ac-sources 'ac-source-etags)))
+
 
 ;;;; Buffer Move Settings
 ;;;;
