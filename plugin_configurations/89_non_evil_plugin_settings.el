@@ -25,7 +25,7 @@
   "mc" 'evil-ace-jump-char-mode)
 
 
-;;;; Auto complete Settings
+;;;; Auto Complete Settings
 ;;;;
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories
@@ -288,15 +288,16 @@
 
 ;;;; Auto Complete Slime
 ;;;;
+(require 'ac-slime)
 (add-hook 'slime-mode-hook
           (lambda ()
             (set-up-slime-ac)
             (define-key slime-mode-map (kbd "M-TAB") 'auto-complete)))
 
-(add-hook 'slime-repl-hook
+(add-hook 'slime-repl-mode-hook
           (lambda ()
             (set-up-slime-ac)
-            (define-key slime-repl-map (kbd "M-TAB") 'auto-complete)))
+            (define-key slime-repl-mode-map (kbd "M-TAB") 'auto-complete)))
 
 (add-to-list 'ac-modes 'slime-repl-mode)
 
