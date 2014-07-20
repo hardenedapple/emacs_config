@@ -274,6 +274,21 @@
 (add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
 
 
+;;;; Auto Complete Slime
+;;;;
+(add-hook 'slime-mode-hook
+          (lambda ()
+            (set-up-slime-ac)
+            (define-key slime-mode-map (kbd "M-TAB") 'auto-complete)))
+
+(add-hook 'slime-repl-hook
+          (lambda ()
+            (set-up-slime-ac)
+            (define-key slime-repl-map (kbd "M-TAB") 'auto-complete)))
+
+(add-to-list 'ac-modes 'slime-repl-mode)
+
+
 ;;;; Smart Operator Settings
 ;;;;
 (defun smart-operator-c-mode-hook ()
