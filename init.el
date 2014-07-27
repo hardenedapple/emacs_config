@@ -314,7 +314,8 @@ Including indent-buffer, which should not be called automatically on save."
                   smart-operator smart-window projectile helm-projectile
                   list-register ac-etags vimrc-mode
                   window-number evil-leader evil evil-exchange evil-args
-                  evil-surround evil-visualstar evil-numbers evil-nerd-commenter))
+                  evil-surround evil-visualstar evil-numbers evil-nerd-commenter
+                  evil-jumper))
 
      (require-only
       '(epa-file eldoc desktop uniquify
