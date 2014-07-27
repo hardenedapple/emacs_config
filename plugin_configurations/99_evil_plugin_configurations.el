@@ -102,6 +102,8 @@
 ;; Ex Mode Mappings
 (define-key evil-ex-map "e" 'helm-find-files)
 (define-key evil-ex-map "b" 'helm-mini)
+(define-key evil-ex-map "tabe" 'elscreen-find-file)
+(define-key evil-ex-map "tabx" 'elscreen-execute-extended-command)
 
 ;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
