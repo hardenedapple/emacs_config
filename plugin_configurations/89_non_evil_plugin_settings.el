@@ -344,6 +344,12 @@
     ad-do-it))
 
 
+
+;;;: Vimrc Syntax Settings
+;;;;
+(add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode))
+
+
 ;;;; Yasnippet Settings
 ;;;;
 (yas-global-mode t)
