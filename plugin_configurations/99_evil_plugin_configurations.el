@@ -96,8 +96,10 @@
 (define-key evil-visual-state-map "<" 'dedent-keeping-selection)
 
 ;; Insert mode mappings
-(define-key evil-insert-state-map (kbd "C-u") (lambda () (interactive) (kill-line 0)))
-(define-key evil-insert-state-map (kbd "C-x C-f") 'comint-dynamic-complete-filename)
+(define-key evil-insert-state-map (kbd "C-u")
+  (lambda () (interactive) (kill-line 0)))
+(define-key evil-insert-state-map (kbd "C-x C-f")
+  'comint-dynamic-complete-filename)
 
 ;; Ex Mode Mappings
 (define-key evil-ex-map "e" 'helm-find-files)
@@ -141,16 +143,16 @@
 (defun fold-close ()
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-    (hide-subtree)
+      (hide-subtree)
     evil-close-fold))
 
 (defun fold-close-all ()
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-    (hide-sublevels
-     (cond
-      ((outline-on-heading-p) (outline-level))
-      (t 1)))
+      (hide-sublevels
+       (cond
+        ((outline-on-heading-p) (outline-level))
+        (t 1)))
     evil-close-folds))
 
 (defun fold-open ()
@@ -162,7 +164,7 @@
 (defun fold-open-all ()
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-    (show-all)
+      (show-all)
     evil-open-folds))
 
 (defun fold-move-down (num-moves)
