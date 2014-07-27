@@ -4,6 +4,10 @@
 (setq default-frame-alist '((font . "Tamsyn-10")))
 (set-default-font "Tamsyn-10")
 (setq column-number-mode t)
+(setq scroll-conservatively 1000
+      scroll-step 1
+      scroll-margin 3
+      auto-window-vscroll nil)
 (mouse-avoidance-mode 'banish)
 (global-linum-mode t)
 (show-paren-mode 1)
@@ -256,6 +260,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; This would be C-S-p if not dvorak
 (global-set-key (kbd "C-S-h") (lambda () (interactive)
                                 (ignore-errors (previous-line 5))))
+
 (global-set-key (kbd "C-'") ctl-x-map)
 
 (defvar dvorak-keyswaps
