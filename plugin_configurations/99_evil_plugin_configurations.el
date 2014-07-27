@@ -8,7 +8,10 @@
 (evil-leader/set-key
   "nh" 'evil-ex-nohighlight
   "s"  'save-buffer
-  "bs" 'helm-mini)
+  "bs" 'helm-mini
+  "fr" 'remove-buffer-and-file
+  "fm" 'rename-buffer-and-file
+  "fd" 'ediff-current-file)
 
 
 ;;;; Evil Mode Settings
