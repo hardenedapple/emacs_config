@@ -316,7 +316,7 @@ Including indent-buffer, which should not be called automatically on save."
       '(undo-tree paredit yasnippet key-chord goto-chg elscreen
                   ace-jump-mode wrap-region magit multiple-cursors expand-region
                   elisp-slime-nav jump-char python-mode jedi monky python-pylint
-                  smart-operator smart-window projectile helm-projectile
+                  smart-window projectile helm-projectile
                   list-register ac-etags vimrc-mode
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround evil-visualstar evil-numbers evil-nerd-commenter

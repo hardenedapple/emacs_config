@@ -302,23 +302,6 @@
 (add-to-list 'ac-modes 'slime-repl-mode)
 
 
-;;;; Smart Operator Settings
-;;;;
-(defun smart-operator-c-mode-hook ()
-  (smart-insert-operator-hook)
-  (local-unset-key (kbd "."))
-  (local-unset-key (kbd ":"))
-  (local-set-key (kbd "*") 'c-electric-star))
-
-(add-hook 'c-mode-common-hook 'smart-operator-c-mode-hook)
-
-(defun smart-operator-python-mode-hook ()
-  (smart-insert-operator-hook)
-  (local-unset-key (kbd "."))
-  (local-unset-key (kbd ":")))
-
-(add-hook 'python-mode-hook 'smart-operator-python-mode-hook)
-
 ;;;; Transpose Frame Settings
 ;;;;
 (define-key ctl-x-4-map "t" 'transpose-frame)
