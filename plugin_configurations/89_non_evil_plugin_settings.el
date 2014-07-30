@@ -234,21 +234,6 @@
  'paredit-close-round)
 
 
-;;;; Python mode Settings
-;;;;
-(when (featurep 'python)
-  (unload-feature 'python t))
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-;;; Note: to remove python outline mode, set py-outline-minor-mode to nil
-
-(setq
- py-set-fill-column-p t
- py-electric-colon-active t)
-
-(setq-default
- py-shell-name "ipython"
- py-sexp-function 'py-expression)
-
 
 ;;;; Projectile Settings
 ;;;;
