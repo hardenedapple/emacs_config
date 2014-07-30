@@ -100,6 +100,9 @@
   (lambda () (interactive) (kill-line 0)))
 (define-key evil-insert-state-map (kbd "C-x C-f")
   'comint-dynamic-complete-filename)
+;; Dvorak accomodation (evil-define-key with ctl-x-map doesn't work)
+(define-key evil-insert-state-map (kbd "C-' C-f")
+  'comint-dynamic-complete-filename)
 
 ;; Ex Mode Mappings
 (define-key evil-ex-map "e" 'helm-find-files)
