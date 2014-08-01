@@ -253,13 +253,13 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;; Move more quickly
 ;;;;
-(global-set-key (kbd "C-S-n") (lambda () (interactive)
-                                (ignore-errors (next-line 5))))
+(global-set-key (kbd "C-S-n") (lambda (numtimes) (interactive "p")
+                                (ignore-errors (next-line (* numtimes 5)))))
 
 ;;;; Remaps for Dvorak keyboard
 ;;; This would be C-S-p if not dvorak
-(global-set-key (kbd "C-S-h") (lambda () (interactive)
-                                (ignore-errors (previous-line 5))))
+(global-set-key (kbd "C-S-h") (lambda (numtimes) (interactive "p")
+                                (ignore-errors (previous-line (* numtimes 5)))))
 
 (global-set-key (kbd "C-'") ctl-x-map)
 
