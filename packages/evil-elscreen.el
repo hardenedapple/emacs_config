@@ -99,6 +99,12 @@ If the {file} is nil, create a new tab page with *scratch* buffer, after the cur
   (kill-buffer)
   (elscreen-kill))
 
+(evil-define-command evil-elscreen/tab-break-out-buffer ()
+  "Split current window into a separate tab"
+  :repeat nil
+  (interactive)
+  (elscreen-split))
+
 (evil-define-command evil-elscreen/tab-close-other ()
   "Close all other tabpages. Do not kill other buffers"
   :repeat nil
@@ -158,26 +164,21 @@ If the {file} is nil, create a new tab page with *scratch* buffer, after the cur
 (define-key evil-motion-state-map (kbd "gT") 'evil-elscreen/tab-previous)
 
 ;; ex command
-(evil-ex-define-cmd "tabnew" 'evil-elscreen/tab-new)
-(evil-ex-define-cmd "tabedit" "tabnew")
-(evil-ex-define-cmd "tabe" "tabedit")
-(evil-ex-define-cmd "tabfind" 'evil-elscreen/tab-find)
-(evil-ex-define-cmd "tabf" "tabfind")
 ;;(evil-ex-define-cmd "tab" 'evil-elscreen/tab-command)
-(evil-ex-define-cmd "tabclose" 'evil-elscreen/tab-close)
-(evil-ex-define-cmd "tabc" "tabclose")
+(evil-ex-define-cmd "tabnew" 'evil-elscreen/tab-new)
+(evil-ex-define-cmd "tabe[dit]" "tabnew")
+(evil-ex-define-cmd "tabf[ind]" 'evil-elscreen/tab-find)
+(evil-ex-define-cmd "tabc[lose]" 'evil-elscreen/tab-close)
 (evil-ex-define-cmd "tabclose!" 'evil-elscreen/tab-close-f)
 (evil-ex-define-cmd "tabc!" "tabclose!")
-(evil-ex-define-cmd "tabonly" 'evil-elscreen/tab-close-other)
-(evil-ex-define-cmd "tabo" "tabonly")
+(evil-ex-define-cmd "tabo[nly]" 'evil-elscreen/tab-close-other)
 (evil-ex-define-cmd "tabonly!" 'evil-elscreen/tab-close-other-f)
 (evil-ex-define-cmd "tabo!" "tabonly!")
-(evil-ex-define-cmd "tabnext" 'evil-elscreen/tab-next)
-(evil-ex-define-cmd "tabn" "tabnext")
-(evil-ex-define-cmd "tabprevious" 'evil-elscreen/tab-previous)
-(evil-ex-define-cmd "tabp" "tabprevious")
+(evil-ex-define-cmd "tabn[ext]" 'evil-elscreen/tab-next)
+(evil-ex-define-cmd "tabp[revious]" 'evil-elscreen/tab-previous)
 (evil-ex-define-cmd "tabNext" "tabprevious")
 (evil-ex-define-cmd "tabN" "tabprevious")
+(evil-ex-define-cmd "tabs[plit]" 'evil-elscreen/tab-break-out-buffer)
 
 
 (provide 'evil-elscreen)
