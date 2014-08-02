@@ -72,7 +72,7 @@
 ;;;; Elisp Slime Nav Settings
 ;;;;
 (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-        (add-hook hook 'turn-on-elisp-slime-nav-mode))
+  (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
 
 ;;;; Elscreen Settings
@@ -208,9 +208,9 @@
 ;;;; Paredit Settings
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
-               emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
-               lisp-interaction-mode-hook scheme-mode-hook))
-        (add-hook hook #'enable-paredit-mode))
+                emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
+                lisp-interaction-mode-hook scheme-mode-hook))
+  (add-hook hook #'enable-paredit-mode))
 
 (defun paredit--is-at-start-of-sexp ()
   (and (looking-at "(\\|\\[")

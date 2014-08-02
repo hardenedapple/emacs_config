@@ -7,15 +7,26 @@
         backward-sexp
         cua-cut-region
         cua-delete-region
+        cua-paste
         dabbrev-expand
         eval-last-sexp
         evil-backward-char
+        evil-backward-word-begin
         evil-delete
         evil-delete-char
         evil-delete-line
+        evil-end-of-line
         evil-exit-visual-state
+        evil-force-normal-state
         evil-forward-char
+        evil-inner-single-quote
+        evil-insert
+        evil-insert-line
+        evil-next-line
+        evil-normal-state
         evil-paste-before
+        evil-previous-line
+        evil-visual-char
         kill-sexp
         open-line-below
         org-delete-char
@@ -37,5 +48,6 @@
 (setq mc/cmds-to-run-once
       '(
         cua-set-rectangle-mark
+        evil-goto-mark
         transpose-frame
         ))
