@@ -132,15 +132,18 @@
               (save-excursion
                 (goto-char start)
                 (if (looking-at "[ \t]")
-                    (let* ((lines (split-string (buffer-substring start end) "\n" t))
-                           (initial-indent (string-match "[^ \t]" (nth 0 lines)))
-                           (newlist))
-                      (dolist (line lines)
-                        (if (> initial-indent (string-match "[^ \t]" line))
-                            (error "Indentation of region is wrong %d" initial-indent)
-                          (push (substring line initial-indent) newlist)))
-                      (python-shell-send-string
-                       (mapconcat 'identity newlist "\n") nil t))
+                    (python-shell-send-string
+                     (concat
+                      (let ((line-num (line-number-at-pos start)))
+                        (make-string (1+ line-num) ?\n))
+                      (let* ((lines (split-string (buffer-substring start end) "\n" t))
+                             (initial-indent (string-match "[^ \t]" (nth 0 lines)))
+                             (newlist))
+                        (dolist (line lines)
+                          (if (> initial-indent (string-match "[^ \t]" line))
+                              (error "Indentation of region is wrong %d" initial-indent)
+                            (push (substring line initial-indent) newlist)))
+                        (mapconcat 'identity newlist "\n"))))
                   (python-shell-send-string
                    (buffer-substring start end) nil t))))))
 
