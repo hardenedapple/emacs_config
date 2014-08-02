@@ -148,7 +148,7 @@
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
       (hide-subtree)
-    evil-close-fold))
+    (evil-close-fold)))
 
 (defun fold-close-all ()
   (interactive)
@@ -157,19 +157,19 @@
        (cond
         ((outline-on-heading-p) (outline-level))
         (t 1)))
-    evil-close-folds))
+    (evil-close-folds)))
 
 (defun fold-open ()
   (interactive)
-  (when (or outline-minor-mode (eq major-mode 'outline-mode))
+  (if (or outline-minor-mode (eq major-mode 'outline-mode))
     (show-subtree)
-    evil-open-fold))
+    (evil-open-fold)))
 
 (defun fold-open-all ()
   (interactive)
   (if (or outline-minor-mode (eq major-mode 'outline-mode))
       (show-all)
-    evil-open-folds))
+    (evil-open-folds)))
 
 (defun fold-move-down (num-moves)
   (interactive "p")
