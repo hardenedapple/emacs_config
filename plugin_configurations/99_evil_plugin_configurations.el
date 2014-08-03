@@ -313,6 +313,9 @@
      (window-number-select ,number)))
 
 (dotimes (winnum 5)
+  (define-key ctl-x-map
+    (format "j%d" (1+ winnum))
+    (window-number-select-call (1+ winnum)))
   (define-key evil-motion-state-map
     (format "g%d" (1+ winnum))
     (window-number-select-call (1+ winnum))))
