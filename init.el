@@ -332,7 +332,7 @@ Including indent-buffer, which should not be called automatically on save."
         (append require-only elpa-packages)))
 
     ;; Install packages, require packages
-    (dolist (p (append download-only elpa-packages))
+    (dolist (p (append elpa-packages download-only))
       (unless (package-installed-p p)
         (package-install p)))
 
