@@ -34,8 +34,3 @@
 
 (add-hook 'flymake-allowed-file-name-masks
           '("\\.py\\'" flymake-pylint-init))
-
-
-;;;; Script Settings
-;;;;
-(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
