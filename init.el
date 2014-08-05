@@ -8,7 +8,7 @@
       scroll-step 1
       scroll-margin 3
       auto-window-vscroll nil)
-(mouse-avoidance-mode 'banish)
+(mouse-avoidance-mode 'exile)
 (global-linum-mode t)
 (show-paren-mode 1)
 (scroll-bar-mode -1)
