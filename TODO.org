@@ -6,15 +6,19 @@
 * To Fix:
   Figure out why python-mode's inbuilt flymake settings aren't working.
 
+* Things to Do
+Add org-capture template for work things
+
 * Things to learn:
   [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
   [[info:calc][Read about the calc package.]]
+  Learn about the simple emacs spreadsheet
   EDE (hopefully help with Makefiles)
   Semantic (another CEDET tool)
   Learn all about navigating info files.
 
 * I want:
-  1) Filter grep and occur lists.
+  1) Filter grep and occur lists. (helm grep and helm occur mitigate this)
   2) GrepAdd equivalent.
      + append-to-buffer
   3) Evil surround - deleting surroundings removes everything inside and to
@@ -23,12 +27,13 @@
      find if a magit buffer exists, then
      (switch-to-buffer " ... ")
      + temporarily set same-window-regexps?
-  5) Save window configuration for each elscreen tab along with nameses-save
-  6) Look through the options in Emacs Sessions
-  7) Make each namesession create a temporary fileset so I can run commands on it
-  8) Search google/youtube/github for thing under point
-  9) Automatic indirect buffers for folding.
-  10) Open multiple help files at the same time.
+  5) Add imenu regexp for my setting headers.
+  6) Save window configuration for each elscreen tab along with nameses-save
+  7) Look through the options in Emacs Sessions
+  8) Make each namesession create a temporary fileset so I can run commands on it
+  9) Search google/youtube/github for thing under point
+  10) Automatic indirect buffers for folding.
+  11) Open multiple help files at the same time.
       + C-u C-h to invoke
       + rename-uniquely
 
@@ -61,8 +66,18 @@
        + dired+       :: Extra functions for dired
        + direx        :: Tree viewer - can be used for viewing tree of code
 
-** Plugins to look for:
+** Code Folding.
        + folding      :: Must be automatic for code.
+
+            Own version.
+                         Should make my own version of code folding.
+                         Have set of functions to fold/unfold in both
+                         hs-minor-mode and outline-mode.
+                         Want version to automatically make clone buffers to
+                         allow for differently folded code in different
+                         buffers.
+                         Add the ability to fold on markers (for hiding
+                            passwords in my password files)
             hs-minor-mode
                          Has hide and show
                          Doesn't have motion by folds
@@ -71,9 +86,10 @@
             fold-dwim
                          "Unified interface to folding modes"
                          Same interface to outline, hs and folding
+                         I already have a home-grown version that fits my
+                           preferences more.
             global-semantic-folding-mode
                          apparently in cedet
-                         I can't find it.
             outline-minor-mode
                          Seems to do the same as hs-minor-mode
                          Adds in navigation commands
