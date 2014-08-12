@@ -19,7 +19,6 @@
 ;;;;
 (setq enable-recursive-minibuffers t)
 
-
 ;;;; Auto Save / Backups
 ;;;;
 (setq auto-save-default t)
@@ -305,6 +304,8 @@ Including indent-buffer, which should not be called automatically on save."
   (package-refresh-contents))
 
 ;;; Have to have this set before requiring evil
+;; still not sure whether to move the evil toggle emacs mode key to a key I
+;; don't regularly use or accept that I won't want to use it when in evil
 (setq evilnc-hotkey-comment-operator "")
 
 ;;; If you ask it not to remap keys, it maps them to the default function
@@ -321,7 +322,7 @@ Including indent-buffer, which should not be called automatically on save."
       '(undo-tree paredit yasnippet key-chord goto-chg elscreen
                   ace-jump-mode wrap-region magit multiple-cursors expand-region
                   elisp-slime-nav jump-char jedi monky python-pylint
-                  smart-window projectile helm-projectile
+                  smart-window projectile helm-projectile arduino-mode
                   list-register ac-etags vimrc-mode
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround evil-visualstar evil-numbers evil-nerd-commenter
