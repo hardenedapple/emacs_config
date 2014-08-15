@@ -253,6 +253,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'scroll-up-command)
 (global-set-key (kbd "M-V") 'scroll-down-command)
+(global-set-key (kbd "C-q") 'move-to-window-line-top-bottom)
 
 
 ;;;; Move more quickly

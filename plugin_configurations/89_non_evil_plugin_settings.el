@@ -128,7 +128,6 @@
  helm-buffers-fuzzy-matching t)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-q") 'helm-M-x)
 (global-set-key (kbd "<menu>") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (define-key ctl-x-map "b" 'helm-mini)
