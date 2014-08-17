@@ -48,6 +48,7 @@
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-change-word-to-end nil)
+(setq evil-move-cursor-back nil) ; This set for paredit to work well.
 
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
@@ -201,6 +202,12 @@
 (define-key evil-normal-state-map "zK" 'fold-shift-up)
 
 
+;;;; Settings for when in paredit
+;;;;
+;; Copy mappings from sexp-vim and tpopes' sexp-mappings ...
+;; plugins for vim.
+(evil-define-key 'normal paredit-mode-map ")" 'paredit-forward-up)
+(evil-define-key 'normal paredit-mode-map "(" 'paredit-backward-up)
 ;;;; Evil Unimpaired Settings
 ;;;;
 ;;; maybe evil-define-command for these
