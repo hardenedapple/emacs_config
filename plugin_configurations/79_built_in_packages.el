@@ -104,7 +104,35 @@
 (define-key cm-map "b" 'outline-backward-same-level)
 (define-key cm-map "v" 'outline-move-subtree-down)
 (define-key cm-map "^" 'outline-move-subtree-up)
-(global-set-key (kbd "M-o") cm-map)
+;;(global-set-key (kbd "M-o") cm-map)
+(defun outline-minor-mode-with-hook (arg)
+  (interactive "P")
+  (if arg
+    (outline-minor-mode arg)
+    (outline-minor-mode))
+  (when outline-minor-mode
+      (define-key outline-minor-mode-map (kbd "M-o") cm-map)))
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (outline-minor-mode-with-hook 1)))
+
+
+;;;; Hs-minor-mode Settings
+;;;;
+(add-hook 'c-mode-hook
+          (lambda ()
+            (hs-minor-mode 1)))
+
+(define-prefix-command 'my-hs-mappings nil "hs-")
+(define-key my-hs-mappings "q" 'hs-hide-all)
+(define-key my-hs-mappings "d" 'hs-hide-block)
+(define-key my-hs-mappings "a" 'hs-show-all)
+(define-key my-hs-mappings "s" 'hs-show-block)
+
+(add-hook 'hs-minor-mode-hook
+          (lambda ()
+            (define-key hs-minor-mode-map (kbd "M-o") my-hs-mappings)))
 
 
 ;;;; Python Settings
