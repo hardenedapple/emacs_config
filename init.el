@@ -305,8 +305,9 @@ Including indent-buffer, which should not be called automatically on save."
   (package-refresh-contents))
 
 ;;; Have to have this set before requiring evil
-;; still not sure whether to move the evil toggle emacs mode key to a key I
-;; don't regularly use or accept that I won't want to use it when in evil
+(setq evil-toggle-key "M-e")
+
+;;; Remove the default comment mappings.
 (setq evilnc-hotkey-comment-operator "")
 
 ;;; If you ask it not to remap keys, it maps them to the default function
