@@ -328,6 +328,12 @@
 (add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode))
 
 
+;;;; Xcscope Settings
+;;;;
+(add-hook 'c-mode-hook 'cscope-setup)
+(add-hook 'c++-mode-hook 'cscope-setup)
+
+
 ;;;; Yasnippet Settings
 ;;;;
 (yas-global-mode t)
