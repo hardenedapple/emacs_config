@@ -122,6 +122,7 @@
           ((backward-up-list arg)))))
 
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 
 
 ;;;; Indentation Motion
