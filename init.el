@@ -274,6 +274,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-M-h") 'backward-list)
 (global-set-key (kbd "M-g M-h") 'previous-error)
 (global-set-key (kbd "M-g h") 'previous-error)
+(global-set-key (kbd "M-p") 'mark-paragraph)
 
 ;;; Using M-f and M-b for word motion is a pain, swap with M-a and M-e
 (global-set-key (kbd "M-a") 'subword-backward)
