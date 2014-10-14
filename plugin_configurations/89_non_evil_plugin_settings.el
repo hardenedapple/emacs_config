@@ -238,6 +238,10 @@
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-sexp)
 
+;;; Make the C-M-p keybinding switch to C-M-h
+(define-key paredit-mode-map (kbd "C-M-h") 'paredit-backward-down)
+(define-key paredit-mode-map (kbd "C-M-p") nil)
+
 ;;; paredit with eldoc
 (eldoc-add-command
  'paredit-backward-delete

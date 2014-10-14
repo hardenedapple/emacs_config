@@ -269,6 +269,18 @@ Including indent-buffer, which should not be called automatically on save."
                                 (ignore-errors (previous-line (* numtimes 5)))))
 
 (global-set-key (kbd "C-'") ctl-x-map)
+;; Make the switch between "h" and "p" more thorough
+(global-set-key (kbd "C-M-p") 'mark-defun)
+(global-set-key (kbd "C-M-h") 'backward-list)
+(global-set-key (kbd "M-g M-h") 'previous-error)
+(global-set-key (kbd "M-g h") 'previous-error)
+
+;;; Using M-f and M-b for word motion is a pain, swap with M-a and M-e
+(global-set-key (kbd "M-a") 'subword-backward)
+(global-set-key (kbd "M-e") 'subword-forward)
+(global-set-key (kbd "M-b") 'backward-sentence)
+(global-set-key (kbd "M-f") 'forward-sentence)
+
 
 (defvar dvorak-keyswaps
   '((?\C-h . ?\C-p)
