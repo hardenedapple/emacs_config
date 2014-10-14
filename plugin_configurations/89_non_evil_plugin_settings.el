@@ -272,17 +272,19 @@
 (setq slime-contribs '(slime-fancy))
 
 (define-key global-map (kbd "C-c s") 'slime-selector)
+
 (add-hook 'slime-mode-hook
           (lambda ()
+            (define-key slime-mode-map (kbd "M-p") nil)
+            (define-key slime-mode-map (kbd "M-h") 'slime-previous-note)
             (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)))
 
-(setq slime-autodoc-use-multiline-p t)
+(add-hook 'slime-repl-mode-hook
+          (lambda ()
+            (define-key slime-repl-mode-map (kbd "M-h") 'slime-repl-previous-input)
+            (define-key slime-repl-mode-map (kbd "M-p") nil)))
 
-;; Stop SLIME's REPL from grabbing DEL (keep balanced paranthesis)
-(defun override-slime-repl-bindings-with-paredit ()
-  (define-key slime-repl-mode-map
-    (read-kbd-macro paredit-backward-delete-key) nil))
-(add-hook 'slime-repl-mode-hook 'override-slime-repl-bindings-with-paredit)
+(setq slime-autodoc-use-multiline-p t)
 
 
 ;;;; Auto Complete Slime
