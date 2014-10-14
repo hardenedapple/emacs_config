@@ -62,7 +62,7 @@
 (eval-when-compile (require 'cl))
 
 (provide 'le-eval-and-insert-results)
-	;;; ⇒ le-eval-and-insert-results
+    ;;; ⇒ le-eval-and-insert-results
 
 (defun le::eair::format-res (type str)
   (let ((triple-comment (make-string 3 (string-to-char comment-start))))
@@ -262,7 +262,7 @@ With universal arguments, use whole buffer.
 
 (defun le::evair-nrepl-handler (handler)
   (let ((res (make-hash-table)))
-    (lambda (reponse)
+    (lambda (response)
       (loop for key in '("value" "out" "err")
             for val = (cdr (assoc key response))
             if val
