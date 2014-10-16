@@ -262,45 +262,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;
 (global-set-key (kbd "C-S-n") (lambda (numtimes) (interactive "p")
                                 (ignore-errors (next-line (* numtimes 5)))))
-
-;;;; Remaps for Dvorak keyboard
-;;; This would be C-S-p if not dvorak
-(global-set-key (kbd "C-S-h") (lambda (numtimes) (interactive "p")
+(global-set-key (kbd "C-S-p") (lambda (numtimes) (interactive "p")
                                 (ignore-errors (previous-line (* numtimes 5)))))
-
-(global-set-key (kbd "C-'") ctl-x-map)
-;; Make the switch between "h" and "p" more thorough
-(global-set-key (kbd "C-M-p") 'mark-defun)
-(global-set-key (kbd "C-M-h") 'backward-list)
-(global-set-key (kbd "M-g M-h") 'previous-error)
-(global-set-key (kbd "M-g h") 'previous-error)
-(global-set-key (kbd "M-p") 'mark-paragraph)
-
-;;; Using M-f and M-b for word motion is a pain, swap with M-a and M-e
-(global-set-key (kbd "M-a") 'subword-backward)
-(global-set-key (kbd "M-e") 'subword-forward)
-(global-set-key (kbd "M-b") 'backward-sentence)
-(global-set-key (kbd "M-f") 'forward-sentence)
-
-
-(defvar dvorak-keyswaps
-  '((?\C-h . ?\C-p)
-    (?\C-p . ?\C-h)
-    (?\C-z . ?\C-x)
-    (?\C-x . ?\C-z)
-    (?\C-j . ?\C-c)
-    (?\C-w . ?\C-c)
-    (?\C-c . ?\C-w)))
-
-(defun apply-my-keyswaps ()
-  (dolist (key-pair dvorak-keyswaps)
-    (keyboard-translate (car key-pair) (cdr key-pair))))
-
-(apply-my-keyswaps)
-
-(add-hook 'after-make-frame-functions
-          (lambda (f) (with-selected-frame f
-                        (apply-my-keyswaps))))
 
 
 ;;;; Plugins and everything not enabled by default

@@ -78,10 +78,6 @@
 ;;; otherwise.
 (add-hook 'org-mode-hook
           (lambda ()
-            (define-key org-mode-map (kbd "M-a") nil)
-            (define-key org-mode-map (kbd "M-e") nil)
-            (define-key org-mode-map (kbd "M-f") 'org-forward-sentence)
-            (define-key org-mode-map (kbd "M-b") 'org-backward-sentence)
             (define-key org-mode-map (kbd "C-'") nil)
             (define-key org-mode-map (kbd "C-;") 'org-cycle-agenda-files)))
 

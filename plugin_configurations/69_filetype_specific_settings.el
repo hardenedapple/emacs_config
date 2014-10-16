@@ -4,11 +4,6 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
-;;;; Comint Settings
-;;;
-(define-key comint-mode-map (kbd "M-h") 'comint-previous-input)
-(define-key comint-mode-map (kbd "M-p") nil)
-
 ;;;; Latex Settings
 ;;;;
 (add-hook 'latex-mode-hook

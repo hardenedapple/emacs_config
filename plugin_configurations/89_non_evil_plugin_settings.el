@@ -238,10 +238,6 @@
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-sexp)
 
-;;; Make the C-M-p keybinding switch to C-M-h
-(define-key paredit-mode-map (kbd "C-M-h") 'paredit-backward-down)
-(define-key paredit-mode-map (kbd "C-M-p") nil)
-
 ;;; paredit with eldoc
 (eldoc-add-command
  'paredit-backward-delete
@@ -275,14 +271,7 @@
 
 (add-hook 'slime-mode-hook
           (lambda ()
-            (define-key slime-mode-map (kbd "M-p") nil)
-            (define-key slime-mode-map (kbd "M-h") 'slime-previous-note)
             (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)))
-
-(add-hook 'slime-repl-mode-hook
-          (lambda ()
-            (define-key slime-repl-mode-map (kbd "M-h") 'slime-repl-previous-input)
-            (define-key slime-repl-mode-map (kbd "M-p") nil)))
 
 (setq slime-autodoc-use-multiline-p t)
 
