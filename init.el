@@ -203,7 +203,7 @@ Including indent-buffer, which should not be called automatically on save."
   (let ((col (current-column)))
     (forward-line)
     (transpose-lines (- numlines))
-    (forward-line -1)
+    (forward-line (- (1+ numlines)))
     (move-to-column col)))
 
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)
