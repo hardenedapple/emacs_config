@@ -153,32 +153,6 @@
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
 
-;;; Remove the mavy lines sent to the python shell so the REPL looks nice
-;;; (see python.el for any updates)
-(add-hook 'python-mode-hook
-          (lambda ()
-            (defun python-shell-send-region (start end)
-              "Send the region delimited by START and END to inferior Python process."
-              (interactive "r")
-              (save-excursion
-                (goto-char start)
-                (if (looking-at "[ \t]")
-                    (python-shell-send-string
-                     (concat
-                      (let ((line-num (line-number-at-pos start)))
-                        (make-string (1+ line-num) ?\n))
-                      (let* ((lines (split-string (buffer-substring start end) "\n" t))
-                             (initial-indent (string-match "[^ \t]" (nth 0 lines)))
-                             (newlist))
-                        (dolist (line lines)
-                          (if (> initial-indent (string-match "[^ \t]" line))
-                              (error "Indentation of region is wrong %d" initial-indent)
-                            (push (substring line initial-indent) newlist)))
-                        (mapconcat 'identity newlist "\n"))))
-                  (python-shell-send-string
-                   (buffer-substring start end) nil t))))))
-
-
 ;;;; Uniquify Settings
 ;;;;
 (setq uniquify-buffer-name-style 'post-forward)
