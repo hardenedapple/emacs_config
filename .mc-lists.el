@@ -4,6 +4,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-kill-sexp
         backward-sexp
         beginning-of-line-or-indentation
         cua-clear-rectangle-mark
@@ -39,6 +40,7 @@
         paredit-backward-kill-word
         paredit-forward
         paredit-forward-delete
+        paredit-forward-down
         paredit-forward-kill-word
         paredit-join-sexps
         paredit-kill
