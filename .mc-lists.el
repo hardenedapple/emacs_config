@@ -5,6 +5,8 @@
 (setq mc/cmds-to-run-for-all
       '(
         backward-sexp
+        beginning-of-line-or-indentation
+        cua-clear-rectangle-mark
         cua-cut-region
         cua-delete-region
         cua-paste
@@ -42,6 +44,8 @@
         paredit-kill
         paredit-raise-sexp
         paredit-reindent-defun
+        paredit-wrap-round
+        slime-autodoc-space
         slime-space
         ))
 
