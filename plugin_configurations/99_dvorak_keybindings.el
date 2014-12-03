@@ -28,8 +28,8 @@
 ;;; Using M-f and M-b for word motion is a pain, swap with M-a and M-e
 (global-set-key (kbd "M-a") 'subword-backward)
 (global-set-key (kbd "M-e") 'subword-forward)
-(global-set-key (kbd "M-b") 'backward-sentence)
-(global-set-key (kbd "M-f") 'forward-sentence)
+;; (global-set-key (kbd "M-b") 'backward-sentence)
+;; (global-set-key (kbd "M-f") 'forward-sentence)
 
 
 (defvar dvorak-keyswaps
@@ -62,8 +62,9 @@
           (lambda ()
             (define-key org-mode-map (kbd "M-a") nil)
             (define-key org-mode-map (kbd "M-e") nil)
-            (define-key org-mode-map (kbd "M-f") 'org-forward-sentence)
-            (define-key org-mode-map (kbd "M-b") 'org-backward-sentence)))
+            ;; (define-key org-mode-map (kbd "M-f") 'org-forward-sentence)
+            ;; (define-key org-mode-map (kbd "M-b") 'org-backward-sentence)
+            ))
 
 
 
