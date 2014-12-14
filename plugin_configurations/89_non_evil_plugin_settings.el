@@ -194,6 +194,9 @@
   "gs" 'magit-status)
 
 
+;;;; Monky Settings
+(key-chord-define-global ";h" 'monky-status)
+
 ;;;; Multiple Cursors Settings
 ;;;;
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
