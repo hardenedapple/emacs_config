@@ -142,11 +142,14 @@
 ;;;;
 ;; Automatically break long lines
 ;; use spaces instead of tabs
+;; Don't show lines wrapped if longer than screen width
 (setq-default auto-fill-function 'do-auto-fill)
 (setq-default indent-tabs-mode nil)
 (setq-default fill-column 80)
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
+(setq-default truncate-lines t)
+(setq-default visual-line-mode nil)
 
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
