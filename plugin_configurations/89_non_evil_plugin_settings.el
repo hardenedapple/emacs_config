@@ -269,12 +269,14 @@
 (add-to-list 'load-path "~/.emacs.d/packages/slime")
 (require 'slime-autoloads)
 (setq slime-contribs '(slime-fancy))
+(setq slime-complete-symbol*-fancy t)
 
 (define-key global-map (kbd "C-c s") 'slime-selector)
 
 (add-hook 'slime-mode-hook
           (lambda ()
-            (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)))
+            (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)
+            (define-key slime-mode-map (kbd "TAB") 'slime-complete-symbol)))
 
 (setq slime-autodoc-use-multiline-p t)
 
