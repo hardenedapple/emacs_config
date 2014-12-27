@@ -211,7 +211,8 @@
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
                 emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
-                lisp-interaction-mode-hook scheme-mode-hook))
+                lisp-interaction-mode-hook scheme-mode-hook
+                slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
 (defun paredit--is-at-start-of-sexp ()
@@ -278,6 +279,13 @@
             (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)
             (define-key slime-mode-map (kbd "TAB") 'slime-complete-symbol)))
 
+(add-hook 'slime-repl-mode-hook
+          (lambda ()
+            (set-up-slime-ac)
+            (define-key slime-repl-mode-map (kbd "M-TAB") 'auto-complete)
+            (define-key slime-repl-mode-map "(" 'self-insert-command)
+            (define-key slime-repl-mode-map ")" 'self-insert-command)))
+
 (setq slime-autodoc-use-multiline-p t)
 
 
@@ -288,11 +296,6 @@
           (lambda ()
             (set-up-slime-ac)
             (define-key slime-mode-map (kbd "M-TAB") 'auto-complete)))
-
-(add-hook 'slime-repl-mode-hook
-          (lambda ()
-            (set-up-slime-ac)
-            (define-key slime-repl-mode-map (kbd "M-TAB") 'auto-complete)))
 
 (add-to-list 'ac-modes 'slime-repl-mode)
 
