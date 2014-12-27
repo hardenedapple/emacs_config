@@ -46,6 +46,7 @@
         paredit-kill
         paredit-raise-sexp
         paredit-reindent-defun
+        paredit-splice-sexp-killing-backward
         paredit-wrap-round
         slime-autodoc-space
         slime-space
