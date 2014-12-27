@@ -125,7 +125,8 @@
  helm-quick-update t
  helm-ff-search-library-in-sexp t
  helm-move-to-line-cycle-in-source t
- helm-buffers-fuzzy-matching t)
+ helm-buffers-fuzzy-matching t
+ helm-M-x-fuzzy-match t)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "<menu>") 'helm-M-x)
