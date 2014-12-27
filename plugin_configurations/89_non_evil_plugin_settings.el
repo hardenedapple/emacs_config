@@ -123,6 +123,7 @@
  helm-google-suggest-use-curl-p t
  helm-scroll-amount 4
  helm-quick-update t
+ helm-truncate-lines t
  helm-ff-search-library-in-sexp t
  helm-move-to-line-cycle-in-source t
  helm-buffers-fuzzy-matching t
