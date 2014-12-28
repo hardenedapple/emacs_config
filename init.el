@@ -309,7 +309,7 @@ Including indent-buffer, which should not be called automatically on save."
                   elisp-slime-nav jump-char jedi quack monky python-pylint
                   smart-window projectile helm-projectile arduino-mode
                   list-register ac-etags vimrc-mode xcscope
-                  helm-descbinds
+                  smart-tab helm-descbinds
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround evil-visualstar evil-numbers evil-nerd-commenter
                   evil-jumper))

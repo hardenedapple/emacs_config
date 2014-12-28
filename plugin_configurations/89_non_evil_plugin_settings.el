@@ -272,6 +272,15 @@
     (helm-find-files)))
 
 
+;;;; Smart Tab
+;;;;
+(global-smart-tab-mode 1)
+(push 'lisp-mode smart-tab-disabled-major-modes)
+(setq smart-tab-using-hippie-expand t)
+(setq smart-tab-completion-functions-alist
+      '((emacs-lisp-mode . completion-at-point)))
+
+
 ;;;; Slime Settings
 ;;;;
 (add-to-list 'load-path "~/.emacs.d/packages/slime")
