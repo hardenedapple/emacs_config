@@ -148,6 +148,11 @@
 (helm-mode 1)
 
 
+;;;; Helm descbinds
+;;;;
+(helm-descbinds-mode)
+
+
 ;;;; Jedi Settings
 ;;;;
 (setq jedi:use-shortcuts t)
