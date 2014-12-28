@@ -279,7 +279,7 @@
 (add-hook 'slime-mode-hook
           (lambda ()
             (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)
-            (define-key slime-mode-map (kbd "TAB") 'slime-complete-symbol)))
+            (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)))
 
 (add-hook 'slime-repl-mode-hook
           (lambda ()
