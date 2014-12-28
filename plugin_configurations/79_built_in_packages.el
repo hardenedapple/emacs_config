@@ -48,6 +48,22 @@
 ;; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][look here]]
 
 
+;;;; Hippie Expand Settings
+;;;;
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-expand-line
+        try-expand-list))
+
+(fset 'my-complete-file (make-hippie-expand-function
+                         '(try-complete-file-name-partially
+                           try-complete-file-name)))
+(global-set-key (kbd "M-/") 'my-complete-file)
+(global-set-key (kbd "M-\\") 'hippie-expand)
+
+
 ;;;; List Buffer Settings
 ;;;;
 (global-set-key [remap list-buffers] 'ibuffer)
