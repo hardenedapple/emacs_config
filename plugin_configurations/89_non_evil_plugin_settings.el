@@ -356,9 +356,13 @@
 ;;;; Yasnippet Settings
 ;;;;
 (yas-global-mode t)
+(setq yas-also-auto-indent-first-line t
+      yas-use-menu nil
+      yas/prompt-functions '(yas/completing-prompt
+                             yas/ido-prompt))
 
-(setq yas/prompt-functions '(yas/ido-prompt
-                             yas/dropdown-prompt
-                             yas/x-prompt
-                             yas/completing-prompt
-                             yas/no-prompt))
+(define-key yas-keymap (kbd "C-;") 'yas-next-field-or-maybe-expand)
+(define-key yas-keymap (kbd "C-:") 'yas-prev-field)
+(define-key yas-minor-mode-map (kbd "C-;") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map [(tab)] nil)
