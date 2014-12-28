@@ -296,7 +296,7 @@
 (require 'ac-slime)
 (add-hook 'slime-mode-hook
           (lambda ()
-            (set-up-slime-ac)
+            (set-up-slime-ac t)
             (define-key slime-mode-map (kbd "M-TAB") 'auto-complete)))
 
 (add-to-list 'ac-modes 'slime-repl-mode)
