@@ -16,9 +16,11 @@
 (menu-bar-mode -1)
 (global-unset-key (kbd "M-o"))
 
+
 ;;;; Recursive minibuffers
 ;;;;
 (setq enable-recursive-minibuffers t)
+
 
 ;;;; Auto Save / Backups
 ;;;;
@@ -248,8 +250,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;; Compile Shortcut
 ;;;;
-(global-set-key (kbd "<f10>") 'compile)
-(global-set-key (kbd "<C-f10>") 'recompile)
+(global-set-key (kbd "<f9>") 'compile)
+(global-set-key (kbd "<C-f9>") 'recompile)
 
 
 ;;;; Scrolling
