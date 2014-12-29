@@ -316,7 +316,7 @@ Including indent-buffer, which should not be called automatically on save."
 
      (require-only
       '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame evil-elscreen nameses idomenu
+                 buffer-move transpose-frame evil-elscreen nameses
                  le-eval-and-insert-results)))
 
   (let
