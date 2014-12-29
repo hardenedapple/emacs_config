@@ -1,7 +1,7 @@
 ;;; Nameses enables named sessions.
 ;; Nameses is largely based on my-desktop.el by Scott Frazer
 ;; Modification by Jannis Teunissen
-;; Version 0.01b - 8 April 2014
+;; Version 0.02 - 21 Nov 2014 (added extra check)
 
 ;;; *** Usage ***
 ;; Note: if 'name' is not given, you'll be asked for a name
@@ -126,6 +126,7 @@
         (unless name (setq name (nameses-select "Load session: ")))
         (when prev-name (nameses-save prev-name))
         (nameses-reset)
+        (nameses-detect-problems name)
         (if (desktop-read (concat nameses-dir name))
             (nameses-setup-screens name))))
     (unless (and nameses-prev-session (string= nameses-prev-session prev-name))
