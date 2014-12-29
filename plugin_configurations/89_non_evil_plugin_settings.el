@@ -344,7 +344,9 @@
 
 ;;;: Vimrc Syntax Settings
 ;;;;
-(add-to-list 'auto-mode-alist '(".vim\\(rc\\)?$" . vimrc-mode))
+(add-to-list 'auto-mode-alist '("vimrc$" . vimrc-mode))
+(add-to-list 'auto-mode-alist '("\\.vim$" . vimrc-mode))
+
 
 
 ;;;; Xcscope Settings
