@@ -156,5 +156,14 @@
   (when (nameses-current-name)
     (nameses-save (nameses-current-name))))
 
+(defun nameses-leave ()
+  "Save and leave the current session without losing the current buffers."
+  (interactive)
+  (let ((current-session (nameses-current-name)))
+    (when current-session
+      (nameses-save current-session)
+      (desktop-release-lock)
+      (setq desktop-dirname nil))))
+
 (add-hook 'kill-emacs-hook 'nameses-kill-emacs-hook)
 (provide 'nameses)
