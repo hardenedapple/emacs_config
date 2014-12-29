@@ -50,18 +50,36 @@
 
 ;;;; Hippie Expand Settings
 ;;;;
+;; While I have no mapping for hippie-expand, I set up smart tab to use it by
+;; default whenever autocomplete is not available. Hence, when there isn't
+;; autocomplete, this is the default completion, available on the TAB key.
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
         try-expand-dabbrev-all-buffers
         try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
+        try-complete-file-name
         try-expand-line
         try-expand-list))
 
-(fset 'my-complete-file (make-hippie-expand-function
-                         '(try-complete-file-name-partially
-                           try-complete-file-name)))
-(global-set-key (kbd "M-/") 'my-complete-file)
-(global-set-key (kbd "M-\\") 'hippie-expand)
+(fset 'hippie-complete-file (make-hippie-expand-function
+                             '(try-complete-file-name-partially
+                               try-complete-file-name)))
+(fset 'hippie-expand-dabbrev (make-hippie-expand-function
+                              '(try-expand-dabbrev
+                                try-expand-dabbrev-all-buffers
+                                try-expand-dabbrev-from-kill)))
+;; This is the default special hippie-expanion, default here means ready for
+;; {e,}lisp (as that's what I mainly use emacs for).
+;; The idea is this keybinding is set on a per buffer basis, with customisations
+;; based on mode, while filename completion and dabbrev completion are more
+;; general.
+(fset 'hippie-expand-special (make-hippie-expand-function
+                              '(try-expand-list
+                                try-expand-line)))
+(global-set-key (kbd "M-/") 'hippie-complete-file)
+(global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
+(global-set-key (kbd "C-M-/") 'hippie-expand-special)
 
 
 ;;;; List Buffer Settings
