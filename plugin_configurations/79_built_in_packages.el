@@ -81,6 +81,14 @@
 (global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
 
+;; try-expand-line and try-expand-list add an extra ")" character when in
+;; paredit-mode, fix this with an advice (as suggested on the hippie-expand
+;; emacs wiki page)
+(defadvice he-substitute-string (after he-paredit-fix activate)
+  "remove extra paren when expanding line in paredit"
+  (if (and paredit-mode (equal (substring str -1) ")"))
+      (progn (backward-delete-char 1) (forward-char))))
+
 
 ;;;; List Buffer Settings
 ;;;;
