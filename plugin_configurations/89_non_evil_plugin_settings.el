@@ -281,7 +281,8 @@
 ;;;; Smart Tab
 ;;;;
 (global-smart-tab-mode 1)
-(push 'lisp-mode smart-tab-disabled-major-modes)
+(setq smart-tab-disabled-major-modes
+      (append smart-tab-disabled-major-modes '(lisp-mode slime-repl-mode)))
 (setq smart-tab-using-hippie-expand t)
 (setq smart-tab-completion-functions-alist
       '((emacs-lisp-mode . completion-at-point)))
