@@ -156,7 +156,7 @@
   (when (nameses-current-name)
     (nameses-save (nameses-current-name))))
 
-(defun nameses-leave ()
+(defun nameses-detach ()
   "Save and leave the current session without losing the current buffers."
   (interactive)
   (let ((current-session (nameses-current-name)))
