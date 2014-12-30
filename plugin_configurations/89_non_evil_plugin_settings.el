@@ -214,6 +214,12 @@
 (define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
 
 
+;;;; Nameses Settins
+;;;;
+;; Don't enable nameses ido mode, as I use helm, and that works with completing-read
+(setq nameses-ido-mode nil)
+
+
 ;;;; Paredit Settings
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
