@@ -50,6 +50,17 @@
 (global-subword-mode 1)
 
 
+;;;; Transpose things (negative)
+;;;;
+;; I want negative arguments in transpose-* to "drag" the current object back
+;; with repeated calls. To do this I need the point to end up at the end of the
+;; same object it was called at the end of.
+(defadvice transpose-subr (after bubble-back activate)
+  (when (< arg 0)
+    (if special
+        (goto-char (car (funcall mover arg)))
+        (funcall mover arg))))
+
 ;;;; Replace yes/no by y/n
 ;;;;
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -208,7 +219,11 @@ Including indent-buffer, which should not be called automatically on save."
   (let ((col (current-column)))
     (forward-line)
     (transpose-lines (- numlines))
-    (forward-line (- (1+ numlines)))
+    ;; Note: I have advised TRANSPOSE-SUBR, which means I need to call
+    ;; FORWARD-LINE with argument -1, if I hadn't I'd need to call it with
+    ;; argument (- (1+ NUMLINES))
+    (forward-line -1)
+    ;;(forward-line (- (1+ numlines)))
     (move-to-column col)))
 
 (global-set-key (kbd "<C-s-up>") 'move-this-line-up)
@@ -310,6 +325,9 @@ Including indent-buffer, which should not be called automatically on save."
                   smart-window projectile helm-projectile arduino-mode
                   list-register ac-etags vimrc-mode xcscope
                   smart-tab helm-descbinds
+                  ;; I occasionally use this, but not usually -- shows currently
+                  ;; unbound keys, which is useful for deciding on a keybinding.
+                  ;; unbound
                   window-number evil-leader evil evil-exchange evil-args
                   evil-surround evil-visualstar evil-numbers evil-nerd-commenter
                   evil-jumper))
