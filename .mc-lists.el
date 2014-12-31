@@ -38,6 +38,7 @@
         org-yank
         paredit-backward
         paredit-backward-kill-word
+        paredit-backward-up
         paredit-forward
         paredit-forward-delete
         paredit-forward-down
