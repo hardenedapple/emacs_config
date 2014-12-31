@@ -4,6 +4,7 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
+
 ;;;; Latex Settings
 ;;;;
 (add-hook 'latex-mode-hook
