@@ -30,6 +30,8 @@
         evil-paste-before
         evil-previous-line
         evil-visual-char
+        jump-char-backward
+        jump-char-process-char
         kill-sexp
         open-line-below
         org-delete-char
@@ -47,6 +49,7 @@
         paredit-kill
         paredit-raise-sexp
         paredit-reindent-defun
+        paredit-splice-sexp
         paredit-splice-sexp-killing-backward
         paredit-wrap-round
         slime-autodoc-space
