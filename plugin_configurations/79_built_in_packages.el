@@ -33,6 +33,14 @@
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 
+;;;; Eshell Settings
+;;;;
+(require 'eshell)
+(require 'em-smart)
+(setq eshell-where-to-jump 'end)
+(setq eshell-review-quick-commands 'not-even-short-output)
+
+
 ;;;; Filesets Settings
 ;;;;
 (filesets-init)
