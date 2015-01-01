@@ -318,7 +318,7 @@ Including indent-buffer, which should not be called automatically on save."
                   elisp-slime-nav jump-char jedi quack monky python-pylint
                   smart-window projectile helm-projectile arduino-mode
                   list-register ac-etags vimrc-mode xcscope
-                  smart-tab helm-descbinds
+                  smart-tab helm-descbinds smartscan
                   ;; I occasionally use this, but not usually -- shows currently
                   ;; unbound keys, which is useful for deciding on a keybinding.
                   ;; unbound

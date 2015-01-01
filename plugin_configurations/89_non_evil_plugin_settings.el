@@ -322,6 +322,18 @@
 (add-to-list 'ac-modes 'slime-repl-mode)
 
 
+;;;; Smartscan Settings
+;;;;
+(global-smartscan-mode 1)
+
+(define-key smartscan-map (kbd "M-i") 'smartscan-symbol-go-forward)
+(define-key smartscan-map (kbd "M-o") 'smartscan-symbol-go-backward)
+(define-key smartscan-map (kbd "M-n") nil)
+(define-key smartscan-map (kbd "M-p") nil)
+(define-key smartscan-map (kbd "M-'") 'smartscan-symbol-replace)
+
+
+
 ;;;; Transpose Frame Settings
 ;;;;
 (define-key ctl-x-4-map "t" 'transpose-frame)
