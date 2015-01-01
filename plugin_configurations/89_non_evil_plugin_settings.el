@@ -11,9 +11,7 @@
 
 ;;;; Ace jump Mode Settings
 ;;;;
-(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
-
-(key-chord-define-global ";-" 'ace-jump-mode)
+(key-chord-define-global ";-" 'ace-jump-word-mode)
 (key-chord-define-global ";," 'ace-jump-char-mode)
 
 (eval-after-load "ace-jump-mode"
