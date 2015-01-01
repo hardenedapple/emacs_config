@@ -157,14 +157,14 @@
 (define-key cm-map "b" 'outline-backward-same-level)
 (define-key cm-map "v" 'outline-move-subtree-down)
 (define-key cm-map "^" 'outline-move-subtree-up)
-;;(global-set-key (kbd "M-o") cm-map)
+;;(global-set-key (kbd "M-k") cm-map)
 (defun outline-minor-mode-with-hook (arg)
   (interactive "P")
   (if arg
     (outline-minor-mode arg)
     (outline-minor-mode))
   (when outline-minor-mode
-      (define-key outline-minor-mode-map (kbd "M-o") cm-map)))
+      (define-key outline-minor-mode-map (kbd "M-k") cm-map)))
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
