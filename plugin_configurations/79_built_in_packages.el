@@ -112,7 +112,9 @@
 ;; general.
 (fset 'hippie-expand-special (make-hippie-expand-function
                               '(try-expand-list
-                                try-expand-line)))
+                                try-expand-list-all-buffers
+                                try-expand-line
+                                try-expand-line-all-buffers)))
 (global-set-key (kbd "M-/") 'hippie-complete-file)
 (global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
