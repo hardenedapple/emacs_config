@@ -48,7 +48,7 @@
 ;; I either want them to be run in ansi-term or by some personally defined
 ;; function
 (setq eshell-visual-subcommands (list
-                                 (list "git" "log" "diff" "show")
+                                 (list "git" "log" "diff" "show" "graph")
                                  (list "hg" "log" "diff")))
 
 (defun eshell/emacs (&rest args)
