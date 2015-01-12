@@ -190,6 +190,43 @@
 ;; git commit mode usually starts flyspell
 (setq git-commit-mode-hook '(turn-on-auto-fill))
 
+;;; Intercept calling git in Eshell and parse some into Magit
+(setq eshell-magit->git-transformations
+      (list
+       '("log" . (lambda (args)
+                   (if args (magit-log (cadr args)) (magit-log))
+                   nil))
+       '("diff" . (lambda (args)
+                    (magit-diff (or (cadr args) "HEAD"))
+                    nil))
+       '("graph" . (lambda (args)
+                     (if args (magit-log-long (cadr args)) (magit-log-long))
+                     nil))
+       '("show" . (lambda (args)
+                    (magit-show-commit (cadr args))
+                    nil))
+       '("status" . (lambda (args)
+                      (magit-status default-directory)
+                      nil))))
+
+(defun eshell-delegate-external (command args)
+  "Call an external command "
+  (eshell-wait-for-process (eshell-external-command command args)))
+
+(defun eshell/git (&rest args)
+  "Function to use some of magit abilities in eshell.
+
+Checks if  the subcommand is  one of the  keys in the  assoc list
+  `eshell-magit->git-transformations' if it isn't, we simply pass
+  it  on to  the external  git command,  otherwise, do  something
+  almost equivalent with `magit'"
+  (let ((function-to-call
+         (or (cdr (assoc (car args) eshell-magit->git-transformations))
+             (lambda (args)
+               (eshell-delegate-external (eshell-search-path "git") args)))))
+    (funcall function-to-call args)))
+
+
 ;;; Set some keys for evil
 (evil-leader/set-key
   "gg" 'magit-log
