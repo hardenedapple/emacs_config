@@ -292,7 +292,9 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 ;;;;
 (global-smart-tab-mode 1)
 (setq smart-tab-disabled-major-modes
-      (append smart-tab-disabled-major-modes '(lisp-mode slime-repl-mode)))
+      (append smart-tab-disabled-major-modes '(lisp-mode
+                                               slime-repl-mode
+                                               inferior-python-mode)))
 (setq smart-tab-using-hippie-expand t)
 (setq smart-tab-completion-functions-alist
       '((emacs-lisp-mode . completion-at-point)))

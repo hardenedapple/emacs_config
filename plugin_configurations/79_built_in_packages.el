@@ -232,6 +232,11 @@
  python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
+(add-hook 'inferior-python-mode-hook
+          (lambda ()
+            (define-key inferior-python-mode-map (kbd "TAB")
+              'python-shell-completion-complete-or-indent)))
+
 
 ;;;; Uniquify Settings
 ;;;;
