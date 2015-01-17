@@ -34,10 +34,6 @@
 (setq ac-auto-start nil)
 (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 
-;; Add ac-source-filename to all buffers
-(defun ac-common-setup ()
-  (add-to-list 'ac-sources 'ac-source-filename))
-
 
 ;;;; Auto Complete Etags Settings
 ;;;;
