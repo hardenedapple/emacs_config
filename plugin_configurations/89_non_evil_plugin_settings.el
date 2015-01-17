@@ -18,10 +18,6 @@
   '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
-(evil-leader/set-key
-  "mw" 'evil-ace-jump-word-mode
-  "mc" 'evil-ace-jump-char-mode)
-
 
 ;;;; Auto Complete Settings
 ;;;;
@@ -37,7 +33,6 @@
 ;;; Only complete when I ask you to
 (setq ac-auto-start nil)
 (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-(define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
 
 ;; Add ac-source-filename to all buffers
 (defun ac-common-setup ()
@@ -58,13 +53,6 @@
 (global-set-key (kbd "<C-S-down>")   'buf-move-down)
 (global-set-key (kbd "<C-S-left>")   'buf-move-left)
 (global-set-key (kbd "<C-S-right>")  'buf-move-right)
-
-;;; Set some keys for evil
-(evil-leader/set-key
-  "wh" 'buf-move-left
-  "wj" 'buf-move-down
-  "wk" 'buf-move-up
-  "wl" 'buf-move-right)
 
 
 ;;;; Elisp Slime Nav Settings
@@ -227,16 +215,6 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
     (funcall function-to-call args)))
 
 
-;;; Set some keys for evil
-(evil-leader/set-key
-  "gg" 'magit-log
-  "gw" 'magit-stage-this-file
-  "gd" 'magit-diff-unstaged
-  "gp" 'magit-push
-  "gf" 'magit-pull
-  "gs" 'magit-status)
-
-
 ;;;; Monky Settings
 (key-chord-define-global ";h" 'monky-status)
 
@@ -245,9 +223,6 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-(define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
-(define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
-(define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
 
 
 ;;;; Nameses Settins
@@ -400,6 +375,28 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 ;;;;
 (add-to-list 'auto-mode-alist '("vimrc$" . vimrc-mode))
 (add-to-list 'auto-mode-alist '("\\.vim$" . vimrc-mode))
+
+
+;;;; Window Number Settings
+;;;;
+;; Colors
+(setq window-number-active-background nil)
+(setq window-number-active-foreground nil)
+(setq window-number-inactive-foreground nil)
+(setq window-number-inactive-background nil)
+
+(window-number-mode 1)
+
+;; Key bindings
+(defun window-number-select-call (number)
+  `(lambda ()
+     (interactive)
+     (window-number-select ,number)))
+
+(dotimes (winnum 5)
+  (define-key ctl-x-map
+    (format "j%d" (1+ winnum))
+    (window-number-select-call (1+ winnum))))
 
 
 ;;;; Xcscope Settings

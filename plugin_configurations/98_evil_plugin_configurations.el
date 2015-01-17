@@ -1,3 +1,43 @@
+;;;; Evil plugin settings
+;;;; (key bindings for non-evil plugins here)
+
+;;; Ace jump mode keybindings
+(define-key evil-normal-state-map "s" nil)
+(define-key evil-motion-state-map "s" 'ace-jump-word-mode)
+
+;;; Auto-Complete keybindings
+(define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
+
+;;; Buffer Move keybindings
+(evil-leader/set-key
+  "wh" 'buf-move-left
+  "wj" 'buf-move-down
+  "wk" 'buf-move-up
+  "wl" 'buf-move-right)
+
+;;; Mogit keybindings
+(evil-leader/set-key
+  "gg" 'magit-log
+  "gw" 'magit-stage-this-file
+  "gd" 'magit-diff-unstaged
+  "gp" 'magit-push
+  "gf" 'magit-pull
+  "gs" 'magit-status)
+
+;; ;;; Multiple Cursors keybindings
+;; ;; Doesn't really work with evil, as the cursor position is different
+;; ;; (i.e. the whole cursor at the end of the visual selection thing messes up
+;; ;; MC
+;; (define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
+;; (define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
+;; (define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
+
+;;; Window Number keybindings
+(dotimes (winnum 5)
+  (define-key evil-motion-state-map
+    (format "g%d" (1+ winnum))
+    (window-number-select-call (1+ winnum))))
+
 ;;;; Evil Leader Settings
 ;;;;
 ;; Has to be initialised before evil-mode so is available in *scratch*,
@@ -11,7 +51,9 @@
   "bs" 'helm-mini
   "fr" 'remove-buffer-and-file
   "fm" 'rename-buffer-and-file
-  "fd" 'ediff-current-file)
+  "fd" 'ediff-current-file
+  "z"  'evil-ex
+  "'"  'evil-ex)
 
 
 ;;;; Evil Mode Settings
@@ -37,10 +79,6 @@
 (define-key evil-motion-state-map "gj" 'evil-four-lines-down)
 (define-key evil-motion-state-map "gk" 'evil-four-lines-up)
 
-(evil-leader/set-key
-  "z" 'evil-ex
-  "'" 'evil-ex)
-
 ;;; Variables
 (setq evil-cross-lines t)
 (setq evil-flash-delay 5)
@@ -48,12 +86,13 @@
 (setq evil-want-C-i-jump t)
 (setq evil-want-C-u-scroll t)
 (setq evil-want-change-word-to-end nil)
-(setq evil-move-cursor-back nil) ; This set for paredit to work well.
+(setq evil-move-cursor-back t) ; Unset this for paredit to work well.
 
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
                            (git-rebase-mode . emacs)
-                           (helm-grep-mode . emacs)))
+                           (helm-grep-mode . emacs)
+                           (paredit-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 ;;; Mappings
@@ -69,7 +108,7 @@
 
 (define-key evil-motion-state-map "'" 'evil-goto-mark)
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
-(define-key evil-normal-state-map (kbd "<f9>" )'delete-trailing-whitespace)
+(define-key evil-normal-state-map (kbd "<f10>" )'delete-trailing-whitespace)
 
 ;; C-6 go to previous buffer
 (defun switch-to-last-seen-buffer ()
@@ -100,11 +139,6 @@
 ;; Insert mode mappings
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (kill-line 0)))
-(define-key evil-insert-state-map (kbd "C-x C-f")
-  'comint-dynamic-complete-filename)
-;; Dvorak accomodation (evil-define-key with ctl-x-map doesn't work)
-(define-key evil-insert-state-map (kbd "C-' C-f")
-  'comint-dynamic-complete-filename)
 
 ;; Ex Mode Mappings
 (define-key evil-ex-map "e" 'helm-find-files)
@@ -143,71 +177,73 @@
   ad-do-it)
 
 
-;;;; Evil Folding Settings
-;;;;
-(defun fold-close ()
-  (interactive)
-  (if (or outline-minor-mode (eq major-mode 'outline-mode))
-      (hide-subtree)
-    (evil-close-fold)))
+;; ;;;; Evil Folding Settings
+;; ;;;;
+;; (defun fold-close ()
+;;   (interactive)
+;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
+;;       (hide-subtree)
+;;     (evil-close-fold)))
 
-(defun fold-close-all ()
-  (interactive)
-  (if (or outline-minor-mode (eq major-mode 'outline-mode))
-      (hide-sublevels
-       (cond
-        ((outline-on-heading-p) (outline-level))
-        (t 1)))
-    (evil-close-folds)))
+;; (defun fold-close-all ()
+;;   (interactive)
+;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
+;;       (hide-sublevels
+;;        (cond
+;;         ((outline-on-heading-p) (outline-level))
+;;         (t 1)))
+;;     (evil-close-folds)))
 
-(defun fold-open ()
-  (interactive)
-  (if (or outline-minor-mode (eq major-mode 'outline-mode))
-    (show-subtree)
-    (evil-open-fold)))
+;; (defun fold-open ()
+;;   (interactive)
+;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
+;;     (show-subtree)
+;;     (evil-open-fold)))
 
-(defun fold-open-all ()
-  (interactive)
-  (if (or outline-minor-mode (eq major-mode 'outline-mode))
-      (show-all)
-    (evil-open-folds)))
+;; (defun fold-open-all ()
+;;   (interactive)
+;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
+;;       (show-all)
+;;     (evil-open-folds)))
 
-(defun fold-move-down (num-moves)
-  (interactive "p")
-  (when (or outline-minor-mode (eq major-mode 'outline-mode))
-    (outline-next-visible-heading num-moves)))
+;; (defun fold-move-down (num-moves)
+;;   (interactive "p")
+;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
+;;     (outline-next-visible-heading num-moves)))
 
-(defun fold-move-up (num-moves)
-  (interactive "p")
-  (when (or outline-minor-mode (eq major-mode 'outline-mode))
-    (outline-previous-visible-heading num-moves)))
+;; (defun fold-move-up (num-moves)
+;;   (interactive "p")
+;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
+;;     (outline-previous-visible-heading num-moves)))
 
-(defun fold-shift-down (num-shifts)
-  (interactive "p")
-  (when (or outline-minor-mode (eq major-mode 'outline-mode))
-    (outline-move-subtree-down num-shifts)))
+;; (defun fold-shift-down (num-shifts)
+;;   (interactive "p")
+;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
+;;     (outline-move-subtree-down num-shifts)))
 
-(defun fold-shift-up (num-shifts)
-  (interactive "p")
-  (when (or outline-minor-mode (eq major-mode 'outline-mode))
-    (outline-move-subtree-up num-shifts)))
+;; (defun fold-shift-up (num-shifts)
+;;   (interactive "p")
+;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
+;;     (outline-move-subtree-up num-shifts)))
 
-(define-key evil-normal-state-map "zc" 'fold-close)
-(define-key evil-normal-state-map "zm" 'fold-close-all)
-(define-key evil-normal-state-map "zo" 'fold-open)
-(define-key evil-normal-state-map "zr" 'fold-open-all)
-(define-key evil-normal-state-map "zj" 'fold-move-down)
-(define-key evil-normal-state-map "zk" 'fold-move-up)
-(define-key evil-normal-state-map "zJ" 'fold-shift-down)
-(define-key evil-normal-state-map "zK" 'fold-shift-up)
+;; (define-key evil-normal-state-map "zc" 'fold-close)
+;; (define-key evil-normal-state-map "zm" 'fold-close-all)
+;; (define-key evil-normal-state-map "zo" 'fold-open)
+;; (define-key evil-normal-state-map "zr" 'fold-open-all)
+;; (define-key evil-normal-state-map "zj" 'fold-move-down)
+;; (define-key evil-normal-state-map "zk" 'fold-move-up)
+;; (define-key evil-normal-state-map "zJ" 'fold-shift-down)
+;; (define-key evil-normal-state-map "zK" 'fold-shift-up)
 
 
-;;;; Settings for when in paredit
-;;;;
-;; Copy mappings from sexp-vim and tpopes' sexp-mappings ...
-;; plugins for vim.
-(evil-define-key 'normal paredit-mode-map ")" 'paredit-forward-up)
-(evil-define-key 'normal paredit-mode-map "(" 'paredit-backward-up)
+;; ;;;; Settings for when in paredit
+;; ;;;;
+;; ;; Copy mappings from sexp-vim and tpopes' sexp-mappings ...
+;; ;; plugins for vim.
+;; (evil-define-key 'normal paredit-mode-map ")" 'paredit-forward-up)
+;; (evil-define-key 'normal paredit-mode-map "(" 'paredit-backward-up)
+;; ;; (evil-define-key 'normal paredit-mode-map "W" 'paredit-forward)
+
 ;;;; Evil Unimpaired Settings
 ;;;;
 ;;; maybe evil-define-command for these
@@ -301,28 +337,3 @@
 ;;;; Evil Surround Settings
 ;;;;
 (global-evil-surround-mode 1)
-
-
-;;;; Window Number Settings
-;;;;
-;; Colors
-(setq window-number-active-background nil)
-(setq window-number-active-foreground nil)
-(setq window-number-inactive-foreground nil)
-(setq window-number-inactive-background nil)
-
-(window-number-mode 1)
-
-;; Key bindings
-(defun window-number-select-call (number)
-  `(lambda ()
-     (interactive)
-     (window-number-select ,number)))
-
-(dotimes (winnum 5)
-  (define-key ctl-x-map
-    (format "j%d" (1+ winnum))
-    (window-number-select-call (1+ winnum)))
-  (define-key evil-motion-state-map
-    (format "g%d" (1+ winnum))
-    (window-number-select-call (1+ winnum))))

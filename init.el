@@ -274,6 +274,7 @@ Including indent-buffer, which should not be called automatically on save."
   (balance-windows))
 
 (define-key ctl-x-map "3" 'split-window-horizontally-equal)
+
 ;;; Make it more likely that split-window-sensibly will split vertically
 (setq split-height-threshold 27
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
@@ -297,7 +298,7 @@ Including indent-buffer, which should not be called automatically on save."
   (package-refresh-contents))
 
 ;;; Have to have this set before requiring evil
-(setq evil-toggle-key "M-e")
+(setq evil-toggle-key "C-\\")
 
 ;;; Remove the default comment mappings.
 (setq evilnc-hotkey-comment-operator "")
@@ -318,18 +319,22 @@ Including indent-buffer, which should not be called automatically on save."
                   elisp-slime-nav jump-char jedi quack monky python-pylint
                   smart-window projectile helm-projectile arduino-mode
                   list-register ac-etags vimrc-mode xcscope
-                  smart-tab helm-descbinds smartscan
+                  smart-tab helm-descbinds smartscan window-number
                   ;; I occasionally use this, but not usually -- shows currently
                   ;; unbound keys, which is useful for deciding on a keybinding.
                   ;; unbound
-                  window-number evil-leader evil evil-exchange evil-args
+
+                  ;; Haven't yet gotten evil to work well
+                  evil-leader evil evil-exchange evil-args
                   evil-surround evil-visualstar evil-numbers evil-nerd-commenter
-                  evil-jumper))
+                  evil-jumper
+                  ))
 
      (require-only
       '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame evil-elscreen nameses
-                 le-eval-and-insert-results)))
+                 buffer-move transpose-frame
+                 evil-elscreen
+                 nameses le-eval-and-insert-results)))
 
   (let
       ((require-packages
