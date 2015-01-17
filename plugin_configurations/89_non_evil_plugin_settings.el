@@ -142,7 +142,6 @@
 
 ;;;; Jedi Settings
 ;;;;
-(setq jedi:use-shortcuts t)
 (add-hook 'python-mode-hook 'jedi:setup)
 ;;; See [[http://tkf.github.io/emacs-jedi/latest/][jedi docs]] for setting
 ;;; python2
