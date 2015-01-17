@@ -297,11 +297,11 @@ Including indent-buffer, which should not be called automatically on save."
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;;; Have to have this set before requiring evil
-(setq evil-toggle-key "C-\\")
+;; ;;; Have to have this set before requiring evil
+;; (setq evil-toggle-key "C-\\")
 
-;;; Remove the default comment mappings.
-(setq evilnc-hotkey-comment-operator "")
+;; ;;; Remove the default comment mappings.
+;; (setq evilnc-hotkey-comment-operator "")
 
 ;;; If you ask it not to remap keys, it maps them to the default function
 ;;; instead of just leaving them alone.
@@ -324,16 +324,16 @@ Including indent-buffer, which should not be called automatically on save."
                   ;; unbound keys, which is useful for deciding on a keybinding.
                   ;; unbound
 
-                  ;; Haven't yet gotten evil to work well
-                  evil-leader evil evil-exchange evil-args
-                  evil-surround evil-visualstar evil-numbers evil-nerd-commenter
-                  evil-jumper
+                  ;; ;; Haven't yet gotten evil to work well
+                  ;; evil-leader evil evil-exchange evil-args
+                  ;; evil-surround evil-visualstar evil-numbers evil-nerd-commenter
+                  ;; evil-jumper
                   ))
 
      (require-only
       '(epa-file eldoc desktop uniquify
                  buffer-move transpose-frame
-                 evil-elscreen
+                 ;; evil-elscreen
                  nameses le-eval-and-insert-results)))
 
   (let
