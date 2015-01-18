@@ -38,9 +38,3 @@
 ;;;; Scheme Settings
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")
-;;; Want to add the mapping to complete symmetry with C-x C-e and C-' C-e
-;;; Unfortunately, at the moment I can't be bothered doing that right now, as
-;;; there doesn't seem to be a scheme-mode-map.
-;; (add-hook 'scheme-mode-hook
-;;           (lambda ()
-;;             (define-key WHATEVER-MAP (kbd "C-' C-e") 'scheme-send-last-sexp)))
