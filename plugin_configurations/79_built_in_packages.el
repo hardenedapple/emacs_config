@@ -86,7 +86,7 @@
 
 ;;;; Hippie Expand Settings
 ;;;;
-;; While I have no mapping for hippie-expand, I set up smart tab to use it by
+;; While I have no mapping for HIPPIE-EXPAND, I set up smart tab to use it by
 ;; default whenever autocomplete is not available. Hence, when there isn't
 ;; autocomplete, this is the default completion, available on the TAB key.
 (setq hippie-expand-try-functions-list
@@ -105,8 +105,8 @@
                               '(try-expand-dabbrev
                                 try-expand-dabbrev-all-buffers
                                 try-expand-dabbrev-from-kill)))
-;; This is the default special hippie-expanion, default here means ready for
-;; {e,}lisp (as that's what I mainly use emacs for).
+;; This is my default special HIPPIE-EXPANION function, default here means ready
+;; for {e,}lisp (as that's what I mainly use emacs for).
 ;; The idea is this keybinding is set on a per buffer basis, with customisations
 ;; based on mode, while filename completion and dabbrev completion are more
 ;; general.
@@ -119,8 +119,8 @@
 (global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
 
-;; try-expand-line and try-expand-list add an extra ")" character when in
-;; paredit-mode, fix this with an advice (as suggested on the hippie-expand
+;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
+;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
 ;; emacs wiki page)
 (defadvice he-substitute-string (after he-paredit-fix activate)
   "remove extra paren when expanding line in paredit"
