@@ -19,30 +19,6 @@
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 
-;;;; Auto Complete Settings
-;;;;
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories
-             "~/.emacs.d/elpa/auto-complete-20140618.2217/dict")
-(ac-config-default)
-
-;;; C-n and C-p to choose options
-(setq ac-use-menu-map t)
-(define-key ac-menu-map (kbd "C-n") 'ac-next)
-(define-key ac-menu-map (kbd "C-p") 'ac-previous)
-;;; Only complete when I ask you to
-(setq ac-auto-start nil)
-(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-
-
-;;;; Auto Complete Etags Settings
-;;;;
-(ac-etags-setup)
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (add-to-list 'ac-sources 'ac-source-etags)))
-
-
 ;;;; Buffer Move Settings
 ;;;;
 (global-set-key (kbd "<C-S-up>")     'buf-move-up)
@@ -134,13 +110,6 @@
 ;;;; Helm descbinds
 ;;;;
 (helm-descbinds-mode)
-
-
-;;;; Jedi Settings
-;;;;
-(add-hook 'python-mode-hook 'jedi:setup)
-;;; See [[http://tkf.github.io/emacs-jedi/latest/][jedi docs]] for setting
-;;; python2
 
 
 ;;;; Jump Char Settings
@@ -313,22 +282,10 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (add-hook 'slime-repl-mode-hook
           (lambda ()
             (set-up-slime-ac)
-            (define-key slime-repl-mode-map (kbd "M-TAB") 'auto-complete)
             (define-key slime-repl-mode-map "(" 'self-insert-command)
             (define-key slime-repl-mode-map ")" 'self-insert-command)))
 
 (setq slime-autodoc-use-multiline-p t)
-
-
-;;;; Auto Complete Slime
-;;;;
-(require 'ac-slime)
-(add-hook 'slime-mode-hook
-          (lambda ()
-            (set-up-slime-ac t)
-            (define-key slime-mode-map (kbd "M-TAB") 'auto-complete)))
-
-(add-to-list 'ac-modes 'slime-repl-mode)
 
 
 ;;;; Smartscan Settings

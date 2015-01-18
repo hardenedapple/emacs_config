@@ -310,16 +310,15 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; In a let as I don't like polluting the namespace.
 (let
-    ((download-only '(monokai-theme tangotango-theme pos-tip auto-complete helm
-                                    ac-slime))
+    ((download-only '(monokai-theme tangotango-theme helm))
 
      (elpa-packages
       '(undo-tree paredit yasnippet key-chord goto-chg elscreen
                   ace-jump-mode wrap-region magit multiple-cursors expand-region
-                  elisp-slime-nav jump-char jedi quack monky python-pylint
+                  elisp-slime-nav jump-char quack monky python-pylint
                   smart-window projectile helm-projectile arduino-mode
-                  list-register ac-etags vimrc-mode xcscope
-                  smart-tab helm-descbinds smartscan window-number
+                  list-register vimrc-mode xcscope smart-tab helm-descbinds
+                  smartscan window-number
                   ;; I occasionally use this, but not usually -- shows currently
                   ;; unbound keys, which is useful for deciding on a keybinding.
                   ;; unbound
