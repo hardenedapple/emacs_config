@@ -183,6 +183,11 @@
               'python-shell-completion-complete-or-indent)))
 
 
+;;;; Regexp Builder
+;;;;
+(setq reb-re-syntax 'string)
+
+
 ;;;; Uniquify Settings
 ;;;;
 (setq uniquify-buffer-name-style 'post-forward)
