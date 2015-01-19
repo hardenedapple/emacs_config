@@ -268,6 +268,13 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
       '((emacs-lisp-mode . completion-at-point)))
 
 
+;;;; Smart Window settings
+;;;;
+;; I like my windows to stay equally sized
+(defadvice smart-window--split (after equalise-windows activate)
+  (balance-windows))
+
+
 ;;;; Slime Settings
 ;;;;
 (add-to-list 'load-path "~/.emacs.d/packages/slime")
@@ -300,7 +307,6 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (define-key smartscan-map (kbd "M-n") nil)
 (define-key smartscan-map (kbd "M-p") nil)
 (define-key smartscan-map (kbd "M-'") 'smartscan-symbol-replace)
-
 
 
 ;;;; Transpose Frame Settings
