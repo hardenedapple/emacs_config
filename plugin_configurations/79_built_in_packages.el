@@ -118,6 +118,7 @@
 (global-set-key (kbd "M-/") 'hippie-complete-file)
 (global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
+(global-set-key (kbd "C-\\") 'dabbrev-completion)
 
 ;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
 ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
