@@ -124,6 +124,7 @@
 (global-set-key (kbd "<C-s-down>") 'move-this-line-down)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
+(global-set-key (kbd "M-k") 'goto-line)
 
 
 ;;;; Make scripts executeable automatically

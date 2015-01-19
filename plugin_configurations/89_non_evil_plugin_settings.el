@@ -122,8 +122,6 @@
 ;;;;
 (key-chord-mode 1)
 
-(key-chord-define-global "gt" 'goto-line)
-
 
 ;;;; List Registers Settings
 ;;;;
@@ -143,6 +141,11 @@
 (setq git-commit-mode-hook '(turn-on-auto-fill))
 
 ;;; Intercept calling git in Eshell and parse some into Magit
+;;
+;; TODO:
+;;     Add something for my shell aliases gr and hr
+;;     Possibly get the output from 'start-file-process, then use that in the
+;;     function to change directory
 (setq eshell-magit->git-transformations
       (list
        '("log" . (lambda (args)
