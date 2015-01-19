@@ -297,12 +297,6 @@ Including indent-buffer, which should not be called automatically on save."
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;; ;;; Have to have this set before requiring evil
-;; (setq evil-toggle-key "C-\\")
-
-;; ;;; Remove the default comment mappings.
-;; (setq evilnc-hotkey-comment-operator "")
-
 ;;; If you ask it not to remap keys, it maps them to the default function
 ;;; instead of just leaving them alone.
 ;;; Follow this variable and remove the offending maps
@@ -322,11 +316,6 @@ Including indent-buffer, which should not be called automatically on save."
                   ;; I occasionally use this, but not usually -- shows currently
                   ;; unbound keys, which is useful for deciding on a keybinding.
                   ;; unbound
-
-                  ;; ;; Haven't yet gotten evil to work well
-                  ;; evil-leader evil evil-exchange evil-args
-                  ;; evil-surround evil-visualstar evil-numbers evil-nerd-commenter
-                  ;; evil-jumper
                   ))
 
      (require-only
@@ -349,9 +338,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; Load all files in the directory plugin_configurations
 ;;; Name of file denotes order it's loaded in.
-;;; Note order matters in two ways here:
+;;; Note order matters in way here:
 ;;;    wrap-region after paredit to not overwrite '('
-;;;    evil-leader before evil so works in initial buffers.
 (dolist (conf-file
          (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
   (load conf-file))
