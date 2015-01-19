@@ -19,6 +19,10 @@
 
 ;;;; Python Settings
 ;;;;
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq imenu-create-index-function python-imenu-create-index)))
+
 ;; Manually set the flymake configuration
 ;; At the moment the pylint flymake option in python-mode isn't doing anything
 (setq pylint "epylint")
