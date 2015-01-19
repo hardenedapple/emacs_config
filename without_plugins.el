@@ -282,4 +282,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;;;; Load Dvorak keybindings
-(load "~/.emacs.d/plugin_configurations/99_dvorak_keybindings.el")
+(dolist (conf-file (list
+                    "~/.emacs.d/plugin_configurations/69_filetype_specific_settings.el"
+                    "~/.emacs.d/plugin_configurations/79_built_in_packages.el"
+                    "~/.emacs.d/plugin_configurations/99_dvorak_keybindings.el"))
+  (load conf-file))
