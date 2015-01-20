@@ -124,6 +124,7 @@
 (global-set-key (kbd "<C-s-down>") 'move-this-line-down)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
+(global-set-key (kbd "M-k") 'goto-line)
 
 
 ;;;; Make scripts executeable automatically
@@ -259,23 +260,19 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-map "+" 'what-cursor-position)
 (define-key ctl-x-map "=" 'balance-windows)
 
-(defun fix-window-horizontal-size ()
+(defun fix-window-horizontal-size (&optional num-columns)
   "Set the window's size to 80 (or prefix arg WIDTH) columns wide."
   (interactive)
-  (enlarge-window (- 82 (window-width)) 'horizontal))
+  (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-(defun split-window-horizontally-equal ()
-  "I get a little annoyed every time I split windows without this."
-  (interactive)
-  (split-window-horizontally)
-  (balance-windows))
-
-(define-key ctl-x-map "3" 'split-window-horizontally-equal)
+;; Keep window size evenly spread
+(setq window-combination-resize t)
 
 ;;; Make it more likely that split-window-sensibly will split vertically
+(setq fit-window-to-buffer-horizontally t)
 (setq split-height-threshold 27
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
