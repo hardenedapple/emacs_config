@@ -166,5 +166,13 @@
       (desktop-release-lock)
       (setq desktop-dirname nil))))
 
+(defun nameses-leave ()
+  "Save and leave the current session, completely exit."
+  (interactive)
+  (let ((cur-name (nameses-current-name)))
+    (when cur-name
+      (nameses-save cur-name)
+      (nameses-reset))))
+
 (add-hook 'kill-emacs-hook 'nameses-kill-emacs-hook)
 (provide 'nameses)
