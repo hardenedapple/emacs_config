@@ -275,6 +275,19 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (defadvice smart-window--split (after equalise-windows activate)
   (balance-windows))
 
+;; Once loaded, overwrite with my own mappings
+(define-key ctl-x-map "2"
+  (lambda (numlines) (interactive "P")
+    (if (not (consp numlines)) (call-interactively 'sw-below)
+      (split-window-below)
+      (balance-windows))))
+
+(define-key ctl-x-map "3"
+  (lambda (numlines) (interactive "P")
+    (if (not (consp numlines)) (call-interactively 'sw-right)
+      (split-window-right)
+      (balance-windows))))
+
 
 ;;;; Slime Settings
 ;;;;
