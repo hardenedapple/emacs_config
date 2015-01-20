@@ -159,9 +159,9 @@
 ;; Elisp imenu
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            (push '("Section" "^;;;;\\s-?\\(.+\\)$" 1)
+            (push '("Section" "^;;;;\\s-?\\([^;[:cntrl:]].+\\)$" 1)
                   imenu-generic-expression)
-            (push '("Subsection" "^;;;\\s-?\\([^;].+\\)$" 1)
+            (push '("Subsection" "^;;;\\s-?\\([^;[:cntrl:]].+\\)$" 1)
                   imenu-generic-expression)))
 
 
