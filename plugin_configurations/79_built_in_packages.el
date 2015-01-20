@@ -156,6 +156,14 @@
           (lambda ()
             (setq imenu-create-index-function python-imenu-create-index)))
 
+;; Elisp imenu
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (push '("Section" "^;;;;\\s-?\\(.+\\)$" 1)
+                  imenu-generic-expression)
+            (push '("Subsection" "^;;;\\s-?\\([^;].+\\)$" 1)
+                  imenu-generic-expression)))
+
 
 ;;;; List Buffer Settings
 ;;;;
@@ -170,7 +178,7 @@
 (global-set-key (kbd "C-c o") 'org-open-at-point-global)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
-;;; (setq org-drawers (cons "THOUGHTS" org-drawers))
+;; (setq org-drawers (cons "THOUGHTS" org-drawers))
 (setq org-directory "~/TODO"
       org-hide-block-startup t
       org-startup-indented t
@@ -183,8 +191,8 @@
                              "~/TODO/Someday.org"))
 
 
-;;; Have to do this when org-mode is leaded as org-mode-map isn't defined
-;;; otherwise.
+;; Have to do this when org-mode is leaded as org-mode-map isn't defined
+;; otherwise.
 (add-hook 'org-mode-hook
           (lambda ()
             (define-key org-mode-map (kbd "C-'") nil)
