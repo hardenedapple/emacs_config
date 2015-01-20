@@ -277,6 +277,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-map "3" 'split-window-horizontally-equal)
 
 ;;; Make it more likely that split-window-sensibly will split vertically
+(setq fit-window-to-buffer-horizontally t)
 (setq split-height-threshold 27
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
