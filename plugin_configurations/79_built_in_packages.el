@@ -151,12 +151,14 @@
 
 ;;;; Imenu Settings
 ;;;;
-;; Python imenu
+;;; Python imenu
 (add-hook 'python-mode-hook
           (lambda ()
             (setq imenu-create-index-function python-imenu-create-index)))
 
-;; Elisp imenu
+;;; Elisp imenu
+;; don't like how this requires [:cntrl:] to avoid newlines
+;; look for something better later.
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
             (push '("Section" "^;;;;\\s-?\\([^;[:cntrl:]].+\\)$" 1)

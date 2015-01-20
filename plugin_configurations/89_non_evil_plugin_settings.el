@@ -334,7 +334,7 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
     ad-do-it))
 
 
-;;;: Vimrc Syntax Settings
+;;;; Vimrc Syntax Settings
 ;;;;
 (add-to-list 'auto-mode-alist '("vimrc$" . vimrc-mode))
 (add-to-list 'auto-mode-alist '("\\.vim$" . vimrc-mode))
