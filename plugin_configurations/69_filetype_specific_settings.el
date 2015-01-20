@@ -17,28 +17,6 @@
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
 
-;;;; Python Settings
-;;;;
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq imenu-create-index-function python-imenu-create-index)))
-
-;; Manually set the flymake configuration
-;; At the moment the pylint flymake option in python-mode isn't doing anything
-(setq pylint "epylint")
-
-(when (load "flymake" t)
-  (defun flymake-pylint-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list pylint (list local-file)))))
-
-(add-hook 'flymake-allowed-file-name-masks
-          '("\\.py\\'" flymake-pylint-init))
-
 ;;;; Scheme Settings
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")

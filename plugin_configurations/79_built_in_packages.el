@@ -84,6 +84,26 @@
 ;; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][look here]]
 
 
+;;;; Flymake Settings
+;;;;
+;; Python flymake
+;; Manually set the flymake configuration
+;; At the moment the pylint flymake option in python-mode isn't doing anything
+(setq pylint "epylint")
+
+(when (load "flymake" t)
+  (defun flymake-pylint-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list pylint (list local-file)))))
+
+(add-hook 'flymake-allowed-file-name-masks
+          '("\\.py\\'" flymake-pylint-init))
+
+
 ;;;; Hippie Expand Settings
 ;;;;
 ;; While I have no mapping for HIPPIE-EXPAND, I set up smart tab to use it by
@@ -127,6 +147,14 @@
   "remove extra paren when expanding line in paredit"
   (if (and paredit-mode (equal (substring str -1) ")"))
       (progn (backward-delete-char 1) (forward-char))))
+
+
+;;;; Imenu Settings
+;;;;
+;; Python imenu
+(add-hook 'python-mode-hook
+          (lambda ()
+            (setq imenu-create-index-function python-imenu-create-index)))
 
 
 ;;;; List Buffer Settings
