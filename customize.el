@@ -29,7 +29,8 @@
         (mode . c-mode)
         (mode . java-mode)
         (mode . idl-mode)
-        (mode . lisp-mode))))))))
+        (mode . lisp-mode)
+        (mode . python-mode))))))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
