@@ -60,13 +60,14 @@
   "Save desktop by name."
   (interactive)
   (unless name (setq name (read-string "Save session as: ")))
-  (when (nameses-current-name)
-    (desktop-release-lock))
-  (make-directory (concat nameses-dir name) t)
-  (desktop-lazy-complete)               ; Load all buffers before saving
-  (if (desktop-save (concat nameses-dir name) nil)
-      (with-temp-file (nameses-elscreen-file name)
-        (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
+  (when (not (string= "" name))
+    (when (nameses-current-name)
+      (desktop-release-lock))
+    (make-directory (concat nameses-dir name) t)
+    (desktop-lazy-complete)             ; Load all buffers before saving
+    (if (desktop-save (concat nameses-dir name) nil)
+        (with-temp-file (nameses-elscreen-file name)
+          (insert (prin1-to-string (elscreen-get-screen-to-name-alist)))))))
 
 (defun nameses-prev ()
   "Switch to previous session"
