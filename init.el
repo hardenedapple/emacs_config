@@ -260,10 +260,10 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-map "+" 'what-cursor-position)
 (define-key ctl-x-map "=" 'balance-windows)
 
-(defun fix-window-horizontal-size ()
+(defun fix-window-horizontal-size (&optional num-columns)
   "Set the window's size to 80 (or prefix arg WIDTH) columns wide."
   (interactive)
-  (enlarge-window (- 82 (window-width)) 'horizontal))
+  (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
