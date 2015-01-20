@@ -265,7 +265,8 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
                                                inferior-python-mode)))
 (setq smart-tab-using-hippie-expand t)
 (setq smart-tab-completion-functions-alist
-      '((emacs-lisp-mode . completion-at-point)))
+      '((emacs-lisp-mode . completion-at-point)
+        (inferior-emacs-lisp-mode . completion-at-point)))
 
 
 ;;;; Smart Window settings
