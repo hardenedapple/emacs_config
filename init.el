@@ -268,13 +268,8 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-(defun split-window-horizontally-equal ()
-  "I get a little annoyed every time I split windows without this."
-  (interactive)
-  (split-window-horizontally)
-  (balance-windows))
-
-(define-key ctl-x-map "3" 'split-window-horizontally-equal)
+;; Keep window size evenly spread
+(setq window-combination-resize t)
 
 ;;; Make it more likely that split-window-sensibly will split vertically
 (setq fit-window-to-buffer-horizontally t)

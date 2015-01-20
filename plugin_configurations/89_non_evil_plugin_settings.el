@@ -279,14 +279,12 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (define-key ctl-x-map "2"
   (lambda (numlines) (interactive "P")
     (if (not (consp numlines)) (call-interactively 'sw-below)
-      (split-window-below)
-      (balance-windows))))
+      (split-window-below))))
 
 (define-key ctl-x-map "3"
   (lambda (numlines) (interactive "P")
     (if (not (consp numlines)) (call-interactively 'sw-right)
-      (split-window-right)
-      (balance-windows))))
+      (split-window-right))))
 
 
 ;;;; Slime Settings
