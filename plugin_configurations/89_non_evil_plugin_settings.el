@@ -301,6 +301,16 @@ and run a command given by the user in that window.
       (call-interactively (run-command-split-window 'right))))))
 
 
+;;;; Smex Settings
+;;;;
+(setq smex-history-length 20)
+(setq smex-save-file "~/.emacs.d/smex-items")
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
 ;;;; Slime Settings
 ;;;;
 (add-to-list 'load-path "~/.emacs.d/packages/slime")
