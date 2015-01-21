@@ -177,14 +177,6 @@
       next-screen-context-lines 3)
 
 
-;;;; Set Major Mode on filename
-;;;;
-;; Lies to set-auto-mode function so it sets major mode based on buffer name
-(setq default-major-mode (lambda ()
-                           (let ((buffer-file-name (or buffer-file-name (buffer-name))))
-                             (set-auto-mode))))
-
-
 ;;;; Set the files to use
 ;;;;
 (setq custom-file "~/.emacs.d/customize.el"
