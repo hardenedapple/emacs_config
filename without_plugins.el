@@ -270,6 +270,20 @@ Including indent-buffer, which should not be called automatically on save."
       compilation-window-height 10)
 
 
+
+;;;; Settings to replace external plugins
+;;;;
+;;; Ido (instead of helm)
+(require 'ido)
+(setq ido-enable-flex-matching 1)
+(add-hook 'ido-setup-hook
+ (lambda ()
+   (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
+(setq ido-use-filename-at-point 'guess)
+(setq ido-everywhere 1)
+(ido-mode 1)
+
+
 ;;;; Load Dvorak keybindings
 (dolist (conf-file (list
                     "~/.emacs.d/plugin_configurations/69_filetype_specific_settings.el"
