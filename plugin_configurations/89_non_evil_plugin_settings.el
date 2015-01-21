@@ -100,7 +100,7 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "<menu>") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(define-key ctl-x-map "b" 'helm-mini)
+(setq buffer-choose-default-function 'helm-mini)
 (define-key ctl-x-map (kbd "C-f") 'helm-find-files)
 (define-key helm-command-prefix "g" 'helm-do-grep)
 (define-key helm-command-prefix "o" 'helm-occur)
