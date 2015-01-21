@@ -33,8 +33,6 @@
 
 ;;;; Eshell Settings
 ;;;;
-(require 'eshell)
-
 ;; Prompt
 (setq eshell-prompt-function
       (lambda ()
@@ -62,7 +60,6 @@
     (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
 
 ;; Have the smart option set up how I like it, but not enabled by default.
-(require 'em-smart)
 (setq eshell-where-to-jump 'after)
 (setq eshell-review-quick-commands 'not-even-short-output)
 
