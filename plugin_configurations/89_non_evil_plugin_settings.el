@@ -269,12 +269,6 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
         (inferior-emacs-lisp-mode . completion-at-point)))
 
 
-;;;; Smart Window settings
-;;;;
-;; I like my windows to stay equally sized
-(defadvice smart-window--split (after equalise-windows activate)
-  (balance-windows))
-
 ;; Once loaded, overwrite with my own mappings
 (define-key ctl-x-map "2"
   (lambda (numlines) (interactive "P")
