@@ -267,6 +267,15 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
       (helm-projectile)
     (helm-find-files)))
 
+(defun try-projectile-compile ()
+  "Attempt to use projectile compile, otherwise just use compile."
+  (interactive)
+  (if (projectile-project-p)
+      (call-interactively 'projectile-compile-project)
+    (call-interactively 'compile)))
+
+(global-set-key [remap compile] 'try-projectile-compile)
+
 
 ;;;; Smart Tab
 ;;;;
