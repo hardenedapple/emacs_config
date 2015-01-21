@@ -581,11 +581,11 @@ Then `apply' ARGS to FUNCTION."
 
      (elpa-packages
       '(ace-jump-mode arduino-mode buffer-move elisp-slime-nav expand-region
-                      goto-chg ido-ubiquitous jump-char list-register
-                      magit monky multiple-cursors paredit projectile
-                      python-pylint quack smart-tab smart-window smartscan smex
-                      undo-tree vimrc-mode window-number wrap-region xcscope
-                      yasnippet
+                      goto-chg ido-ubiquitous ido-at-point jump-char
+                      list-register magit monky multiple-cursors paredit
+                      projectile python-pylint quack smart-tab smart-window
+                      smartscan smex undo-tree vimrc-mode window-number
+                      wrap-region xcscope yasnippet
                       ;; I occasionally use this, but not usually -- shows currently
                       ;; unbound keys, which is useful for deciding on a keybinding.
                       ;; unbound

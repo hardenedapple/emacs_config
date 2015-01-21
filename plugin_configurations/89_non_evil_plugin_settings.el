@@ -63,7 +63,12 @@
 (global-set-key [(control ?,)] 'goto-last-change-reverse)
 
 
-;;;; Ido Ubiquitous settings
+;;;; Ido at point Settings
+;;;;
+(ido-at-point-mode)
+
+
+;;;; Ido Ubiquitous Settings
 ;;;;
 (ido-ubiquitous-mode)
 
