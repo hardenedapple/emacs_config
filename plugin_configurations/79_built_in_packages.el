@@ -8,9 +8,7 @@
 
 ;;;; Cua Settings
 ;;;;
-(cua-mode t)
 (setq cua-auto-tabify-rectangles nil)
-(transient-mark-mode 1)
 (cua-selection-mode t)
 
 
@@ -224,6 +222,36 @@
 ;;;; Regexp Builder
 ;;;;
 (setq reb-re-syntax 'string)
+
+
+;;; Transient Mark Mode Settings
+;;;
+(transient-mark-mode 1)
+(defun push-mark-no-activate ()
+  "Pushes `point' to `mark-ring' and does not activate the region.
+Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled."
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring"))
+
+(defun jump-to-mark ()
+  "Jumps to the local mark, respecting the `mark-ring' order.
+This is the same as using \\[set-mark-command] with the prefix argument, when
+\\[transient-mark-mode] is disabled"
+  (interactive)
+  (set-mark-command 1))
+
+(defun exchange-point-and-mark-no-activate ()
+  "Identical to \\[exchange-point-and-mark] but will not activate the region."
+  (interactive)
+  (exchange-point-and-mark)
+  (deactivate-mark nil))
+
+(global-set-key (kbd "C-`") 'push-mark-no-activate)
+(global-set-key (kbd "M-`") 'jump-to-mark)
+;; Can't use the 'remap' thing, as there is already a remap from
+;; cua-exchange-point-and-mark
+(define-key ctl-x-map (kbd "C-x") 'exchange-point-and-mark-no-activate)
 
 
 ;;;; Uniquify Settings
