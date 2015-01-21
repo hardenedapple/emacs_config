@@ -14,9 +14,7 @@
 (key-chord-define-global ";-" 'ace-jump-word-mode)
 (key-chord-define-global ";," 'ace-jump-char-mode)
 
-(eval-after-load "ace-jump-mode"
-  '(ace-jump-mode-enable-mark-sync))
-(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+(setq ace-jump-mode-scope 'window)
 
 
 ;;;; Buffer Move Settings
