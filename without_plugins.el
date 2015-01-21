@@ -165,11 +165,16 @@
 
 ;;;; Scrolling
 ;;;;
+(require 'view)
 (global-set-key (kbd "C-v") 'View-scroll-half-page-forward)
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'scroll-up-command)
 (global-set-key (kbd "M-V") 'scroll-down-command)
 (global-set-key (kbd "C-q") 'move-to-window-line-top-bottom)
+(setq scroll-conservatively 101
+      scroll-margin 3
+      auto-window-vscroll nil
+      next-screen-context-lines 3)
 
 
 ;;;; Set Major Mode on filename
@@ -206,11 +211,7 @@
 ;;;;
 (setq inhibit-startup-message t
       default-frame-alist '((font . "Tamsyn-10"))
-      column-number-mode t
-      scroll-conservatively 1000
-      scroll-step 1
-      scroll-margin 3
-      auto-window-vscroll nil)
+      column-number-mode t)
 (set-default-font "Tamsyn-10")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
