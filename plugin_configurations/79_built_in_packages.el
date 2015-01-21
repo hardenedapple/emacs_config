@@ -149,7 +149,7 @@
 ;;; Python imenu
 (add-hook 'python-mode-hook
           (lambda ()
-            (setq imenu-create-index-function python-imenu-create-index)))
+            (setq imenu-create-index-function 'python-imenu-create-index)))
 
 ;;; Elisp imenu
 ;; don't like how this requires [:cntrl:] to avoid newlines
