@@ -63,6 +63,11 @@
 (global-set-key [(control ?,)] 'goto-last-change-reverse)
 
 
+;;;; Ido Ubiquitous settings
+;;;;
+(ido-ubiquitous-mode)
+
+
 ;;;; Jump Char Settings
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
