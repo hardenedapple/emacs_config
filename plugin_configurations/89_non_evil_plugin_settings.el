@@ -68,23 +68,34 @@
 (require 'helm-files)
 (require 'helm-grep)
 
-(define-key helm-map (kbd "C-z") 'helm-select-action)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-q") 'helm-maybe-exit-minibuffer)
 
 (define-key helm-grep-mode-map (kbd "<return>") 'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n") 'helm-grep-mode-jump-other-window-forward)
 (define-key helm-grep-mode-map (kbd "p") 'helm-grep-mode-jump-other-window-backward)
 
+(when (executable-find "curl")
+  (setq  helm-google-suggest-use-curl-p t))
+
 (setq
- helm-google-suggest-use-curl-p t
  helm-scroll-amount 4
+ helm-split-window-default-side 'other
+ helm-split-window-in-side-p t
+ helm-always-two-windows t
  helm-quick-update t
  helm-truncate-lines t
  helm-ff-search-library-in-sexp t
+ helm-ff-file-name-history-use-recentf t
  helm-move-to-line-cycle-in-source t
+ helm-recentf-fuzzy-match t
  helm-buffers-fuzzy-matching t
- helm-M-x-fuzzy-match t)
+ helm-M-x-fuzzy-match t
+ helm-locate-fuzzy-match t
+ helm-semantic-fuzzy-match t
+ helm-imenu-fuzzy-match t
+ helm-apropos-fuzzy-match t
+ helm-lisp-fuzzy-completion t
+ helm-candidate-number-limit 50)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "<menu>") 'helm-M-x)
@@ -99,9 +110,12 @@
 
 (add-hook 'eshell-mode-hook
           #'(lambda ()
-              (define-key eshell-mode-map (kbd "M-l") 'helm-eshell-history)))
+              (define-key eshell-mode-map (kbd "M-r") 'helm-eshell-history)
+              (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)))
 
 (add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
+
+(helm-autoresize-mode 0)
 (helm-mode 1)
 
 
@@ -263,10 +277,11 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
                                                inferior-python-mode)))
 (setq smart-tab-using-hippie-expand t)
 (setq smart-tab-completion-functions-alist
-      '((emacs-lisp-mode . completion-at-point)
-        (inferior-emacs-lisp-mode . completion-at-point)))
+      '((emacs-lisp-mode . helm-lisp-completion-at-point)
+        (inferior-emacs-lisp-mode . helm-lisp-completion-at-point)))
 
 
+;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
 (define-key ctl-x-map "2"
   (lambda (numlines) (interactive "P")
