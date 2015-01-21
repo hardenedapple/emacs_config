@@ -594,19 +594,6 @@ run a command given by the user in that window.
       (select-window (split-window-right)))))
 
 
-;;;; Settings to replace external plugins
-;;;;
-;;; Ido (instead of helm)
-(require 'ido)
-(setq ido-enable-flex-matching 1)
-(add-hook 'ido-setup-hook
-          (lambda ()
-            (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
-(setq ido-use-filename-at-point 'guess)
-(setq ido-everywhere 1)
-(ido-mode 1)
-
-
 (require 'help-mode)
 (require 'ibuffer)
 ;;;; Load Dvorak keybindings

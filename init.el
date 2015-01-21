@@ -577,15 +577,14 @@ Then `apply' ARGS to FUNCTION."
   (package-refresh-contents))
 
 (let
-    ((download-only '(helm monokai-theme tangotango-theme))
+    ((download-only '(monokai-theme tangotango-theme))
 
      (elpa-packages
       '(ace-jump-mode arduino-mode buffer-move elisp-slime-nav expand-region
-                      goto-chg helm-descbinds jump-char list-register
-                      magit monky multiple-cursors paredit projectile
-                      python-pylint quack smart-tab smart-window smartscan
-                      undo-tree vimrc-mode window-number wrap-region xcscope
-                      yasnippet
+                      goto-chg jump-char list-register magit monky
+                      multiple-cursors paredit projectile python-pylint quack
+                      smart-tab smart-window smartscan undo-tree vimrc-mode
+                      window-number wrap-region xcscope yasnippet
                       ;; I occasionally use this, but not usually -- shows currently
                       ;; unbound keys, which is useful for deciding on a keybinding.
                       ;; unbound

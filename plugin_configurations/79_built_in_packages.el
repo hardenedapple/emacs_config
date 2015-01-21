@@ -276,6 +276,16 @@ as yet."
       (backward-delete-char 1)))
 
 
+;;;; Ido Settings
+(setq ido-enable-flex-matching 1)
+(add-hook 'ido-setup-hook
+ (lambda ()
+   (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
+(setq ido-use-filename-at-point 'guess)
+(setq ido-everywhere 1)
+(ido-mode 1)
+
+
 ;;;; Imenu Settings
 ;;;;
 (global-set-key (kbd "C-c i") 'imenu)

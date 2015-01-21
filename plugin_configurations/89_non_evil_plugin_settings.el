@@ -63,100 +63,6 @@
 (global-set-key [(control ?,)] 'goto-last-change-reverse)
 
 
-;;;; Helm Settings
-;;;;
-(require 'helm)
-(require 'helm-config)
-(require 'helm-eshell)
-(require 'helm-files)
-(require 'helm-grep)
-
-(define-key helm-map (kbd "C-q") 'helm-execute-persistent-action)
-
-(define-key helm-grep-mode-map (kbd "<return>") 'helm-grep-mode-jump-other-window)
-(define-key helm-grep-mode-map (kbd "n") 'helm-grep-mode-jump-other-window-forward)
-(define-key helm-grep-mode-map (kbd "p") 'helm-grep-mode-jump-other-window-backward)
-
-(when (executable-find "curl")
-  (setq  helm-google-suggest-use-curl-p t))
-
-(setq
- helm-scroll-amount 4
- helm-split-window-default-side 'other
- helm-split-window-in-side-p t
- helm-always-two-windows t
- helm-reuse-last-window-split-state t
- helm-quick-update t
- helm-truncate-lines t
- helm-ff-search-library-in-sexp t
- helm-ff-file-name-history-use-recentf t
- helm-move-to-line-cycle-in-source t
- helm-recentf-fuzzy-match t
- helm-buffers-fuzzy-matching t
- helm-M-x-fuzzy-match t
- helm-locate-fuzzy-match t
- helm-semantic-fuzzy-match t
- helm-imenu-fuzzy-match t
- helm-apropos-fuzzy-match t
- helm-lisp-fuzzy-completion t
- helm-candidate-number-limit 100)
-
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "<menu>") 'helm-M-x)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(setq buffer-choose-default-function 'helm-mini)
-(define-key helm-command-prefix "g" 'helm-do-grep)
-(define-key helm-command-prefix "o" 'helm-occur)
-
-(define-key 'help-command (kbd "C-f") 'helm-apropos)
-(define-key 'help-command (kbd "r") 'helm-info-emacs)
-
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map (kbd "M-r") 'helm-eshell-history)
-              (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)))
-
-(add-hook 'helm-goto-line-before-hook 'helm-save-current-pos-to-mark-ring)
-
-(helm-autoresize-mode 0)
-(helm-mode 1)
-
-;;; Helm window setup
-;; Currently the helm buffer keeps moving, as `display-buffer-use-some-window'
-;; displays in `get-lru-window', which changes each time you start helm again.
-;;
-;; It gets past `display-buffer-in-previous-window' in my
-;; `display-buffer-base-action' as the buffers aren't in the returned value of
-;; `window-prev-buffers'.
-;;
-;; This is because `helm-cleanup' calls `replace-buffer-in-windows', which then
-;; calls `unrecord-window-buffer', removing the buffer from the windows name.
-;;
-;; Hence I need some other logic to make sure the helm windows open where I
-;; want.
-;;
-;; I'm currently not sure what logic I want, but this setting is a start.
-;;
-;; If I want to do something before the call to `pop-to-buffer', should have a
-;; look at setting `helm-display-function'
-(push
- (cons "^\*[hH]elm.*\*"
-       (list (lambda (buffer alist)
-               (if (one-window-p)
-                   (display-buffer-pop-up-window buffer alist)
-                 (window--display-buffer buffer
-                                         (next-window)
-                                         ;; (get-largest-window)
-                                         'reuse)))))
- display-buffer-alist)
-
-
-;;;; Helm descbinds
-;;;;
-(helm-descbinds-mode)
-(setq helm-descbinds-window-style 'split-window)
-
-
 ;;;; Jump Char Settings
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
@@ -271,8 +177,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Nameses Settins
 ;;;;
-;; Don't enable nameses ido mode, as I use helm, and that works with completing-read
-(setq nameses-ido-mode nil)
+(setq nameses-ido-mode t)
 
 
 ;;;; Paredit Settings
@@ -325,7 +230,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;;
 (projectile-global-mode)
 (setq projectile-enable-caching t)
-(setq projectile-completion-system 'helm)
+(setq projectile-completion-system 'ido)
 (setq projectile-use-git-grep t)
 (setq projectile-remember-window-configs t)
 
@@ -339,8 +244,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
                                                inferior-python-mode)))
 (setq smart-tab-using-hippie-expand t)
 (setq smart-tab-completion-functions-alist
-      '((emacs-lisp-mode . helm-lisp-completion-at-point)
-        (inferior-emacs-lisp-mode . helm-lisp-completion-at-point)))
+      '((emacs-lisp-mode . completion-at-point)
+        (inferior-emacs-lisp-mode . completion-at-point)))
 
 
 ;;;; Smart Window
