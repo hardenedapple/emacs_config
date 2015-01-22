@@ -31,23 +31,6 @@
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
 
-;;;; Elscreen Settings
-;;;;
-;;; For introduction look at https://github.com/shosti/elscreen
-;; Redefine elscreen-split to stay at the new tab
-(defun elscreen-split ()
-  (interactive)
-  (if (and (null (one-window-p))
-           (< (elscreen-get-number-of-screens) 10))
-      (let ((elscreen-split-buffer (current-buffer)))
-        (delete-window)
-        (elscreen-create)
-        (switch-to-buffer elscreen-split-buffer))
-    (elscreen-message "cannot split screen!")))
-
-(elscreen-start)
-
-
 ;;;; Expand Region Settings
 ;;;;
 (global-set-key (kbd "C-=") 'er/expand-region)

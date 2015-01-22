@@ -313,7 +313,7 @@ Including indent-buffer, which should not be called automatically on save."
     ((download-only '(monokai-theme tangotango-theme helm))
 
      (elpa-packages
-      '(undo-tree paredit yasnippet key-chord goto-chg elscreen
+      '(undo-tree paredit yasnippet key-chord goto-chg
                   ace-jump-mode wrap-region magit multiple-cursors expand-region
                   elisp-slime-nav jump-char quack monky python-pylint
                   smart-window projectile helm-projectile arduino-mode

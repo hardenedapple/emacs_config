@@ -21,9 +21,6 @@
 ;; (global-set-key (kbd "C-<f9>")   'nameses-prev)
 ;; (global-set-key (kbd "C-S-<f9>") 'nameses-save)
 
-(defvar nameses-elscreen-name "el-screens"
-  "Where to save the elscreen setup.")
-
 (defvar nameses-dir
   (concat (getenv "HOME") "/.emacs.d/nameses-sessions/")
   "*Directory to save desktop sessions in")
@@ -34,28 +31,6 @@
 (defvar nameses-ido-mode t
   "Whether to use ido-mode")
 
-(defun nameses-elscreen-file (name)
-  (concat (file-name-as-directory (concat nameses-dir name))
-          nameses-elscreen-name))
-
-(defun nameses-setup-screens (name)
-  (let ((elscreen-save-file (nameses-elscreen-file name)))
-    (if (file-readable-p elscreen-save-file)
-        (let ((screens (reverse
-                        (read
-                         (with-temp-buffer
-                           (insert-file-contents elscreen-save-file)
-                           (buffer-string))))))
-          (dolist (screen screens)
-            (setq screen_num (car screen))
-            (setq buffers (split-string (cdr screen) ":"))
-            (if (eq screen_num 0)
-                (switch-to-buffer (car buffers))
-              (elscreen-find-and-goto-by-buffer (car buffers) t t))
-            (setq buffers (cdr buffers))
-            (dolist (buffer buffers)
-              (switch-to-buffer-other-window buffer)))))))
-
 (defun nameses-save (&optional name)
   "Save desktop by name."
   (interactive)
@@ -65,9 +40,7 @@
       (desktop-release-lock))
     (make-directory (concat nameses-dir name) t)
     (desktop-lazy-complete)             ; Load all buffers before saving
-    (if (desktop-save (concat nameses-dir name) nil)
-        (with-temp-file (nameses-elscreen-file name)
-          (insert (prin1-to-string (elscreen-get-screen-to-name-alist)))))))
+    (desktop-save (concat nameses-dir name) nil)))
 
 (defun nameses-prev ()
   "Switch to previous session"
@@ -108,9 +81,7 @@
             (desktop-release-lock dirname)
           (throw 'err (concat name " is locked"))))
       (let ((dirfiles (delete "." (delete ".." (directory-files dirname)))))
-        (when (not (or
-                    (equal dirfiles (list desktop-base-file-name nameses-elscreen-name))
-                    (equal dirfiles (list desktop-base-file-name))))
+	(when (not (equal dirfiles (list desktop-base-file-name)))
           (throw 'err (concat dirname " contains extra files")))))))
 
 (defun nameses-load (prefix &optional name)
@@ -128,8 +99,7 @@
         (when prev-name (nameses-save prev-name))
         (nameses-reset)
         (nameses-detect-problems name)
-        (if (desktop-read (concat nameses-dir name))
-            (nameses-setup-screens name))))
+        (desktop-read (concat nameses-dir name))))
     (unless (and nameses-prev-session (string= nameses-prev-session prev-name))
       (setq nameses-prev-session prev-name))))
 
