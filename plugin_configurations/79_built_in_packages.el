@@ -238,17 +238,20 @@ This is the same as using \\[set-mark-command] with the prefix argument, when
   (interactive)
   (set-mark-command 1))
 
-(defun exchange-point-and-mark-no-activate ()
-  "Identical to \\[exchange-point-and-mark] but will not activate the region."
+(defun exchange-point-and-mark-keep-activation ()
+  "Identical to \\[exchange-point-and-mark] but will not activate the region if
+it isn't already activated."
   (interactive)
-  (exchange-point-and-mark)
-  (deactivate-mark nil))
+  (let ((should-deactivate (not mark-active)))
+    (exchange-point-and-mark)
+    (when should-deactivate
+      (deactivate-mark nil))))
 
 (global-set-key (kbd "C-`") 'push-mark-no-activate)
 (global-set-key (kbd "M-`") 'jump-to-mark)
 ;; Can't use the 'remap' thing, as there is already a remap from
 ;; cua-exchange-point-and-mark
-(define-key ctl-x-map (kbd "C-x") 'exchange-point-and-mark-no-activate)
+(define-key ctl-x-map (kbd "C-x") 'exchange-point-and-mark-keep-activation)
 
 
 ;;;; Uniquify Settings
