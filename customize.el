@@ -30,7 +30,12 @@
         (mode . java-mode)
         (mode . idl-mode)
         (mode . lisp-mode)
-        (mode . python-mode))))))))
+        (mode . python-mode)))))))
+ '(safe-local-variable-values
+   (quote
+    ((Base . 10)
+     (Package . LET-OVER-LAMBDA)
+     (Syntax . COMMON-LISP)))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
