@@ -319,7 +319,6 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 
 (add-hook 'slime-repl-mode-hook
           (lambda ()
-            (set-up-slime-ac)
             (define-key slime-repl-mode-map "(" 'self-insert-command)
             (define-key slime-repl-mode-map ")" 'self-insert-command)))
 
