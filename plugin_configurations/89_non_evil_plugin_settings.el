@@ -338,10 +338,10 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 
 ;;;; Transpose Frame Settings
 ;;;;
-(define-key ctl-x-4-map "t" 'transpose-frame)
-(define-key ctl-x-4-map "v" 'flip-frame)
-(define-key ctl-x-4-map "h" 'flop-frame)
-(define-key ctl-x-4-map "r" 'rotate-frame-clockwise)
+(define-key ctl-x-5-map "t" 'transpose-frame)
+(define-key ctl-x-5-map "v" 'flip-frame)
+(define-key ctl-x-5-map "h" 'flop-frame)
+(define-key ctl-x-5-map "r" 'rotate-frame-clockwise)
 
 
 ;;;; Undo Tree Settings
