@@ -238,14 +238,12 @@ This is the same as using \\[set-mark-command] with the prefix argument, when
   (interactive)
   (set-mark-command 1))
 
-(defun exchange-point-and-mark-keep-activation ()
+(defun exchange-point-and-mark-keep-activation (&optional arg)
   "Identical to \\[exchange-point-and-mark] but will not activate the region if
 it isn't already activated."
-  (interactive)
-  (let ((should-deactivate (not mark-active)))
-    (exchange-point-and-mark)
-    (when should-deactivate
-      (deactivate-mark nil))))
+  (interactive "P")
+  (let ((should-deactivate (eq mark-active (not (not arg)))))
+    (exchange-point-and-mark should-deactivate)))
 
 (global-set-key (kbd "C-`") 'push-mark-no-activate)
 (global-set-key (kbd "M-`") 'jump-to-mark)
