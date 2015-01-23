@@ -293,24 +293,28 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; Splice current windows into parent tree
 (defun splice-window--get-all-window-siblings (&optional direction)
-  "Return a list of the current sibling windows in a given direction.
-Default direction is forward."
-  (let ((current-sibling (selected-window))
-        (window-iterator-function (case direction
-                                    (prev 'window-prev-sibling)
-                                    (t 'window-next-sibling)))
-        return-list)
-    (while (setq current-sibling
-                 (funcall window-iterator-function current-sibling))
-      (push (list
-             (window-buffer current-sibling)
-             (window-start current-sibling)
-             (window-point current-sibling)
-             (window-hscroll current-sibling)
-             (window-dedicated-p current-sibling)
-             (window-redisplay-end-trigger)
-             current-sibling) return-list))
-    return-list))
+  "Return a list of current windows's siblings in given DIRECTION.
+Default direction is forward.
+If any siblings don't satisfy `window-live-p', throw an error."
+  (catch 'dead-window
+    (let ((current-sibling (selected-window))
+         (window-iterator-function (case direction
+                                     (prev 'window-prev-sibling)
+                                     (t 'window-next-sibling)))
+         return-list)
+     (while (setq current-sibling
+                  (funcall window-iterator-function current-sibling))
+       (unless (window-live-p current-sibling)
+         (throw 'dead-window 'subtrees-exist))
+       (push (list
+              (window-buffer current-sibling)
+              (window-start current-sibling)
+              (window-point current-sibling)
+              (window-hscroll current-sibling)
+              (window-dedicated-p current-sibling)
+              (window-redisplay-end-trigger)
+              current-sibling) return-list))
+     return-list)))
 
 (defun splice-window--get-current-split-type (&optional window)
   "Return the configuration (vertical/horizontal) WINDOW is in.
@@ -357,7 +361,7 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
                 (frame-root-window-p (window-parent cur-win))
-                (and (null forward-siblings) (null backward-siblings)))
+                (memq 'subtrees-exist (list forward-siblings backward-siblings)))
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
