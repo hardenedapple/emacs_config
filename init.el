@@ -291,6 +291,84 @@ Including indent-buffer, which should not be called automatically on save."
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
 
+;;; Splice current windows into parent tree
+(defun splice-window--get-all-window-siblings (&optional direction)
+  "Return a list of the current sibling windows in a given direction.
+Default direction is forward."
+  (let ((current-sibling (selected-window))
+        (window-iterator-function (case direction
+                                    (prev 'window-prev-sibling)
+                                    (t 'window-next-sibling)))
+        return-list)
+    (while (setq current-sibling
+                 (funcall window-iterator-function current-sibling))
+      (push (list
+             (window-buffer current-sibling)
+             (window-start current-sibling)
+             (window-point current-sibling)
+             (window-hscroll current-sibling)
+             (window-dedicated-p current-sibling)
+             (window-redisplay-end-trigger)
+             current-sibling) return-list))
+    return-list))
+
+(defun splice-window--get-current-split-type (&optional window)
+  "Return the configuration (vertical/horizontal) WINDOW is in.
+Returns nil if WINDOW is either the root window or the minibuffer window."
+  (catch 'configured
+    (when (window-combined-p window)
+      (throw 'configured 'vertical))
+    (when (window-combined-p window t)
+      (throw 'configured 'horizontal))))
+
+(defun splice-window--add-back-window (base-window to-add forwards)
+  "Add window specification TO-ADD into the BASE-WINDOW's config."
+  (let ((direction
+         (case (splice-window--get-current-split-type)
+           (vertical (if forwards 'below 'above))
+           (horizontal (if forwards 'right 'left))
+           (t (if (>= (/ (window-body-width base-window) split-width-threshold)
+                      (/ (window-body-height base-window) split-height-threshold))
+                  (if forwards 'right 'left)
+                (if forwards 'below 'above))))))
+    (let ((window (split-window base-window nil direction))
+          (buffer (pop to-add)))
+      (set-window-buffer window buffer)
+      (set-window-start window (pop to-add))
+      (set-window-point window (pop to-add))
+      (set-window-hscroll window (pop to-add))
+      (set-window-dedicated-p window (pop to-add))
+      (set-window-redisplay-end-trigger window (pop to-add))
+      (let ((orig-window (pop to-add))
+            (ol-func (lambda (ol)
+                       (if (eq (overlay-get ol 'window) orig-window)
+                           (overlay-put ol 'window window))))
+            (ol-lists (with-current-buffer buffer
+                        (overlay-lists))))
+        (mapc ol-func (car ol-lists))
+        (mapc ol-func (cdr ol-lists))))))
+
+(defun splice-window-upwards (&optional window)
+  "Move the current window level up one, and splice windows into parents level"
+  (interactive)
+  (let ((forward-siblings (splice-window--get-all-window-siblings 'next))
+        (backward-siblings (splice-window--get-all-window-siblings 'prev))
+        (cur-win (or window (selected-window))))
+    ;; Check it makes sense to call this function in the current environment
+    (unless (or (frame-root-window-p cur-win)
+                (and (null forward-siblings) (null backward-siblings)))
+      ;; Remove current siblings
+      ;; once all siblings are closed, emacs automatically splices the remaining
+      ;; window into the above level.
+      (dolist (cur-sibling (append forward-siblings backward-siblings))
+        (delete-window (car (last cur-sibling))))
+      (dolist (forward-sibling forward-siblings)
+        (splice-window--add-back-window cur-win forward-sibling t))
+      (dolist (back-sibling backward-siblings)
+        (splice-window--add-back-window cur-win back-sibling nil)))))
+
+(define-key ctl-x-4-map "s" 'splice-window-upwards)
+
 
 ;;;; Plugins and everything not enabled by default
 ;;;;
