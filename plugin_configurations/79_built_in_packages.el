@@ -146,6 +146,8 @@
 
 ;;;; Imenu Settings
 ;;;;
+(global-set-key (kbd "C-c i") 'imenu)
+
 ;;; Python imenu
 (add-hook 'python-mode-hook
           (lambda ()
