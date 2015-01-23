@@ -356,6 +356,7 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
+                (frame-root-window-p (window-parent cur-win))
                 (and (null forward-siblings) (null backward-siblings)))
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
