@@ -180,6 +180,7 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 ;;;; Monky Settings
 (key-chord-define-global ";h" 'monky-status)
 
+
 ;;;; Multiple Cursors Settings
 ;;;;
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -290,8 +291,11 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 ;;;;
 (add-to-list 'load-path "~/.emacs.d/packages/slime")
 (require 'slime-autoloads)
-(setq slime-contribs '(slime-fancy))
+(setq slime-contribs '(slime-fancy slime-asdf))
 (setq slime-complete-symbol*-fancy t)
+;; note with this set up of info, also need to go inte the directory and run
+;; install-info --dir=dir slime.info
+(add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
 
 (define-key global-map (kbd "C-c s") 'slime-selector)
 
