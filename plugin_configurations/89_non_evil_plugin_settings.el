@@ -51,7 +51,7 @@
 (require 'helm-files)
 (require 'helm-grep)
 
-(define-key helm-map (kbd "C-q") 'helm-maybe-exit-minibuffer)
+(define-key helm-map (kbd "C-q") 'helm-execute-persistent-action)
 
 (define-key helm-grep-mode-map (kbd "<return>") 'helm-grep-mode-jump-other-window)
 (define-key helm-grep-mode-map (kbd "n") 'helm-grep-mode-jump-other-window-forward)
