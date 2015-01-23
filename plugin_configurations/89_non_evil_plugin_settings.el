@@ -228,6 +228,7 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-sexp)
+(define-key paredit-mode-map (kbd "C-j") 'nil)
 
 ;;; paredit with eldoc
 (eldoc-add-command
