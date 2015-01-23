@@ -292,12 +292,12 @@ Including indent-buffer, which should not be called automatically on save."
       compilation-window-height 10)
 
 ;;; Splice current windows into parent tree
-(defun splice-window--get-all-window-siblings (&optional direction)
-  "Return a list of current windows's siblings in given DIRECTION.
+(defun splice-window--get-all-window-siblings (&optional direction window)
+  "Return a list of WINDOW's siblings in given DIRECTION.
 Default direction is forward.
 If any siblings don't satisfy `window-live-p', throw an error."
   (catch 'dead-window
-    (let ((current-sibling (selected-window))
+    (let ((current-sibling (or window (selected-window)))
          (window-iterator-function (case direction
                                      (prev 'window-prev-sibling)
                                      (t 'window-next-sibling)))
