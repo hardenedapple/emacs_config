@@ -248,12 +248,12 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (setq projectile-use-git-grep t)
 (setq projectile-remember-window-configs t)
 
-(defun try-open-projectile-file ()
+(defun try-open-projectile-file (arg)
   "Attempt to open file using projectile, otherwise normal open-file"
-  (interactive)
-  (if (projectile-project-p)
-      (helm-projectile)
-    (helm-find-files)))
+  (interactive "P")
+  (if (or arg (null (projectile-project-p)))
+      (helm-find-files nil)
+    (call-interactively 'projectile-find-file)))
 
 (defun try-projectile-compile ()
   "Attempt to use projectile compile, otherwise just use compile."
@@ -263,6 +263,7 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
     (call-interactively 'compile)))
 
 (global-set-key [remap compile] 'try-projectile-compile)
+(define-key ctl-x-map (kbd "C-f") 'try-open-projectile-file)
 
 
 ;;;; Smart Tab
