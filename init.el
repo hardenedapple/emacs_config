@@ -292,19 +292,8 @@ Including indent-buffer, which should not be called automatically on save."
       compilation-window-height 10)
 
 ;;; Splice current windows into parent tree
-(defun splice-window--window-config (window)
-  "Returns the config list for WINDOW"
-  (list
-   (window-buffer current-sibling)
-   (window-start current-sibling)
-   (window-point current-sibling)
-   (window-hscroll current-sibling)
-   (window-dedicated-p current-sibling)
-   (window-redisplay-end-trigger)
-   current-sibling))
-
 (defun splice-window--get-split-type (&optional window forwards)
-  "Return the configuration (vertical/horizontal) WINDOW is in.
+  "Return the direction to split WINDOW.
 Returns nil if WINDOW is either the root window or the minibuffer window."
   (catch 'configured
     (when (window-combined-p window)
@@ -333,7 +322,14 @@ its configuration as a sublist. "
       (while current-sibling
         (push
          (if (window-live-p current-sibling)
-             (splice-window--window-config current-sibling)
+             (list
+              (window-buffer current-sibling)
+              (window-start current-sibling)
+              (window-point current-sibling)
+              (window-hscroll current-sibling)
+              (window-dedicated-p current-sibling)
+              (window-redisplay-end-trigger)
+              current-sibling)
            (if recursive
                (let ((first-child (window-child current-sibling)))
                  (cons (splice-window--get-split-type first-child t)
