@@ -292,71 +292,124 @@ Including indent-buffer, which should not be called automatically on save."
       compilation-window-height 10)
 
 ;;; Splice current windows into parent tree
-(defun splice-window--get-all-window-siblings (&optional direction window)
-  "Return a list of WINDOW's siblings in given DIRECTION.
-Default direction is forward.
-If any siblings don't satisfy `window-live-p', throw an error."
-  (catch 'dead-window
-    (let ((current-sibling (or window (selected-window)))
-         (window-iterator-function (case direction
-                                     (prev 'window-prev-sibling)
-                                     (t 'window-next-sibling)))
-         return-list)
-     (while (setq current-sibling
-                  (funcall window-iterator-function current-sibling))
-       (unless (window-live-p current-sibling)
-         (throw 'dead-window 'subtrees-exist))
-       (push (list
-              (window-buffer current-sibling)
-              (window-start current-sibling)
-              (window-point current-sibling)
-              (window-hscroll current-sibling)
-              (window-dedicated-p current-sibling)
-              (window-redisplay-end-trigger)
-              current-sibling) return-list))
-     return-list)))
+(defun splice-window--window-config (window)
+  "Returns the config list for WINDOW"
+  (list
+   (window-buffer current-sibling)
+   (window-start current-sibling)
+   (window-point current-sibling)
+   (window-hscroll current-sibling)
+   (window-dedicated-p current-sibling)
+   (window-redisplay-end-trigger)
+   current-sibling))
 
-(defun splice-window--get-current-split-type (&optional window)
+(defun splice-window--get-split-type (&optional window forwards)
   "Return the configuration (vertical/horizontal) WINDOW is in.
 Returns nil if WINDOW is either the root window or the minibuffer window."
   (catch 'configured
     (when (window-combined-p window)
-      (throw 'configured 'vertical))
+      (throw 'configured (if forwards 'below 'above)))
     (when (window-combined-p window t)
-      (throw 'configured 'horizontal))))
+      (throw 'configured (if forwards 'right 'left)))))
 
-(defun splice-window--add-back-window (base-window to-add forwards)
+(defun splice-window--get-all-window-siblings (&optional
+                                               direction window recursive)
+  "Return a list of WINDOW's siblings in given DIRECTION.
+
+Default direction is forward.
+
+The RECURSIVE parameter decides what to do if any siblings don't
+satisfy `window-live-p', if RECURSIVE is nil (the default),
+return nil, otherwise recurse into the non-live window, storing
+its configuration as a sublist. "
+  (catch 'dead-window
+    ;; Check if the window given is a
+    (let* ((window-iterator-function (case direction
+                                       (prev 'window-prev-sibling)
+                                       (t 'window-next-sibling)))
+           ;; Here selected window takes over when there are no siblings
+           (current-sibling (or window (selected-window)))
+           return-list)
+      (while current-sibling
+        (push
+         (if (window-live-p current-sibling)
+             (splice-window--window-config current-sibling)
+           (if recursive
+               (let ((first-child (window-child current-sibling)))
+                 (cons (splice-window--get-split-type first-child t)
+                       (splice-window--get-all-window-siblings
+                        'next first-child recursive)))
+             (throw 'dead-window nil)))
+         return-list)
+        (setq current-sibling
+              (funcall window-iterator-function current-sibling)))
+      return-list)))
+
+(defun splice-window--setup-window (window buffer conf forwards direction)
+  (if (symbolp buffer)
+      (let ((window-combination-limit t))
+        (splice-window--add-back-windows window conf forwards buffer))
+    (set-window-buffer window buffer)
+    (set-window-start window (pop conf))
+    (set-window-point window (pop conf))
+    (set-window-hscroll window (pop conf))
+    (set-window-dedicated-p window (pop conf))
+    (set-window-redisplay-end-trigger window (pop conf))
+    (let ((orig-window (pop conf))
+          (ol-func (lambda (ol)
+                     (if (eq (overlay-get ol 'window) orig-window)
+                         (overlay-put ol 'window window))))
+          (ol-lists (with-current-buffer buffer
+                      (overlay-lists))))
+      (mapc ol-func (car ol-lists))
+      (mapc ol-func (cdr ol-lists)))))
+
+(defun splice-window--add-back-windows (base-window to-add forwards
+                                                    &optional direction)
   "Add window specification TO-ADD into the BASE-WINDOW's config."
   (let ((direction
-         (case (splice-window--get-current-split-type)
-           (vertical (if forwards 'below 'above))
-           (horizontal (if forwards 'right 'left))
-           (t (if (>= (/ (window-body-width base-window) split-width-threshold)
-                      (/ (window-body-height base-window) split-height-threshold))
-                  (if forwards 'right 'left)
-                (if forwards 'below 'above))))))
-    (let ((window (split-window base-window nil direction))
-          (buffer (pop to-add)))
-      (set-window-buffer window buffer)
-      (set-window-start window (pop to-add))
-      (set-window-point window (pop to-add))
-      (set-window-hscroll window (pop to-add))
-      (set-window-dedicated-p window (pop to-add))
-      (set-window-redisplay-end-trigger window (pop to-add))
-      (let ((orig-window (pop to-add))
-            (ol-func (lambda (ol)
-                       (if (eq (overlay-get ol 'window) orig-window)
-                           (overlay-put ol 'window window))))
-            (ol-lists (with-current-buffer buffer
-                        (overlay-lists))))
-        (mapc ol-func (car ol-lists))
-        (mapc ol-func (cdr ol-lists))))))
+         (or direction
+             (splice-window--get-split-type base-window forwards)
+             (if (>= (/ (window-body-width base-window) split-width-threshold)
+                     (/ (window-body-height base-window) split-height-threshold))
+                 (if forwards 'right 'left)
+               (if forwards 'below 'above))))
+        (original-combination-limit window-combination-limit))
+    ;; Recursion needed
+    ;; Split current window, work on new one
+    ;; set window-combination-limit to t
+    ;; Do splice-window--add-back-windows on first child
+    (let* ((conf (pop to-add))
+           (conf-start (pop conf)))
+      (if to-add
+          ;; Have more stuff to do -- continue
+          (let ((window (split-window base-window nil direction)))
+            (splice-window--setup-window
+             window conf-start conf forwards direction)
+            (splice-window--add-back-windows
+             base-window to-add forwards direction))
+        ;; Are on the last window of this tree, set up current window with the
+        ;; configuration, and leave
+        (splice-window--setup-window
+         base-window conf-start conf forwards direction)))))
+
+(defun splice-window--remove-current-siblings (window)
+  "Delete all siblings of WINDOW"
+  (flet ((window-collector (window function)
+                           (loop for current-sibling = (funcall function window)
+                                 then (funcall function current-sibling)
+                                 until (null current-sibling)
+                                 collect current-sibling)))
+    (let ((next-windows (window-collector window 'window-next-sibling))
+          (prev-windows (window-collector window 'window-prev-sibling)))
+      (dolist (current-sibling (append next-windows prev-windows))
+        (delete-window current-sibling)))))
 
 (defun splice-window-upwards (&optional window)
   "Move the current window level up one, and splice windows into parents level"
   (interactive)
-  (let ((forward-siblings (splice-window--get-all-window-siblings 'next))
-        (backward-siblings (splice-window--get-all-window-siblings 'prev))
+  (let ((forward-siblings (splice-window--get-all-window-siblings 'next nil t))
+        (backward-siblings (splice-window--get-all-window-siblings 'prev nil t))
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
@@ -365,12 +418,9 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
-      (dolist (cur-sibling (append forward-siblings backward-siblings))
-        (delete-window (car (last cur-sibling))))
-      (dolist (forward-sibling forward-siblings)
-        (splice-window--add-back-window cur-win forward-sibling t))
-      (dolist (back-sibling backward-siblings)
-        (splice-window--add-back-window cur-win back-sibling nil)))))
+      (splice-window--remove-current-siblings cur-win)
+      (splice-window--add-back-windows cur-win forward-siblings t)
+      (splice-window--add-back-windows cur-win backward-siblings nil))))
 
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
