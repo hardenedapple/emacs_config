@@ -230,11 +230,14 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-sexp)
 (define-key paredit-mode-map (kbd "C-j") 'nil)
 
+(add-hook 'ielm-mode-hook
+          (lambda ()
+            (define-key paredit-mode-map (kbd "M-r") nil)))
+
 ;;; paredit with eldoc
 (eldoc-add-command
  'paredit-backward-delete
  'paredit-close-round)
-
 
 
 ;;;; Projectile Settings
