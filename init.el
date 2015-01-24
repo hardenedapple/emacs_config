@@ -341,24 +341,29 @@ its configuration as a sublist. "
               (funcall window-iterator-function current-sibling)))
       return-list)))
 
-(defun splice-window--setup-window (window buffer conf forwards direction)
-  (if (symbolp buffer)
-      (let ((window-combination-limit t))
-        (splice-window--add-back-windows window conf forwards buffer))
-    (set-window-buffer window buffer)
-    (set-window-start window (pop conf))
-    (set-window-point window (pop conf))
-    (set-window-hscroll window (pop conf))
-    (set-window-dedicated-p window (pop conf))
-    (set-window-redisplay-end-trigger window (pop conf))
-    (let ((orig-window (pop conf))
-          (ol-func (lambda (ol)
-                     (if (eq (overlay-get ol 'window) orig-window)
-                         (overlay-put ol 'window window))))
-          (ol-lists (with-current-buffer buffer
-                      (overlay-lists))))
-      (mapc ol-func (car ol-lists))
-      (mapc ol-func (cdr ol-lists)))))
+(defun splice-window--setup-window (window conf forwards direction)
+  "Helper function for SPLICE-WINDOW--ADD-BACK-WINDOWS
+
+Applies the configuration CONF to WINDOW, if CONF is a subtree,
+recurse into SPLICE-WINDOW--ADD-BACK-WINDOWS"
+  (let ((buffer (pop conf)))
+    (if (symbolp buffer)
+        (let ((window-combination-limit t))
+          (splice-window--add-back-windows window conf forwards buffer))
+      (set-window-buffer window buffer)
+      (set-window-start window (pop conf))
+      (set-window-point window (pop conf))
+      (set-window-hscroll window (pop conf))
+      (set-window-dedicated-p window (pop conf))
+      (set-window-redisplay-end-trigger window (pop conf))
+      (let ((orig-window (pop conf))
+            (ol-func (lambda (ol)
+                       (if (eq (overlay-get ol 'window) orig-window)
+                           (overlay-put ol 'window window))))
+            (ol-lists (with-current-buffer buffer
+                        (overlay-lists))))
+        (mapc ol-func (car ol-lists))
+        (mapc ol-func (cdr ol-lists))))))
 
 (defun splice-window--add-back-windows (base-window to-add forwards
                                                     &optional direction)
@@ -375,19 +380,18 @@ its configuration as a sublist. "
     ;; Split current window, work on new one
     ;; set window-combination-limit to t
     ;; Do splice-window--add-back-windows on first child
-    (let* ((conf (pop to-add))
-           (conf-start (pop conf)))
+    (let* ((conf (pop to-add)))
       (if to-add
           ;; Have more stuff to do -- continue
           (let ((window (split-window base-window nil direction)))
             (splice-window--setup-window
-             window conf-start conf forwards direction)
+             window conf forwards direction)
             (splice-window--add-back-windows
              base-window to-add forwards direction))
         ;; Are on the last window of this tree, set up current window with the
         ;; configuration, and leave
         (splice-window--setup-window
-         base-window conf-start conf forwards direction)))))
+         base-window conf forwards direction)))))
 
 (defun splice-window--remove-current-siblings (window)
   "Delete all siblings of WINDOW"
