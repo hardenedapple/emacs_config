@@ -289,7 +289,9 @@ Including indent-buffer, which should not be called automatically on save."
     (display-buffer-use-some-window buffer alist)))
 
 (setq window-combination-resize t
-      display-buffer-base-action '((display-buffer-reuse-window display-buffer-some/pop-window)))
+      display-buffer-base-action (list (list
+                                        'display-buffer-reuse-window
+                                        'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
 (setq fit-window-to-buffer-horizontally t
@@ -307,8 +309,8 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
     (when (window-combined-p window t)
       (throw 'configured (if forwards 'right 'left)))))
 
-(defun splice-window--get-all-window-siblings (&optional
-                                               direction window recursive)
+(defun splice-window--get-all-window-siblings
+    (&optional direction window recursive)
   "Return a list of WINDOW's siblings in given DIRECTION.
 
 Default direction is forward.
@@ -348,10 +350,10 @@ its configuration as a sublist. "
       return-list)))
 
 (defun splice-window--setup-window (window conf forwards direction)
-  "Helper function for SPLICE-WINDOW--ADD-BACK-WINDOWS
+  "Helper function for `splice-window--add-back-windows'
 
 Applies the configuration CONF to WINDOW, if CONF is a subtree,
-recurse into SPLICE-WINDOW--ADD-BACK-WINDOWS"
+recurse into `splice-window--add-back-windows'"
   (let ((buffer (pop conf)))
     (if (symbolp buffer)
         (let ((window-combination-limit t))
@@ -419,8 +421,7 @@ recurse into SPLICE-WINDOW--ADD-BACK-WINDOWS"
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
-                (frame-root-window-p (window-parent cur-win))
-                (memq 'subtrees-exist (list forward-siblings backward-siblings)))
+                (frame-root-window-p (window-parent cur-win)))
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
