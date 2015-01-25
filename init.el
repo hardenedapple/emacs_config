@@ -486,5 +486,5 @@ recurse into SPLICE-WINDOW--ADD-BACK-WINDOWS"
 ;;; Note order matters in way here:
 ;;;    wrap-region after paredit to not overwrite '('
 (dolist (conf-file
-         (directory-files "~/.emacs.d/plugin_configurations" t "^.+\\.elc?$"))
+         (directory-files "~/.emacs.d/plugin_configurations" t "^[^.].+\\.elc?$"))
   (load conf-file))
