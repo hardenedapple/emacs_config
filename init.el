@@ -283,8 +283,13 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
 ;; Keep window size evenly spread and don't keep opening new windows
+(defun display-buffer-some/pop-window (buffer alist)
+  (if (frame-root-window-p (selected-window))
+      (display-buffer-pop-up-window buffer alist)
+    (display-buffer-use-some-window buffer alist)))
+
 (setq window-combination-resize t
-      pop-up-windows nil)
+      display-buffer-base-action (list (cons 'display-buffer-some/pop-window nil)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
 (setq fit-window-to-buffer-horizontally t
