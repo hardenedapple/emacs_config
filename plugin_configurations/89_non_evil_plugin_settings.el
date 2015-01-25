@@ -191,6 +191,14 @@ Checks if  the subcommand is  one of the  keys in the  assoc list
                (eshell-delegate-external (eshell-search-path "git") args)))))
     (funcall function-to-call args)))
 
+(defun eshell/gr (&rest args)
+  "Go to the current repositorys' root dir.
+
+Calls `eshell/cd' to the value of `magit-get-top-dir'"
+  (let ((git-root (magit-get-top-dir)))
+    (when git-root
+      (eshell/cd git-root))))
+
 
 ;;;; Monky Settings
 (key-chord-define-global ";h" 'monky-status)
