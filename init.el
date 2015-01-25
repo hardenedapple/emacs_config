@@ -290,21 +290,19 @@ window. Otherwise try `display-buffer-use-some-window'."
       (display-buffer-pop-up-window buffer alist)
     (display-buffer-use-some-window buffer alist)))
 
-(defun display-buffer-same-windows (buffer alist)
-  "If we're currently in a *Help* window, display BUFFER here.
+(defvar display-buffer-here-commands
+  (list 'previous-error 'next-error 'push-button)
+  "Commands to use same window when calling `pop-to-buffer'")
 
-Exception if the buffer to display is if `buffer-name' of BUFFER
-is *Help*. When calling the help function, `buffer-name' of
-`current-buffer' is *Help*, which means this function would act
-even though it's not what I want, so this exception is added."
-  (when (and (string-equal "*Help*" (buffer-name (current-buffer)))
-             (not (string-equal "*Help*" (buffer-name buffer))))
+(defun display-buffer-same-window-from-command (buffer alist)
+  "Opens BUFFER in `current-window' if `this-command' is in `display-buffer-here-commands'"
+  (when (memq this-command display-buffer-here-commands)
     (display-buffer-same-window buffer alist)))
 
 (setq window-combination-resize t
       display-buffer-base-action (list (list
                                         'display-buffer-reuse-window
-                                        'display-buffer-same-windows
+                                        'display-buffer-same-window-from-command
                                         'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
