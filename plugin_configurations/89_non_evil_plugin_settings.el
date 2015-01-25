@@ -78,7 +78,7 @@
  helm-imenu-fuzzy-match t
  helm-apropos-fuzzy-match t
  helm-lisp-fuzzy-completion t
- helm-candidate-number-limit 50)
+ helm-candidate-number-limit 100)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "<menu>") 'helm-M-x)
