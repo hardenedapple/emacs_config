@@ -402,19 +402,64 @@ recurse into `splice-window--add-back-windows'"
          base-window conf forwards direction)))))
 
 (defun splice-window--remove-current-siblings (window)
-  "Delete all siblings of WINDOW"
-  (flet ((window-collector (window function)
-                           (loop for current-sibling = (funcall function window)
-                                 then (funcall function current-sibling)
-                                 until (null current-sibling)
-                                 collect current-sibling)))
-    (let ((next-windows (window-collector window 'window-next-sibling))
-          (prev-windows (window-collector window 'window-prev-sibling)))
-      (dolist (current-sibling (append next-windows prev-windows))
-        (delete-window current-sibling)))))
+  "Delete all siblings of WINDOW
+
+Actually, splits `window-parent' of WINDOW, then deletes it,
+  returning the remaining window."
+  (let ((window (window-parent window)))
+    (prog1
+        (split-window window nil (splice-window--get-split-type window))
+      (delete-window window))))
 
 (defun splice-window-upwards (&optional window)
-  "Move the current window level up one, and splice windows into parents level"
+  "Splice current level of WINDOW ancestry up one.
+
+If WINDOW is not eq to or a child of `frame-root-window', then it
+  must be at least one level of nesting down.
+
+This function remove one level of nesting e.g., given this frame
+
+    +------------+------------+
+    |            |     B      |
+    |     A      +------------+
+    |            |     C      |
+    +------------+------------+
+    |            D            |
+    +-------------------------+
+
+when called on window B leaves the frame as
+
+    +--------+--------+-------+
+    |        |        |       |
+    |    A   |    B   |   C   |
+    |        |        |       |
+    +--------+--------+-------+
+    |            D            |
+    +-------------------------+
+
+when called on window A, leave the frame as
+(not scaled correctly)
+
+    +-------------------------+
+    |                         |
+    |            A            +
+    |                         |
+    +-------------------------+
+    |            C            |
+    +-------------------------+
+    |            B            |
+    +-------------------------+
+    |                         |
+    |            D            |
+    |                         |
+    +-------------------------+
+
+This function leaves any preexisting subnests like the B/C window in the
+example.
+
+As this function doesn't yet take account of original window sizes, it's
+advisable to have `window-combination-resize' set to `t' when using this
+function."
   (interactive)
   (let ((forward-siblings (splice-window--get-all-window-siblings 'next nil t))
         (backward-siblings (splice-window--get-all-window-siblings 'prev nil t))
@@ -425,9 +470,10 @@ recurse into `splice-window--add-back-windows'"
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
-      (splice-window--remove-current-siblings cur-win)
-      (splice-window--add-back-windows cur-win forward-siblings t)
-      (splice-window--add-back-windows cur-win backward-siblings nil))))
+      (let ((cur-win (splice-window--remove-current-siblings cur-win)))
+        (splice-window--add-back-windows cur-win forward-siblings t)
+        (splice-window--add-back-windows cur-win backward-siblings nil)
+        (select-window cur-win)))))
 
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
