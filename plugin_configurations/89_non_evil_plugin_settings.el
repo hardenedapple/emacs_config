@@ -137,27 +137,42 @@
 
 ;;; Intercept calling git in Eshell and parse some into Magit
 ;;
+;; NOTE:
+;;     Some of these functions are taken directly from magit.el, while changing
+;;     the SWITCH-FUNC argument to `magit-mode-setup' macro so that always use
+;;     the current window.
+;;
 ;; TODO:
 ;;     Add something for my shell aliases gr and hr
 ;;     Possibly get the output from 'start-file-process, then use that in the
 ;;     function to change directory
 (setq eshell-magit->git-transformations
       (list
-       '("log" . (lambda (args)
-                   (if args (magit-log (cadr args)) (magit-log))
+       '("log" . (lambda (range)
+                   (let ((range (cadr range)))
+                     (cond ((not range) (setq range "HEAD"))
+                           ;; Forward compatibility kludge.
+                           ((listp range) (setq range (car range))))
+                     (magit-mode-setup magit-log-buffer-name
+                                       #'switch-to-buffer
+                                       #'magit-log-mode
+                                       #'magit-refresh-log-buffer
+                                       'oneline range magit-custom-options))
                    nil))
        '("diff" . (lambda (args)
-                    (magit-diff (or (cadr args) "HEAD"))
-                    nil))
-       '("graph" . (lambda (args)
-                     (if args (magit-log-long (cadr args)) (magit-log-long))
-                     nil))
-       '("show" . (lambda (args)
-                    (magit-show-commit (cadr args))
+                    (magit-mode-setup magit-diff-buffer-name
+                                      #'switch-to-buffer
+                                      #'magit-diff-mode
+                                      #'magit-refresh-diff-buffer
+                                      (or (cadr args) "HEAD") nil nil)
                     nil))
        '("status" . (lambda (args)
-                      (magit-status default-directory)
-                      nil))))
+                      (magit-status default-directory
+                                    #'switch-to-buffer
+                                    nil)))))
+
+(push (cons "graph" (cdr (assoc "log" eshell-magit->git-transformations)))
+      eshell-magit->git-transformations)
 
 (defun eshell-delegate-external (command args)
   "Call an external command "
