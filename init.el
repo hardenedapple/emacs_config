@@ -516,7 +516,7 @@ function."
       '(undo-tree paredit yasnippet key-chord goto-chg
                   ace-jump-mode wrap-region magit multiple-cursors expand-region
                   elisp-slime-nav jump-char quack monky python-pylint
-                  smart-window projectile helm-projectile arduino-mode
+                  smart-window projectile arduino-mode
                   list-register vimrc-mode xcscope smart-tab helm-descbinds
                   smartscan window-number
                   ;; I occasionally use this, but not usually -- shows currently
