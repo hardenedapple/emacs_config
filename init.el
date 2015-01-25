@@ -510,25 +510,22 @@ function."
 
 ;;; In a let as I don't like polluting the namespace.
 (let
-    ((download-only '(monokai-theme tangotango-theme helm))
+    ((download-only '(helm monokai-theme tangotango-theme))
 
      (elpa-packages
-      '(undo-tree paredit yasnippet key-chord goto-chg
-                  ace-jump-mode wrap-region magit multiple-cursors expand-region
-                  elisp-slime-nav jump-char quack monky python-pylint
-                  smart-window projectile arduino-mode
-                  list-register vimrc-mode xcscope smart-tab helm-descbinds
-                  smartscan window-number
-                  ;; I occasionally use this, but not usually -- shows currently
-                  ;; unbound keys, which is useful for deciding on a keybinding.
-                  ;; unbound
-                  ))
+      '(ace-jump-mode arduino-mode elisp-slime-nav expand-region goto-chg
+                      helm-descbinds jump-char key-chord list-register magit monky
+                      multiple-cursors paredit projectile python-pylint quack smart-tab
+                      smart-window smartscan undo-tree vimrc-mode window-number wrap-region
+                      xcscope yasnippet
+                      ;; I occasionally use this, but not usually -- shows currently
+                      ;; unbound keys, which is useful for deciding on a keybinding.
+                      ;; unbound
+                      ))
 
      (require-only
-      '(epa-file eldoc desktop uniquify
-                 buffer-move transpose-frame
-                 eshell em-smart
-                 nameses le-eval-and-insert-results)))
+      '(buffer-move desktop eldoc em-smart eshell le-eval-and-insert-results
+                    nameses transpose-frame uniquify epa-file)))
 
   (let
       ((require-packages
