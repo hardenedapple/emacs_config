@@ -289,7 +289,7 @@ Including indent-buffer, which should not be called automatically on save."
     (display-buffer-use-some-window buffer alist)))
 
 (setq window-combination-resize t
-      display-buffer-base-action (list (cons 'display-buffer-some/pop-window nil)))
+      display-buffer-base-action '((display-buffer-reuse-window display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
 (setq fit-window-to-buffer-horizontally t
