@@ -282,15 +282,29 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-;; Keep window size evenly spread and don't keep opening new windows
+;; Set up how new/different buffers are displayed
 (defun display-buffer-some/pop-window (buffer alist)
+  "If `selected-window' is only one in this frame, display in new
+window. Otherwise try `display-buffer-use-some-window'."
   (if (frame-root-window-p (selected-window))
       (display-buffer-pop-up-window buffer alist)
     (display-buffer-use-some-window buffer alist)))
 
+(defun display-buffer-same-windows (buffer alist)
+  "If we're currently in a *Help* window, display BUFFER here.
+
+Exception if the buffer to display is if `buffer-name' of BUFFER
+is *Help*. When calling the help function, `buffer-name' of
+`current-buffer' is *Help*, which means this function would act
+even though it's not what I want, so this exception is added."
+  (when (and (string-equal "*Help*" (buffer-name (current-buffer)))
+             (not (string-equal "*Help*" (buffer-name buffer))))
+    (display-buffer-same-window buffer alist)))
+
 (setq window-combination-resize t
       display-buffer-base-action (list (list
                                         'display-buffer-reuse-window
+                                        'display-buffer-same-windows
                                         'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
