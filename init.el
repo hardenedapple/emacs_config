@@ -282,12 +282,13 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-;; Keep window size evenly spread
-(setq window-combination-resize t)
+;; Keep window size evenly spread and don't keep opening new windows
+(setq window-combination-resize t
+      pop-up-windows nil)
 
 ;;; Make it more likely that split-window-sensibly will split vertically
-(setq fit-window-to-buffer-horizontally t)
-(setq split-height-threshold 27
+(setq fit-window-to-buffer-horizontally t
+      split-height-threshold 27
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
 
