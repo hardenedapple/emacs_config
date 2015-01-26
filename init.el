@@ -498,6 +498,23 @@ sizes, it's advisable to have `window-combination-resize' set to
         (splice-window--add-back-windows cur-win backward-siblings nil)
         (select-window cur-win)))))
 
+(defun swap-windows-properly (window1 &optional window2)
+  "Swap WINDOW1 and WINDOW2 respecting any splits
+
+Takes two windows, and swaps them, works if one or both of the
+windows are internal ones, i.e. if `window-live-p' returns `nil'
+on them."
+  (let ((conf1 (splice-window--get-window-setup window1))
+        (conf2 (splice-window--get-window-setup window2))
+        (new-win1 (split-window window1 nil
+                                (splice-window--get-split-type window1)))
+        (new-win2 (split-window window2 nil
+                                (splice-window--get-split-type window2))))
+    (splice-window--setup-window new-win1 conf2)
+    (splice-window--setup-window new-win2 conf1)
+    (delete-window window1)
+    (delete-window window2)))
+
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
 
