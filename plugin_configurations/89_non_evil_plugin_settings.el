@@ -203,6 +203,14 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;; Monky Settings
 (key-chord-define-global ";h" 'monky-status)
 
+(defun eshell/hr (&rest args)
+  "Go to the current mercurial repositorys' root dir.
+
+Calls `eshell/cd' to the value of `magit-get-top-dir'"
+  (let ((hg-root (monky-get-root-dir)))
+    (when hg-root
+      (eshell/cd hg-root))))
+
 
 ;;;; Multiple Cursors Settings
 ;;;;
