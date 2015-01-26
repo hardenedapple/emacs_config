@@ -503,16 +503,24 @@ sizes, it's advisable to have `window-combination-resize' set to
 Takes two windows, and swaps them, works if one or both of the
 windows are internal ones, i.e. if `window-live-p' returns `nil'
 on them."
+  (unless (windowp window1)
+    (error "Must supply valid WINDOW1 to SWAP-WINDOWS-PROPERLY"))
   (let ((conf1 (splice-window--get-window-setup window1))
         (conf2 (splice-window--get-window-setup window2))
         (new-win1 (split-window window1 nil
                                 (splice-window--get-split-type window1)))
         (new-win2 (split-window window2 nil
-                                (splice-window--get-split-type window2))))
+                                (splice-window--get-split-type window2)))
+        (original-window (selected-window)))
     (splice-window--setup-window new-win1 conf2)
     (splice-window--setup-window new-win2 conf1)
     (delete-window window1)
-    (delete-window window2)))
+    (delete-window window2)
+    (select-window (or (unless window2 new-win1)
+                       (cdr (assq original-window
+                                  (list (cons window1 new-win2)
+                                        (cons window2 new-win1))))
+                       original-window))))
 
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
