@@ -206,6 +206,7 @@
 (setq inhibit-startup-message t
       default-frame-alist '((font . "Tamsyn-10"))
       column-number-mode t)
+(setq-default major-mode nil)
 (set-default-font "Tamsyn-10")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
