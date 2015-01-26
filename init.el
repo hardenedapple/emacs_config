@@ -456,7 +456,7 @@ when called on window B leaves the frame as
     +-------------------------+
 
 when called on window A, leave the frame as
-(not scaled correctly)
+not scaled correctly
 
     +-------------------------+
     |                         |
@@ -472,15 +472,17 @@ when called on window A, leave the frame as
     |                         |
     +-------------------------+
 
-This function leaves any preexisting subnests like the B/C window in the
-example.
+This function leaves any preexisting subnests like the B/C window
+in the example.
 
-As this function doesn't yet take account of original window sizes, it's
-advisable to have `window-combination-resize' set to `t' when using this
-function."
+As this function doesn't yet take account of original window
+sizes, it's advisable to have `window-combination-resize' set to
+`t' when using this function."
   (interactive)
-  (let ((forward-siblings (splice-window--get-all-window-siblings 'next nil t))
-        (backward-siblings (splice-window--get-all-window-siblings 'prev nil t))
+  (let ((forward-siblings
+         (splice-window--get-all-window-siblings 'next window t))
+        (backward-siblings
+         (splice-window--get-all-window-siblings 'prev window t))
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
