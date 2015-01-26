@@ -404,8 +404,7 @@ recurse into `splice-window--add-back-windows'"
              (if (>= (/ (window-body-width base-window) split-width-threshold)
                      (/ (window-body-height base-window) split-height-threshold))
                  (if forwards 'right 'left)
-               (if forwards 'below 'above))))
-        (original-combination-limit window-combination-limit))
+               (if forwards 'below 'above)))))
     ;; Recursion needed
     ;; Split current window, work on new one
     ;; set window-combination-limit to t
