@@ -19,10 +19,12 @@
 (global-subword-mode 1)
 
 
-;;;; Compile Shortcut
+;;;; Compile Settings
 ;;;;
 (global-set-key (kbd "<f9>") 'compile)
 (global-set-key (kbd "<C-f9>") 'recompile)
+(global-set-key (kbd "M-g M-t") 'fist-error)
+(global-set-key (kbd "M-g t") 'fist-error)
 
 
 ;;;; Enable commands
