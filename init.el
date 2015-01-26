@@ -115,9 +115,9 @@
   (let ((col (current-column)))
     (forward-line)
     (transpose-lines (- numlines))
-    ;; Note: I have advised TRANSPOSE-SUBR, which means I need to call
-    ;; FORWARD-LINE with argument -1, if I hadn't I'd need to call it with
-    ;; argument (- (1+ NUMLINES))
+    ;; Note: I have advised `transpose-subr', which means I need to call
+    ;;       `forward-line' with argument -1, if I hadn't I'd need to call it
+    ;;       with argument (- (1+ NUMLINES))
     (forward-line -1)
     ;;(forward-line (- (1+ numlines)))
     (move-to-column col)))
