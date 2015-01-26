@@ -382,8 +382,11 @@ Applies the configuration CONF to WINDOW, if CONF is a subtree,
 recurse into `splice-window--add-back-windows'"
   (let ((buffer (pop conf)))
     (if (symbolp buffer)
-        (let ((window-combination-limit t))
-          (splice-window--add-back-windows window conf t buffer))
+        (let ((window-combination-limit t) (sub-conf))
+          (while (setq sub-conf (pop conf))
+            (splice-window--setup-window
+             (if conf (split-window window nil buffer) window)
+             sub-conf)))
       (set-window-buffer window buffer)
       (set-window-start window (pop conf))
       (set-window-point window (pop conf))
