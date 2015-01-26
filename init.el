@@ -328,7 +328,7 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
       (throw 'configured (if forwards 'right 'left)))))
 
 (defun splice-window--get-all-window-siblings
-    (&optional direction window recursive)
+    (&optional direction window)
   "Return a list of WINDOW's siblings in given DIRECTION.
 
 Default direction is forward.
@@ -360,7 +360,7 @@ its configuration as a sublist. "
                (let ((first-child (window-child current-sibling)))
                  (cons (splice-window--get-split-type first-child t)
                        (splice-window--get-all-window-siblings
-                        'next first-child recursive)))
+                        'next first-child)))
              (throw 'dead-window nil)))
          return-list)
         (setq current-sibling
@@ -480,9 +480,9 @@ sizes, it's advisable to have `window-combination-resize' set to
 `t' when using this function."
   (interactive)
   (let ((forward-siblings
-         (splice-window--get-all-window-siblings 'next window t))
+         (splice-window--get-all-window-siblings 'next window))
         (backward-siblings
-         (splice-window--get-all-window-siblings 'prev window t))
+         (splice-window--get-all-window-siblings 'prev window))
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
