@@ -327,6 +327,26 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
     (when (window-combined-p window t)
       (throw 'configured (if forwards 'right 'left)))))
 
+(defun splice-window--get-window-setup (&optional window)
+  "Return the configuration of a WINDOW.
+
+If WINDOW is `nil', return the configuration of
+`selected-window'"
+  (let ((window (or window (selected-window))))
+    (if (window-live-p window)
+        (list (window-buffer window)
+              (window-start window)
+              (window-point window)
+              (window-hscroll window)
+              (window-dedicated-p window)
+              (window-redisplay-end-trigger)
+              window)
+      ;; Recurse on the window -- get the
+      (let ((first-child (window-child window)))
+        (cons (splice-window--get-split-type first-child t)
+              (splice-window--get-all-window-siblings
+               'next first-child))))))
+
 (defun splice-window--get-all-window-siblings
     (&optional direction window)
   "Return a list of WINDOW's siblings in given DIRECTION.
@@ -337,35 +357,19 @@ The RECURSIVE parameter decides what to do if any siblings don't
 satisfy `window-live-p', if RECURSIVE is nil (the default),
 return nil, otherwise recurse into the non-live window, storing
 its configuration as a sublist. "
-  (catch 'dead-window
-    ;; Check if the window given is a
-    (let* ((window-iterator-function (case direction
-                                       (prev 'window-prev-sibling)
-                                       (t 'window-next-sibling)))
-           ;; Here selected window takes over when there are no siblings
-           (current-sibling (or window (selected-window)))
-           return-list)
-      (while current-sibling
-        (push
-         (if (window-live-p current-sibling)
-             (list
-              (window-buffer current-sibling)
-              (window-start current-sibling)
-              (window-point current-sibling)
-              (window-hscroll current-sibling)
-              (window-dedicated-p current-sibling)
-              (window-redisplay-end-trigger)
-              current-sibling)
-           (if recursive
-               (let ((first-child (window-child current-sibling)))
-                 (cons (splice-window--get-split-type first-child t)
-                       (splice-window--get-all-window-siblings
-                        'next first-child)))
-             (throw 'dead-window nil)))
+  (let* ((window-iterator-function (case direction
+                                     (prev 'window-prev-sibling)
+                                     (t 'window-next-sibling)))
+         ;; Here selected window takes over when there are no siblings
+         (current-sibling (or window (selected-window)))
          return-list)
-        (setq current-sibling
-              (funcall window-iterator-function current-sibling)))
-      return-list)))
+    (while current-sibling
+      (push
+       (splice-window--get-window-setup current-sibling)
+       return-list)
+      (setq current-sibling
+            (funcall window-iterator-function current-sibling)))
+    return-list))
 
 (defun splice-window--setup-window (window conf forwards direction)
   "Helper function for `splice-window--add-back-windows'
