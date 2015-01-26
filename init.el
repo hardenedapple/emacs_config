@@ -14,28 +14,6 @@
       auto-save-interval 500)
 
 
-;;;; Window history buffer switch
-;;;;
-(defvar buffer-choose-default-function 'switch-to-buffer
-  "Function to call with the key C-x b  with no prefix.")
-
-(defun window-history-buffer-choose (&optional prefix)
-  "Select a buffer from the current window history."
-  (interactive "P")
-  (if prefix
-      (let ((buffer-names
-             (mapcar (lambda (list-thing) (buffer-name (car list-thing)))
-                     (append (window-prev-buffers) (window-next-buffers)))))
-        (if buffer-names
-            (switch-to-buffer
-             (completing-read "Buffer previous " buffer-names
-                              nil t nil nil (car buffer-names) nil))
-          (call-interactively buffer-choose-default-function)))
-    (call-interactively buffer-choose-default-function)))
-
-(define-key ctl-x-map "b" 'window-history-buffer-choose)
-
-
 ;;;; CamelCase word motion
 ;;;;
 (global-subword-mode 1)
@@ -267,6 +245,28 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
+
+
+;;;; Window history buffer switch
+;;;;
+(defvar buffer-choose-default-function 'switch-to-buffer
+  "Function to call with the key C-x b  with no prefix.")
+
+(defun window-history-buffer-choose (&optional prefix)
+  "Select a buffer from the current window history."
+  (interactive "P")
+  (if prefix
+      (let ((buffer-names
+             (mapcar (lambda (list-thing) (buffer-name (car list-thing)))
+                     (append (window-prev-buffers) (window-next-buffers)))))
+        (if buffer-names
+            (switch-to-buffer
+             (completing-read "Buffer previous " buffer-names
+                              nil t nil nil (car buffer-names) nil))
+          (call-interactively buffer-choose-default-function)))
+    (call-interactively buffer-choose-default-function)))
+
+(define-key ctl-x-map "b" 'window-history-buffer-choose)
 
 
 ;;;; Window Layout
