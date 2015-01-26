@@ -371,7 +371,7 @@ its configuration as a sublist. "
             (funcall window-iterator-function current-sibling)))
     return-list))
 
-(defun splice-window--setup-window (window conf forwards direction)
+(defun splice-window--setup-window (window conf)
   "Helper function for `splice-window--add-back-windows'
 
 Applies the configuration CONF to WINDOW, if CONF is a subtree,
@@ -379,7 +379,7 @@ recurse into `splice-window--add-back-windows'"
   (let ((buffer (pop conf)))
     (if (symbolp buffer)
         (let ((window-combination-limit t))
-          (splice-window--add-back-windows window conf forwards buffer))
+          (splice-window--add-back-windows window conf t buffer))
       (set-window-buffer window buffer)
       (set-window-start window (pop conf))
       (set-window-point window (pop conf))
@@ -414,14 +414,12 @@ recurse into `splice-window--add-back-windows'"
       (if to-add
           ;; Have more stuff to do -- continue
           (let ((window (split-window base-window nil direction)))
-            (splice-window--setup-window
-             window conf forwards direction)
+            (splice-window--setup-window window conf)
             (splice-window--add-back-windows
              base-window to-add forwards direction))
         ;; Are on the last window of this tree, set up current window with the
         ;; configuration, and leave
-        (splice-window--setup-window
-         base-window conf forwards direction)))))
+        (splice-window--setup-window base-window conf)))))
 
 (defun splice-window--remove-current-siblings (window)
   "Delete all siblings of WINDOW
