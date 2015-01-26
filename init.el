@@ -214,7 +214,10 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+;; Remove face commands, and emacs suspension commands
 (global-unset-key (kbd "M-o"))
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
 
 
 ;;;; Whitespace and indent
