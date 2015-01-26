@@ -486,7 +486,8 @@ sizes, it's advisable to have `window-combination-resize' set to
         (cur-win (or window (selected-window))))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
-                (frame-root-window-p (window-parent cur-win)))
+                (frame-root-window-p (window-parent cur-win))
+                (not (window-live-p cur-win)))
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
