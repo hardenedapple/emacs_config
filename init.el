@@ -341,11 +341,15 @@ If WINDOW is `nil', return the configuration of
               (window-dedicated-p window)
               (window-redisplay-end-trigger)
               window)
-      ;; Recurse on the window -- get the
-      (let ((first-child (window-child window)))
-        (cons (splice-window--get-split-type first-child t)
-              (splice-window--get-all-window-siblings
-               'next first-child))))))
+      ;; Recurse on the window -- get all children's config
+      (let ((current-sibling (window-child window)))
+        (cons (splice-window--get-split-type current-sibling t)
+              (let (retlist)
+                (while current-sibling
+                  (push (splice-window--get-window-setup current-sibling)
+                        retlist)
+                  (setq current-sibling (window-next-sibling current-sibling)))
+                retlist))))))
 
 (defun splice-window--get-all-window-siblings
     (&optional direction window)
