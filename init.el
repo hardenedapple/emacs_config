@@ -23,8 +23,8 @@
 ;;;;
 (global-set-key (kbd "<f9>") 'compile)
 (global-set-key (kbd "<C-f9>") 'recompile)
-(global-set-key (kbd "M-g M-t") 'fist-error)
-(global-set-key (kbd "M-g t") 'fist-error)
+(global-set-key (kbd "M-g M-t") 'first-error)
+(global-set-key (kbd "M-g t") 'first-error)
 
 
 ;;;; Enable commands
