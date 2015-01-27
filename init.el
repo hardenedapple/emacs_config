@@ -356,12 +356,7 @@ If WINDOW is `nil', return the configuration of
     (&optional direction window)
   "Return a list of WINDOW's siblings in given DIRECTION.
 
-Default direction is forward.
-
-The RECURSIVE parameter decides what to do if any siblings don't
-satisfy `window-live-p', if RECURSIVE is nil (the default),
-return nil, otherwise recurse into the non-live window, storing
-its configuration as a sublist. "
+Default direction is forward."
   (let* ((window-iterator-function (case direction
                                      (prev 'window-prev-sibling)
                                      (t 'window-next-sibling)))
@@ -481,26 +476,25 @@ As this function doesn't yet take account of original window
 sizes, it's advisable to have `window-combination-resize' set to
 `t' when using this function."
   (interactive)
-  (let ((forward-siblings
-         (splice-window--get-all-window-siblings 'next window))
-        (backward-siblings
-         (splice-window--get-all-window-siblings 'prev window))
-        (current-conf (splice-window--get-window-setup window))
-        (cur-win (or window (selected-window)))
+  (let ((cur-win (or window (selected-window)))
         (original-win (selected-window)))
-    ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
                 (frame-root-window-p (window-parent cur-win)))
-      ;; Remove current siblings
-      ;; once all siblings are closed, emacs automatically splices the remaining
-      ;; window into the above level.
-      (let ((cur-win (splice-window--remove-current-siblings cur-win)))
-        (splice-window--add-back-windows cur-win forward-siblings t)
-        (splice-window--add-back-windows cur-win backward-siblings nil)
-        (splice-window--setup-window cur-win current-conf)
-        (select-window (cond
-                        ((window-live-p original-win) original-win)
-                        (t cur-win)))))))
+      (let ((forward-siblings
+             (splice-window--get-all-window-siblings 'next cur-win))
+            (backward-siblings
+             (splice-window--get-all-window-siblings 'prev cur-win))
+            (current-conf (splice-window--get-window-setup cur-win)))
+        ;; Remove current siblings
+        ;; once all siblings are closed, emacs automatically splices the remaining
+        ;; window into the above level.
+        (let ((cur-win (splice-window--remove-current-siblings cur-win)))
+          (splice-window--add-back-windows cur-win forward-siblings t)
+          (splice-window--add-back-windows cur-win backward-siblings nil)
+          (splice-window--setup-window cur-win current-conf)
+          (select-window (cond
+                          ((window-live-p original-win) original-win)
+                          (t cur-win))))))))
 
 (defun swap-windows-properly (window1 &optional window2)
   "Swap WINDOW1 and WINDOW2 respecting any splits
