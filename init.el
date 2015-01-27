@@ -483,7 +483,8 @@ sizes, it's advisable to have `window-combination-resize' set to
          (splice-window--get-all-window-siblings 'next window))
         (backward-siblings
          (splice-window--get-all-window-siblings 'prev window))
-        (cur-win (or window (selected-window))))
+        (cur-win (or window (selected-window)))
+        (original-win (selected-window)))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
                 (frame-root-window-p (window-parent cur-win))
@@ -494,7 +495,9 @@ sizes, it's advisable to have `window-combination-resize' set to
       (let ((cur-win (splice-window--remove-current-siblings cur-win)))
         (splice-window--add-back-windows cur-win forward-siblings t)
         (splice-window--add-back-windows cur-win backward-siblings nil)
-        (select-window cur-win)))))
+        (select-window (cond
+                        ((window-live-p original-win) original-win)
+                        (t cur-win)))))))
 
 (defun swap-windows-properly (window1 &optional window2)
   "Swap WINDOW1 and WINDOW2 respecting any splits
