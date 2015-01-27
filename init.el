@@ -309,6 +309,7 @@ window. Otherwise try `display-buffer-use-some-window'."
       display-buffer-base-action (list (list
                                         'display-buffer-reuse-window
                                         'display-buffer-same-window-from-command
+                                        'display-buffer-in-previous-window
                                         'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
