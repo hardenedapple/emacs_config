@@ -415,16 +415,9 @@ recurse into `splice-window--add-back-windows'"
     ;; Split current window, work on new one
     ;; set window-combination-limit to t
     ;; Do splice-window--add-back-windows on first child
-    (let* ((conf (pop to-add)))
-      (if to-add
-          ;; Have more stuff to do -- continue
-          (let ((window (split-window base-window nil direction)))
-            (splice-window--setup-window window conf)
-            (splice-window--add-back-windows
-             base-window to-add forwards direction))
-        ;; Are on the last window of this tree, set up current window with the
-        ;; configuration, and leave
-        (splice-window--setup-window base-window conf)))))
+    (while (setq conf (pop to-add))
+      (splice-window--setup-window
+       (if to-add (split-window base-window nil direction) base-window) conf))))
 
 (defun splice-window--remove-current-siblings (window)
   "Delete all siblings of WINDOW
