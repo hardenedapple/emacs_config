@@ -366,13 +366,12 @@ its configuration as a sublist. "
                                      (t 'window-next-sibling)))
          ;; Here selected window takes over when there are no siblings
          (current-sibling (or window (selected-window)))
-         return-list)
-    (while current-sibling
+         (return-list (list (splice-window--get-window-setup current-sibling))))
+    (while (setq current-sibling
+                 (funcall window-iterator-function current-sibling))
       (push
        (splice-window--get-window-setup current-sibling)
-       return-list)
-      (setq current-sibling
-            (funcall window-iterator-function current-sibling)))
+       return-list))
     return-list))
 
 (defun splice-window--setup-window (window conf)
