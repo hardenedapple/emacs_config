@@ -375,13 +375,14 @@ its configuration as a sublist. "
     return-list))
 
 (defun splice-window--setup-window (window conf)
-  "Helper function for `splice-window--add-back-windows'
+  "Apply CONF to WINDOW.
 
-Applies the configuration CONF to WINDOW, if CONF is a subtree,
-recurse into `splice-window--add-back-windows'"
+If CONF is a subtree, recurse into self."
   (let ((buffer (pop conf)))
     (if (symbolp buffer)
-        (let ((window-combination-limit t) (sub-conf))
+        (let ((sub-conf (pop conf)))
+          (splice-window--setup-window (let ((window-combination-limit t))
+                                         (split-window window nil buffer)) sub-conf)
           (while (setq sub-conf (pop conf))
             (splice-window--setup-window
              (if conf (split-window window nil buffer) window)
