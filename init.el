@@ -366,7 +366,7 @@ its configuration as a sublist. "
                                      (t 'window-next-sibling)))
          ;; Here selected window takes over when there are no siblings
          (current-sibling (or window (selected-window)))
-         (return-list (list (splice-window--get-window-setup current-sibling))))
+         return-list)
     (while (setq current-sibling
                  (funcall window-iterator-function current-sibling))
       (push
@@ -418,7 +418,7 @@ If CONF is a subtree, recurse into self."
     ;; Do splice-window--add-back-windows on first child
     (while (setq conf (pop to-add))
       (splice-window--setup-window
-       (if to-add (split-window base-window nil direction) base-window) conf))))
+       (split-window base-window nil direction) conf))))
 
 (defun splice-window--remove-current-siblings (window)
   "Delete all siblings of WINDOW
@@ -484,18 +484,19 @@ sizes, it's advisable to have `window-combination-resize' set to
          (splice-window--get-all-window-siblings 'next window))
         (backward-siblings
          (splice-window--get-all-window-siblings 'prev window))
+        (current-conf (splice-window--get-window-setup window))
         (cur-win (or window (selected-window)))
         (original-win (selected-window)))
     ;; Check it makes sense to call this function in the current environment
     (unless (or (frame-root-window-p cur-win)
-                (frame-root-window-p (window-parent cur-win))
-                (not (window-live-p cur-win)))
+                (frame-root-window-p (window-parent cur-win)))
       ;; Remove current siblings
       ;; once all siblings are closed, emacs automatically splices the remaining
       ;; window into the above level.
       (let ((cur-win (splice-window--remove-current-siblings cur-win)))
         (splice-window--add-back-windows cur-win forward-siblings t)
         (splice-window--add-back-windows cur-win backward-siblings nil)
+        (splice-window--setup-window cur-win current-conf)
         (select-window (cond
                         ((window-live-p original-win) original-win)
                         (t cur-win)))))))
