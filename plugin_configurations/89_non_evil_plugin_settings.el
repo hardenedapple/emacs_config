@@ -322,13 +322,13 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
 (define-key ctl-x-map "2"
-  (lambda (numlines) (interactive "P")
-    (if (not (consp numlines)) (call-interactively 'sw-below)
+  (lambda (arg) (interactive "P")
+    (if (not (consp arg)) (call-interactively 'sw-below)
       (split-window-below))))
 
 (define-key ctl-x-map "3"
-  (lambda (numlines) (interactive "P")
-    (if (not (consp numlines)) (call-interactively 'sw-right)
+  (lambda (arg) (interactive "P")
+    (if (not (consp arg)) (call-interactively 'sw-right)
       (split-window-right))))
 
 
