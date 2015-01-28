@@ -300,6 +300,15 @@ Including indent-buffer, which should not be called automatically on save."
 Otherwise try `display-buffer-use-some-window'."
   (if (one-window-p)
       (display-buffer-pop-up-window buffer alist)
+    ;; Note below uses the LEAST recencly used window
+    ;;
+    ;; For some things this might be wanted (only notice things that are
+    ;; annoying -- haven't had this the other way round), I know for helm
+    ;; buffers, this is annoying as it means the window the buffer comes up in
+    ;; cycles through all other windows in turn.
+    ;;
+    ;; Have changed `helm-display-function', so this isn't a problem, just
+    ;; leaving a note here for the future.
     (display-buffer-use-some-window buffer alist)))
 
 (defvar display-buffer-here-commands
@@ -307,9 +316,19 @@ Otherwise try `display-buffer-use-some-window'."
   "Commands to use same window when calling `pop-to-buffer'")
 
 (defun display-buffer-same-window-from-command (buffer alist)
-  "Opens BUFFER in `current-window' if `this-command' is in `display-buffer-here-commands'"
+  "Opens BUFFER in `current-window' if `this-command' is in
+`display-buffer-here-commands'"
   (when (memq this-command display-buffer-here-commands)
     (display-buffer-same-window buffer alist)))
+
+(defun display-buffer-previous-other-window (buffer alist)
+  "Calls `display-buffer-in-previous-window' with
+  `inhibit-same-window' set so never open in the current window.
+
+Not included in the `display-buffer-base-action' by default, but
+  kept here for when I want this sort of thing."
+  (let ((alist (cons '(inhibit-same-window . t) alist)))
+    (display-buffer-in-previous-window buffer alist)))
 
 (setq window-combination-resize t
       display-buffer-base-action (list (list
