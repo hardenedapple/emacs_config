@@ -184,7 +184,7 @@
       next-screen-context-lines 3)
 
 
-;;;; Set the files to use
+;;;; Customize/Abbreviation/Backups/Autosave Directory Settings
 ;;;;
 (setq custom-file "~/.emacs.d/customize.el"
       abbrev-file-name "~/.emacs.d/abbrev_defs"
@@ -294,7 +294,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-;; Set up how new/different buffers are displayed
+;;; DISPLAY-BUFFER settings
 (defun display-buffer-some/pop-window (buffer alist)
   "If `one-window-p' display in new window.
 Otherwise try `display-buffer-use-some-window'."
@@ -343,7 +343,7 @@ Not included in the `display-buffer-base-action' by default, but
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
 
-;;; Splice current windows into parent tree
+;;; Splice window functions
 (defun splice-window--get-split-type (&optional window forwards)
   "Return the direction to split WINDOW.
 Returns nil if WINDOW is either the root window or the minibuffer window."
@@ -523,6 +523,9 @@ sizes, it's advisable to have `window-combination-resize' set to
                           ((window-live-p original-win) original-win)
                           (t cur-win))))))))
 
+(define-key ctl-x-4-map "s" 'splice-window-upwards)
+
+;;; Swap windows
 (defun swap-windows-properly (window1 &optional window2)
   "Swap WINDOW1 and WINDOW2 respecting any splits
 
@@ -547,8 +550,6 @@ on them."
                                   (list (cons window1 new-win2)
                                         (cons window2 new-win1))))
                        original-window))))
-
-(define-key ctl-x-4-map "s" 'splice-window-upwards)
 
 
 ;;;; Plugins and everything not enabled by default
