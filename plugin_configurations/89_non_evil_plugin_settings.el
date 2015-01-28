@@ -321,15 +321,55 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
+(defmacro run-command-split-window (direction)
+  "Return a function that calls `split-window' in DIRECTION, then
+runs a user defined command."
+  `(lambda (command)
+     "Split the current window in ,direction then run COMMAND in
+that window."
+     (interactive "C")
+     (select-window (split-window (selected-window) nil ,direction))
+     (call-interactively command)))
+
 (define-key ctl-x-map "2"
   (lambda (arg) (interactive "P")
-    (if (not (consp arg)) (call-interactively 'sw-below)
-      (split-window-below))))
+    "
+
+Do one of three actions depending on ARG.
+Calling directly, split the window below, and switch to a buffer
+in that window
+
+With the universal argument, call `split-window-below'
+
+With the universal argument twice, split the window to the below,
+and run a command given by the user in that window.
+
+"
+    (cond
+     ((not (consp arg)) (call-interactively 'sw-below))
+     ((<= (car arg) 8) (split-window-below))
+     ((<= (car arg) 16)
+      (call-interactively (run-command-split-window 'below))))))
 
 (define-key ctl-x-map "3"
   (lambda (arg) (interactive "P")
-    (if (not (consp arg)) (call-interactively 'sw-right)
-      (split-window-right))))
+     "
+
+Do one of three actions depending on ARG.
+Calling directly, split the window right, and switch to a buffer
+in that window
+
+With the universal argument, call `split-window-right'
+
+With the universal argument twice, split the window to the right,
+and run a command given by the user in that window.
+
+"
+    (cond
+     ((not arg) (call-interactively 'sw-right))
+     ((<= (car arg) 8) (split-window-right))
+     ((<= (car arg) 16)
+      (call-interactively (run-command-split-window 'right))))))
 
 
 ;;;; Slime Settings
