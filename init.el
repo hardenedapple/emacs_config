@@ -551,6 +551,24 @@ on them."
                                         (cons window2 new-win1))))
                        original-window))))
 
+;;; Run command in other window
+;; For a similar function see my configuration for smart-window
+(defun run-command-other-window (command &optional window)
+  "Run COMMAND in a different window.
+
+Takes a function to run, and calls it interactively in a
+different window.
+
+If WINDOW is nil, split the current window and select the result,
+else select it.
+
+Then run the COMMAND."
+  (interactive "C")
+  (if window
+      (select-window window)
+    (select-window (split-window-sensibly)))
+  (call-interactively command))
+
 
 ;;;; Plugins and everything not enabled by default
 ;;;;
