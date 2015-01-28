@@ -106,14 +106,20 @@
 ;; Currently the helm buffer keeps moving, as `display-buffer-use-some-window'
 ;; displays in `get-lru-window', which changes each time you start helm again.
 ;;
-;; It gets past `display-buffer-in-previous-window' as the buffers aren't in the
-;; return of `window-prev-buffers'.
+;; It gets past `display-buffer-in-previous-window' in my
+;; `display-buffer-base-action' as the buffers aren't in the returned value of
+;; `window-prev-buffers'.
 ;;
-;; I'm currently not sure what logic I want with this, but this setting is a
-;; nice start.
+;; This is because `helm-cleanup' calls `replace-buffer-in-windows', which then
+;; calls `unrecord-window-buffer', removing the buffer from the windows name.
 ;;
-;; If I want to make some decisions before the call to `pop-to-buffer', should
-;; have a look at setting `helm-display-function'
+;; Hence I need some other logic to make sure the helm windows open where I
+;; want.
+;;
+;; I'm currently not sure what logic I want, but this setting is a start.
+;;
+;; If I want to do something before the call to `pop-to-buffer', should have a
+;; look at setting `helm-display-function'
 (push
  (cons "^\*[hH]elm.*\*"
        (list (lambda (buffer alist)
