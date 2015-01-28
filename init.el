@@ -353,30 +353,6 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
     (when (window-combined-p window t)
       (throw 'configured (if forwards 'right 'left)))))
 
-(defun splice-window--get-window-setup (&optional window)
-  "Return the configuration of a WINDOW.
-
-If WINDOW is `nil', return the configuration of
-`selected-window'"
-  (let ((window (or window (selected-window))))
-    (if (window-live-p window)
-        (list (window-buffer window)
-              (window-start window)
-              (window-point window)
-              (window-hscroll window)
-              (window-dedicated-p window)
-              (window-redisplay-end-trigger)
-              window)
-      ;; Recurse on the window -- get all children's config
-      (let ((current-sibling (window-child window)))
-        (cons (splice-window--get-split-type current-sibling t)
-              (let (retlist)
-                (while current-sibling
-                  (push (splice-window--get-window-setup current-sibling)
-                        retlist)
-                  (setq current-sibling (window-next-sibling current-sibling)))
-                retlist))))))
-
 (defun splice-window--get-all-window-siblings
     (&optional direction window)
   "Return a list of WINDOW's siblings in given DIRECTION.
@@ -391,39 +367,9 @@ Default direction is forward."
     (while (setq current-sibling
                  (funcall window-iterator-function current-sibling))
       (push
-       (splice-window--get-window-setup current-sibling)
+       (window-state-get current-sibling t)
        return-list))
     return-list))
-
-(defun splice-window--setup-window (window conf)
-  "Apply CONF to WINDOW.
-
-If CONF is a subtree, recurse into self.
-
-Only works on `window-live-p' windows, does not check arguments."
-  (let ((buffer (pop conf)))
-    (if (symbolp buffer)
-        (let ((sub-conf (pop conf)))
-          (splice-window--setup-window (let ((window-combination-limit t))
-                                         (split-window window nil buffer)) sub-conf)
-          (while (setq sub-conf (pop conf))
-            (splice-window--setup-window
-             (if conf (split-window window nil buffer) window)
-             sub-conf)))
-      (set-window-buffer window buffer)
-      (set-window-start window (pop conf))
-      (set-window-point window (pop conf))
-      (set-window-hscroll window (pop conf))
-      (set-window-dedicated-p window (pop conf))
-      (set-window-redisplay-end-trigger window (pop conf))
-      (let ((orig-window (pop conf))
-            (ol-func (lambda (ol)
-                       (if (eq (overlay-get ol 'window) orig-window)
-                           (overlay-put ol 'window window))))
-            (ol-lists (with-current-buffer buffer
-                        (overlay-lists))))
-        (mapc ol-func (car ol-lists))
-        (mapc ol-func (cdr ol-lists))))))
 
 (defun splice-window--add-back-windows (base-window to-add forwards
                                                     &optional direction)
@@ -439,9 +385,9 @@ Only works on `window-live-p' windows, does not check arguments."
     ;; Split current window, work on new one
     ;; set window-combination-limit to t
     ;; Do splice-window--add-back-windows on first child
-    (while (setq conf (pop to-add))
-      (splice-window--setup-window
-       (split-window base-window nil direction) conf))))
+    (dolist (conf to-add)
+      (window-state-put
+       conf (split-window base-window nil direction) 'safe))))
 
 (defun splice-window-upwards (&optional window)
   "Splice current level of WINDOW ancestry up one.
@@ -487,11 +433,7 @@ not scaled correctly
     +-------------------------+
 
 This function leaves any preexisting subnests like the B/C window
-in the example.
-
-As this function doesn't yet take account of original window
-sizes, it's advisable to have `window-combination-resize' set to
-`t' when using this function."
+in the example."
   (interactive)
   (let ((cur-win (or window (selected-window)))
         (original-win (selected-window)))
@@ -500,18 +442,13 @@ sizes, it's advisable to have `window-combination-resize' set to
       (let ((forward-siblings
              (splice-window--get-all-window-siblings 'next cur-win))
             (backward-siblings
-             (splice-window--get-all-window-siblings 'prev cur-win))
-            (current-conf (splice-window--get-window-setup cur-win)))
+             (splice-window--get-all-window-siblings 'prev cur-win)))
         ;; Remove current siblings
         ;; once all siblings are closed, emacs automatically splices the remaining
         ;; window into the above level.
         (delete-other-windows-internal cur-win (window-parent cur-win))
         (splice-window--add-back-windows cur-win forward-siblings t)
-        (splice-window--add-back-windows cur-win backward-siblings nil)
-        (splice-window--setup-window cur-win current-conf);
-        (select-window (cond
-                        ((window-live-p original-win) original-win)
-                        (t cur-win)))))))
+        (splice-window--add-back-windows cur-win backward-siblings nil)))))
 
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
@@ -524,22 +461,11 @@ windows are internal ones, i.e. if `window-live-p' returns `nil'
 on them."
   (unless (windowp window1)
     (error "Must supply valid WINDOW1 to SWAP-WINDOWS-PROPERLY"))
-  (let ((conf1 (splice-window--get-window-setup window1))
-        (conf2 (splice-window--get-window-setup window2))
-        (new-win1 (split-window window1 nil
-                                (splice-window--get-split-type window1)))
-        (new-win2 (split-window window2 nil
-                                (splice-window--get-split-type window2)))
-        (original-window (selected-window)))
-    (splice-window--setup-window new-win1 conf2)
-    (splice-window--setup-window new-win2 conf1)
-    (delete-window window1)
-    (delete-window window2)
-    (select-window (or (unless window2 new-win1)
-                       (cdr (assq original-window
-                                  (list (cons window1 new-win2)
-                                        (cons window2 new-win1))))
-                       original-window))))
+  (let ((window2 (or window2 (selected-window))))
+    (let ((state1 (window-state-get window1 t))
+          (state2 (window-state-get window2 t)))
+      (window-state-put state1 window2 'safe)
+      (window-state-put state2 window1 'safe))))
 
 ;;; Run command in other window
 ;; For a similar function see my configuration for smart-window
