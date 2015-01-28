@@ -105,6 +105,7 @@
 ;;;; Helm descbinds
 ;;;;
 (helm-descbinds-mode)
+(setq helm-descbinds-window-style 'split-window)
 
 
 ;;;; Jump Char Settings
