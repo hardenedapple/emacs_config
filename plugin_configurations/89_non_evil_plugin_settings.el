@@ -65,6 +65,7 @@
  helm-split-window-default-side 'other
  helm-split-window-in-side-p t
  helm-always-two-windows t
+ helm-reuse-last-window-split-state t
  helm-quick-update t
  helm-truncate-lines t
  helm-ff-search-library-in-sexp t
@@ -100,6 +101,29 @@
 
 (helm-autoresize-mode 0)
 (helm-mode 1)
+
+;;; Helm window setup
+;; Currently the helm buffer keeps moving, as `display-buffer-use-some-window'
+;; displays in `get-lru-window', which changes each time you start helm again.
+;;
+;; It gets past `display-buffer-in-previous-window' as the buffers aren't in the
+;; return of `window-prev-buffers'.
+;;
+;; I'm currently not sure what logic I want with this, but this setting is a
+;; nice start.
+;;
+;; If I want to make some decisions before the call to `pop-to-buffer', should
+;; have a look at setting `helm-display-function'
+(push
+ (cons "^\*[hH]elm.*\*"
+       (list (lambda (buffer alist)
+               (if (one-window-p)
+                   (display-buffer-pop-up-window buffer alist)
+                 (window--display-buffer buffer
+                                         (next-window)
+                                         ;; (get-largest-window)
+                                         'reuse)))))
+ display-buffer-alist)
 
 
 ;;;; Helm descbinds
