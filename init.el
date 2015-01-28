@@ -62,6 +62,11 @@
                (file-name-nondirectory new-name)))))
 
 
+;;;; Help settings
+;;;;
+(setq help-window-select nil)
+
+
 ;;;; Indentation Motion
 ;;;;
 (defun beginning-of-line-or-indentation ()
