@@ -296,8 +296,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; Set up how new/different buffers are displayed
 (defun display-buffer-some/pop-window (buffer alist)
-  "If `selected-window' is only one in this frame, display in new
-window. Otherwise try `display-buffer-use-some-window'."
+  "If `one-window-p' display in new window.
+Otherwise try `display-buffer-use-some-window'."
   (if (one-window-p)
       (display-buffer-pop-up-window buffer alist)
     (display-buffer-use-some-window buffer alist)))
