@@ -292,7 +292,7 @@ Including indent-buffer, which should not be called automatically on save."
 (defun display-buffer-some/pop-window (buffer alist)
   "If `selected-window' is only one in this frame, display in new
 window. Otherwise try `display-buffer-use-some-window'."
-  (if (frame-root-window-p (selected-window))
+  (if (one-window-p)
       (display-buffer-pop-up-window buffer alist)
     (display-buffer-use-some-window buffer alist)))
 
@@ -373,7 +373,9 @@ Default direction is forward."
 (defun splice-window--setup-window (window conf)
   "Apply CONF to WINDOW.
 
-If CONF is a subtree, recurse into self."
+If CONF is a subtree, recurse into self.
+
+Only works on `window-live-p' windows, does not check arguments."
   (let ((buffer (pop conf)))
     (if (symbolp buffer)
         (let ((sub-conf (pop conf)))
@@ -478,7 +480,7 @@ sizes, it's advisable to have `window-combination-resize' set to
   (interactive)
   (let ((cur-win (or window (selected-window)))
         (original-win (selected-window)))
-    (unless (or (frame-root-window-p cur-win)
+    (unless (or (one-window-p)
                 (frame-root-window-p (window-parent cur-win)))
       (let ((forward-siblings
              (splice-window--get-all-window-siblings 'next cur-win))
