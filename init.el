@@ -443,16 +443,6 @@ Only works on `window-live-p' windows, does not check arguments."
       (splice-window--setup-window
        (split-window base-window nil direction) conf))))
 
-(defun splice-window--remove-current-siblings (window)
-  "Delete all siblings of WINDOW
-
-Actually, splits `window-parent' of WINDOW, then deletes it,
-  returning the remaining window."
-  (let ((window (window-parent window)))
-    (prog1
-        (split-window window nil (splice-window--get-split-type window))
-      (delete-window window))))
-
 (defun splice-window-upwards (&optional window)
   "Splice current level of WINDOW ancestry up one.
 
@@ -515,13 +505,13 @@ sizes, it's advisable to have `window-combination-resize' set to
         ;; Remove current siblings
         ;; once all siblings are closed, emacs automatically splices the remaining
         ;; window into the above level.
-        (let ((cur-win (splice-window--remove-current-siblings cur-win)))
-          (splice-window--add-back-windows cur-win forward-siblings t)
-          (splice-window--add-back-windows cur-win backward-siblings nil)
-          (splice-window--setup-window cur-win current-conf)
-          (select-window (cond
-                          ((window-live-p original-win) original-win)
-                          (t cur-win))))))))
+        (delete-other-windows-internal cur-win (window-parent cur-win))
+        (splice-window--add-back-windows cur-win forward-siblings t)
+        (splice-window--add-back-windows cur-win backward-siblings nil)
+        (splice-window--setup-window cur-win current-conf);
+        (select-window (cond
+                        ((window-live-p original-win) original-win)
+                        (t cur-win)))))))
 
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
