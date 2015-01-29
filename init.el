@@ -347,11 +347,9 @@ Not included in the `display-buffer-base-action' by default, but
 (defun splice-window--get-split-type (&optional window forwards)
   "Return the direction to split WINDOW.
 Returns nil if WINDOW is either the root window or the minibuffer window."
-  (catch 'configured
-    (when (window-combined-p window)
-      (throw 'configured (if forwards 'below 'above)))
-    (when (window-combined-p window t)
-      (throw 'configured (if forwards 'right 'left)))))
+  (cond
+   ((window-combined-p window) (if forwards 'below 'above))
+   ((window-combined-p window t) (if forwards 'right 'left))))
 
 (defun splice-window--get-all-window-siblings
     (&optional direction window)
