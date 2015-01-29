@@ -540,3 +540,23 @@ Then run the COMMAND."
 (dolist (conf-file
          (directory-files "~/.emacs.d/plugin_configurations" t "^[^.].+\\.elc?$"))
   (load conf-file))
+
+;;; Remove some settings from MINOR-MODE-ALIST
+;;;
+(defvar minor-mode-show-list
+  (list
+   'compilation-in-progress
+   'compilation-minor-mode
+   'compilation-shell-minor-mode
+   'diff-minor-mode
+   'overwrite-mode
+   'projectile-mode
+   'undo-tree-visualizer-selection-mode
+   'window-number-mode
+   )
+  "List of minor-modes to show in modeline")
+(setq minor-mode-alist
+      (cl-remove-if-not
+       (lambda (val)
+         (member (car val) minor-mode-show-list))
+       minor-mode-alist))
