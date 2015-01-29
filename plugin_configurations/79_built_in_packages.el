@@ -59,6 +59,19 @@
     ;; not the starting directory
     (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
 
+(defun eshell--get-last-input ()
+  "Inserts the last command argument at point.
+
+Uses `eshell-last-arguments', so can't go past the last command
+as yet."
+  (interactive)
+  (insert (or (car (last eshell-last-arguments)) "")))
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (define-key eshell-mode-map (kbd "M-.") 'eshell--get-last-input)
+            (define-key eshell-mode-map (kbd "C-c M-.") 'eshell-find-tag)))
+
 ;; Have the smart option set up how I like it, but not enabled by default.
 (setq eshell-where-to-jump 'after)
 (setq eshell-review-quick-commands 'not-even-short-output)
