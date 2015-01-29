@@ -264,32 +264,25 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
                 slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
-(defun paredit--is-at-start-of-sexp ()
+(defun paredit--is-at-start-of-list ()
   (and (looking-at "(\\|\\[")
        (not (nth 3 (syntax-ppss))) ;; inside string
        (not (nth 4 (syntax-ppss))))) ;; inside comment
 
-(defun paredit-duplicate-closest-sexp ()
+(defun paredit-duplicate-closest-list ()
   (interactive)
   ;; skips to start of current sexp
-  (while (not (paredit--is-at-start-of-sexp))
+  (while (not (paredit--is-at-start-of-list))
     (paredit-backward))
-  (set-mark-command nil)
-  ;; while we find sexps we move forward on the line
-  (while (and (bounds-of-thing-at-point 'sexp)
-              (<= (point) (car (bounds-of-thing-at-point 'sexp)))
-              (not (= (point) (line-end-position))))
-    (forward-sexp)
-    (while (looking-at " ")
-      (forward-char)))
-  (kill-ring-save (mark) (point))
-  ;; go to the next line and copy the sexprs we encountered
-  (paredit-newline)
-  (yank)
-  (exchange-point-and-mark))
+  (let* ((start (point))
+         (end (progn (paredit-forward) (move-end-of-line nil) (point)))
+         (dup-sexp (buffer-substring start end)))
+    ;; go to the next line and copy the sexprs we encountered
+    (paredit-newline)
+    (insert dup-sexp)))
 
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
-(define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-sexp)
+(define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
 (define-key paredit-mode-map (kbd "C-j") 'nil)
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
