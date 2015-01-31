@@ -442,9 +442,14 @@ in the example."
             (backward-siblings
              (splice-window--get-all-window-siblings 'prev cur-win)))
         ;; Remove current siblings
-        ;; once all siblings are closed, emacs automatically splices the remaining
-        ;; window into the above level.
+        ;; once all siblings are closed, emacs automatically splices the
+        ;; remaining window into the above level.
         (delete-other-windows-internal cur-win (window-parent cur-win))
+        ;; If selected window is in the windows to put back, `window-state-put'
+        ;; deals with selecting the window. If it isn't
+        ;; `delete-other-windows-internal' has just selected the wrong window,
+        ;; and won't change it back, so we deal with that here
+        (when (window-live-p original-win) (select-window original-win))
         (splice-window--add-back-windows cur-win forward-siblings t)
         (splice-window--add-back-windows cur-win backward-siblings nil)))))
 
