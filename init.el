@@ -25,6 +25,12 @@
 (global-set-key (kbd "<C-f9>") 'recompile)
 (global-set-key (kbd "M-g M-t") 'first-error)
 (global-set-key (kbd "M-g t") 'first-error)
+(define-key minibuffer-local-map (kbd "M-i")
+  (lambda ()
+    (interactive)
+    (insert
+     (expand-file-name (buffer-name
+                        (window-buffer (minibuffer-selected-window)))))))
 
 
 ;;;; Enable commands
