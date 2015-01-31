@@ -366,7 +366,7 @@ and run a command given by the user in that window.
 "
     (cond
      ((not arg) (call-interactively 'sw-right))
-     ((<= (car arg) 8) (split-window-right))
+     ((<= (car arg) 8) (select-window (split-window-right)))
      ((<= (car arg) 16)
       (call-interactively (run-command-split-window 'right))))))
 
