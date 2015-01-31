@@ -478,15 +478,19 @@ on them."
 Takes a function to run, and calls it interactively in a
 different window.
 
-If WINDOW is nil, split the current window and select the result,
-else select it.
+If WINDOW is nil, and `one-window-p' split the current window and
+select the result, else select WINDOW or `other-window'.
 
 Then run the COMMAND."
   (interactive "C")
-  (if window
+  (if (window-live-p window)
       (select-window window)
-    (select-window (split-window-sensibly)))
+    (if (one-window-p)
+        (select-window (split-window-sensibly))
+      (other-window 1)))
   (call-interactively command))
+
+(define-key ctl-x-4-map (kbd "M-x") 'run-command-other-window)
 
 
 ;;;; Plugins and everything not enabled by default
