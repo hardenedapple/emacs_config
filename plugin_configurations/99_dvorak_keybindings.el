@@ -20,24 +20,28 @@
 (global-set-key (kbd "M-e") 'subword-forward)
 
 (defvar dvorak-keyswaps
-  '(("C-h" . "C-p")
-    ("C-p" . "C-h")
-    ("M-p" . "M-h")
+  '(("M-p" . "M-h")
     ("M-h" . "M-p")
     ("C-M-p" . "C-M-h")
     ("C-M-h" . "C-M-p")
     ("C-S-p" . "C-S-h")
     ("C-S-h" . "C-S-p")
-    ("C-z" . "C-x")
-    ("C-'" . "C-x")
-    ("C-x" . "C-z")
-    ("C-j" . "C-c")
-    ("C-w" . "C-c")
-    ("C-c" . "C-w")))
+    ("C-'" . "C-x")))
+
+(defvar dvorak-key-translations
+  '((?\C-x . ?\C-z)
+    (?\C-z . ?\C-x)
+    (?\C-h . ?\C-p)
+    (?\C-p . ?\C-h)
+    (?\C-w . ?\C-c)
+    (?\C-j . ?\C-c)
+    (?\C-c . ?\C-w)))
 
 (defun apply-my-keyswaps ()
   (dolist (key-pair dvorak-keyswaps)
-    (define-key key-translation-map (kbd (car key-pair)) (kbd (cdr key-pair)))))
+    (define-key key-translation-map (kbd (car key-pair)) (kbd (cdr key-pair))))
+  (dolist (key-characters dvorak-key-translations)
+    (keyboard-translate (car key-characters) (cdr key-characters))))
 
 (apply-my-keyswaps)
 
