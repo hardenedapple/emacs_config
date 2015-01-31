@@ -80,13 +80,6 @@
 (global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
 
 
-;;;; Info
-;;;;
-(defun info-goto-page-in-region (startpt endpt)
-  (interactive "r")
-  (info (buffer-substring startpt endpt)))
-
-
 ;;;; Lines
 ;;;;
 ;;; New lines
