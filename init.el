@@ -482,6 +482,17 @@ in the example."
         (splice-window--add-back-windows cur-win forward-siblings t)
         (splice-window--add-back-windows cur-win backward-siblings nil)))))
 
+(defun merge-windows (window1 &rest windows)
+  "Merge all WINDOWS into WINDOW1.
+
+This is the opposite of `splice-window-upwards'."
+  (let ((confs (mapcar #'window-state-get windows))
+        (direction (if (window-combined-p window1) 'right 'below)))
+    (dolist (add-window windows)
+      (delete-window add-window))
+    (dolist (add-conf confs)
+      (window-state-put add-conf (split-window window1 nil direction)))))
+
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
 ;;; Swap windows
