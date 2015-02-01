@@ -30,6 +30,20 @@
 (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
+;; Elisp find thing at point in other window.
+(defun elisp-slime-nav-find-thing-at-point-other-window ()
+  "Go to the definition of `symbol-at-point' in other window."
+  (interactive)
+  (let ((current-symbol (thing-at-point 'symbol t)))
+    (other-window 1)
+    (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))
+
+;; Left click finds elisp thing
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (define-key emacs-lisp-mode-map (kbd "C-x 4 M-.")
+              'elisp-slime-nav-find-thing-at-point-other-window)))
+
 
 ;;;; Expand Region Settings
 ;;;;
