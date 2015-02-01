@@ -399,7 +399,7 @@ and run a command given by the user in that window.
 ;; install-info --dir=dir slime.info
 (add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
 
-(define-key global-map (kbd "C-c s") 'slime-selector)
+(global-set-key (kbd "C-c s") 'slime-selector)
 
 (add-hook 'slime-mode-hook
           (lambda ()
