@@ -42,7 +42,10 @@
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
             (define-key emacs-lisp-mode-map (kbd "C-x 4 M-.")
-              'elisp-slime-nav-find-thing-at-point-other-window)))
+              'elisp-slime-nav-find-thing-at-point-other-window)
+            (define-key emacs-lisp-mode-map [mouse-1]
+              (mouse-function-on-symbol
+               (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))))
 
 
 ;;;; Expand Region Settings
