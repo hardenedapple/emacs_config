@@ -98,10 +98,10 @@
 (defun open-line-above ()
   "Add new line above the current one."
   (interactive)
-  (end-of-line)
+  (beginning-of-line)
   (indent-new-comment-line)
-  (transpose-lines 1)
-  (forward-line -2)
+  (forward-line -1)
+  (indent-for-tab-command)
   (end-of-line))
 
 (global-set-key (kbd "C-o") 'open-line-below)
