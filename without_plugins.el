@@ -1,8 +1,7 @@
 ;;;; Align
 ;;;;
 (defun align-repeat (start end regexp)
-  "repeat alignment with respect to
-     the given regular expression"
+  "Repeat alignment w.r.t REGEXP."
   (interactive "r\nsAlign regexp: ")
   (align-regexp start end
                 (concat "\\(\\s-*\\)" regexp) 1 1 t))
@@ -19,10 +18,17 @@
 (global-subword-mode 1)
 
 
-;;;; Compile Shortcut
+;;;; Compile Settings
 ;;;;
 (global-set-key (kbd "<f9>") 'compile)
 (global-set-key (kbd "<C-f9>") 'recompile)
+(global-set-key (kbd "M-g M-t") 'first-error)
+(global-set-key (kbd "M-g t") 'first-error)
+(define-key minibuffer-local-map (kbd "M-i")
+  (lambda ()
+    (interactive)
+    (insert (expand-file-name (buffer-name (window-buffer
+                                            (minibuffer-selected-window)))))))
 
 
 ;;;; Enable commands
@@ -32,25 +38,25 @@
 
 ;;;; File Handling
 ;;;;
-(defun remove-buffer-and-file ()
-  "Removes file connected to current buffer and kills buffer."
+(defun remove-buffer-and-file (&optional buffer-or-name)
+  "Removes `get-buffer' BUFFER-OR-NAME kills it too."
   (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name))
+  (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
+         (filename (buffer-file-name buffer)))
+    (unless (and filename (file-exists-p filename))
+      (error "Buffer '%s' is not visiting a file!" (buffer-name buffer)))
     (delete-file filename)
     (kill-buffer buffer)
     (message "File '%s' removed" filename)))
 
-(defun rename-buffer-and-file ()
-  "Renames current buffer and file it is visiting."
+(defun rename-buffer-and-file (&optional buffer-or-name)
+  "Rename BUFFER-OR-NAME and file it's visiting."
   (interactive)
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name))
+  (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
+        (filename (buffer-file-name buffer))
+        (name (buffer-name buffer)))
+    (unless (and filename (file-exists-p filename))
+      (error "Buffer '%s' is not visiting a file!" name))
     (let ((new-name (read-file-name "New name: " filename)))
       (rename-file filename new-name 1)
       (rename-buffer new-name t)
@@ -60,10 +66,17 @@
                (file-name-nondirectory new-name)))))
 
 
+;;;; Help settings
+;;;;
+(setq help-window-select nil)
+(define-key help-map "I" 'info-apropos)
+(define-key help-map "A" 'apropos)
+
+
 ;;;; Indentation Motion
 ;;;;
 (defun beginning-of-line-or-indentation ()
-  "Move to the beginning of the line or indentation."
+  "Toggle between beginning of the line and indentation."
   (interactive)
   (let ((orig-point (point)))
     (back-to-indentation)
@@ -73,27 +86,22 @@
 (global-set-key (kbd "C-a") 'beginning-of-line-or-indentation)
 
 
-;;;; Info
-;;;;
-(defun info-goto-page-in-region (startpt endpt)
-  (interactive "r")
-  (info (buffer-substring startpt endpt)))
-
-
 ;;;; Lines
 ;;;;
 ;;; New lines
 (defun open-line-below ()
+  "Add a new line below current one."
   (interactive)
   (end-of-line)
   (indent-new-comment-line))
 
 (defun open-line-above ()
+  "Add new line above the current one."
   (interactive)
-  (end-of-line)
+  (beginning-of-line)
   (indent-new-comment-line)
-  (transpose-lines 1)
-  (forward-line -2)
+  (forward-line -1)
+  (indent-for-tab-command)
   (end-of-line))
 
 (global-set-key (kbd "C-o") 'open-line-below)
@@ -101,6 +109,7 @@
 
 ;;; Move lines around
 (defun move-this-line-down (numlines)
+  "Drag current line NUMLINES downwards."
   (interactive "p")
   (let ((col (current-column)))
     (forward-line)
@@ -109,13 +118,14 @@
     (move-to-column col)))
 
 (defun move-this-line-up (numlines)
+  "Drag current line NUMLINES upwards."
   (interactive "p")
   (let ((col (current-column)))
     (forward-line)
     (transpose-lines (- numlines))
-    ;; Note: I have advised TRANSPOSE-SUBR, which means I need to call
-    ;; FORWARD-LINE with argument -1, if I hadn't I'd need to call it with
-    ;; argument (- (1+ NUMLINES))
+    ;; Note: I have advised `transpose-subr', which means I need to call
+    ;;       `forward-line' with argument -1, if I hadn't I'd need to call it
+    ;;       with argument (- (1+ NUMLINES))
     (forward-line -1)
     ;;(forward-line (- (1+ numlines)))
     (move-to-column col)))
@@ -129,6 +139,27 @@
 ;;;; Make scripts executeable automatically
 ;;;;
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+
+
+;;;; Mouse navigation
+;;;;
+(defun get-clicked-symbol (event)
+  "Move to event point, and find the symbol at point."
+  (mouse-set-point event)
+  (let ((current-symbol (thing-at-point 'symbol t)))
+    current-symbol))
+
+(defmacro mouse-function-on-symbol (&rest body)
+  "Put EVENT and CURRENT-SYMBOL in lexical environment for BODY."
+  `(lambda (event) (interactive "e")
+     (let ((current-symbol (get-clicked-symbol event)))
+       (if current-symbol
+           ,@body))))
+
+(global-set-key [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
+(global-set-key [mouse-2] (mouse-function-on-symbol
+                           (occur (concat "\\_<" current-symbol "\\_>"))))
+(global-set-key [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
 
 
 ;;;; Move more quickly
@@ -147,6 +178,7 @@
 ;;;; Redefining sexp motion
 ;;;;
 (defun backward-up-sexp (arg)
+  "Move up whatever sexp we're in."
   (interactive "p")
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
@@ -177,7 +209,7 @@
       next-screen-context-lines 3)
 
 
-;;;; Set the files to use
+;;;; Customize/Abbreviation/Backups/Autosave Directory Settings
 ;;;;
 (setq custom-file "~/.emacs.d/customize.el"
       abbrev-file-name "~/.emacs.d/abbrev_defs"
@@ -204,6 +236,7 @@
 (setq inhibit-startup-message t
       default-frame-alist '((font . "Tamsyn-10"))
       column-number-mode t)
+(setq-default major-mode nil)
 (set-default-font "Tamsyn-10")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
@@ -211,7 +244,11 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+;; Remove face commands, and emacs suspension commands
 (global-unset-key (kbd "M-o"))
+(global-unset-key (kbd "M-k"))
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
 
 
 ;;;; Whitespace and indent
@@ -228,17 +265,20 @@
 (setq indent-line-function 'insert-tab)
 
 (defun cleanup-buffer-safe ()
-  "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
+  "Perform some safe whitespace operations on `current-buffer'.
+
+Does not indent buffer, as it's used for a `before-save-hook',
+and that might be bad."
   (interactive)
   (untabify (point-min) (point-max))
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
 (defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
+  "Perform unsafe whitespace operations on `current-buffer'.
+
+Include `indent-buffer', which should not be called automatically
+on save."
   (interactive)
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
@@ -247,27 +287,289 @@ Including indent-buffer, which should not be called automatically on save."
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
 
+;;;; Window history buffer switch
+;;;;
+(defvar buffer-choose-default-function 'switch-to-buffer
+  "Function to call with unprefixed C-x b")
+
+(defun window-history-buffer-choose (&optional prefix)
+  "Select a buffer from the history of `current-window'."
+  (interactive "P")
+  (if prefix
+      (let ((buffer-names
+             (mapcar (lambda (list-thing) (buffer-name (car list-thing)))
+                     (append (window-prev-buffers) (window-next-buffers)))))
+        (if buffer-names
+            (switch-to-buffer
+             (completing-read "Buffer previous " buffer-names
+                              nil t nil nil (car buffer-names) nil))
+          (call-interactively buffer-choose-default-function)))
+    (call-interactively buffer-choose-default-function)))
+
+(define-key ctl-x-map "b" 'window-history-buffer-choose)
+
+
 ;;;; Window Layout
 ;;;;
 (define-key ctl-x-map "+" 'what-cursor-position)
 (define-key ctl-x-map "=" 'balance-windows)
 
 (defun fix-window-horizontal-size (&optional num-columns)
-  "Set the window's size to 80 (or prefix arg WIDTH) columns wide."
+  "Set `current-window' size to 80 NUM-COLUMNS columns wide."
   (interactive)
   (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
 
-;; Keep window size evenly spread
-(setq window-combination-resize t)
+;;; DISPLAY-BUFFER settings
+(defun display-buffer-some/pop-window (buffer alist)
+  "If `one-window-p' display in new window.
+
+Otherwise try `display-buffer-use-some-window'."
+  (if (one-window-p)
+      (display-buffer-pop-up-window buffer alist)
+    ;; Note below uses the LEAST recencly used window
+    ;;
+    ;; For some things this might be wanted (only notice things that are
+    ;; annoying -- haven't had this the other way round), I know for helm
+    ;; buffers, this is annoying as it means the window the buffer comes up in
+    ;; cycles through all other windows in turn.
+    ;;
+    ;; Have changed `helm-display-function', so this isn't a problem, just
+    ;; leaving a note here for the future.
+    (display-buffer-use-some-window buffer alist)))
+
+(defvar display-buffer-here-commands
+  (list 'previous-error 'next-error 'push-button)
+  "Commands to use same window when calling `pop-to-buffer'")
+
+(defun display-buffer-same-window-from-command (buffer alist)
+  "Open BUFFER in `current-window' if `this-command' is in
+`display-buffer-here-commands'"
+  (when (memq this-command display-buffer-here-commands)
+    (display-buffer-same-window buffer alist)))
+
+(defun display-buffer-previous-other-window (buffer alist)
+  "Call `display-buffer-in-previous-window' with
+  `inhibit-same-window' set so never open in `current-window'.
+
+Not included in the `display-buffer-base-action' by default, but
+  kept here for if it's useful."
+  (let ((alist (cons '(inhibit-same-window . t) alist)))
+    (display-buffer-in-previous-window buffer alist)))
+
+(setq window-combination-resize t
+      display-buffer-base-action (list (list
+                                        'display-buffer-reuse-window
+                                        'display-buffer-same-window-from-command
+                                        'display-buffer-in-previous-window
+                                        'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
-(setq fit-window-to-buffer-horizontally t)
-(setq split-height-threshold 27
+(setq fit-window-to-buffer-horizontally t
+      split-height-threshold 27
       split-width-threshold 175      ; 2 * 80 columns of text + line numbers etc
       compilation-window-height 10)
+
+;;; Splice window functions
+(defun splice-window--get-split-type (&optional window forwards)
+  "Return split direction for WINDOW.
+Returns nil if WINDOW is either the root window or the minibuffer window."
+  (cond
+   ((window-combined-p window) (if forwards 'below 'above))
+   ((window-combined-p window t) (if forwards 'right 'left))))
+
+(defun splice-window--get-all-window-siblings
+    (&optional direction window)
+  "Return list of WINDOW's siblings in given DIRECTION.
+
+Default direction is next."
+  (let* ((window-iterator-function (case direction
+                                     (prev 'window-prev-sibling)
+                                     (t 'window-next-sibling)))
+         ;; Here selected window takes over when there are no siblings
+         (current-sibling (or window (selected-window)))
+         return-list)
+    (while (setq current-sibling
+                 (funcall window-iterator-function current-sibling))
+      (push
+       (window-state-get current-sibling t)
+       return-list))
+    return-list))
+
+(defun splice-window--add-back-windows (base-window to-add forwards
+                                                    &optional direction)
+  "Add window specification TO-ADD into BASE-WINDOW's config."
+  (let ((direction
+         (or direction
+             (splice-window--get-split-type base-window forwards)
+             (if (>= (/ (window-body-width base-window) split-width-threshold)
+                     (/ (window-body-height base-window) split-height-threshold))
+                 (if forwards 'right 'left)
+               (if forwards 'below 'above)))))
+    ;; Recursion needed
+    ;; Split current window, work on new one
+    ;; set window-combination-limit to t
+    ;; Do splice-window--add-back-windows on first child
+    (dolist (conf to-add)
+      (window-state-put
+       conf (split-window base-window nil direction) 'safe))))
+
+(defun splice-window-upwards (&optional window)
+  "Splice current level of WINDOW ancestry up one.
+
+If WINDOW is not eq to or a child of `frame-root-window', then it
+  must be at least one level of nesting down.
+
+This function remove one level of nesting e.g., given this frame
+
+    +------------+------------+
+    |            |     B      |
+    |     A      +------------+
+    |            |     C      |
+    +------------+------------+
+    |            D            |
+    +-------------------------+
+
+when called on window B leaves the frame as
+
+    +--------+--------+-------+
+    |        |        |       |
+    |    A   |    B   |   C   |
+    |        |        |       |
+    +--------+--------+-------+
+    |            D            |
+    +-------------------------+
+
+when called on window A, leave the frame as
+not scaled correctly
+
+    +-------------------------+
+    |                         |
+    |            A            +
+    |                         |
+    +-------------------------+
+    |            C            |
+    +-------------------------+
+    |            B            |
+    +-------------------------+
+    |                         |
+    |            D            |
+    |                         |
+    +-------------------------+
+
+This function leaves any preexisting subnests like the B/C window
+in the example."
+  (interactive)
+  (let ((cur-win (or window (selected-window)))
+        (original-win (selected-window)))
+    (unless (or (one-window-p)
+                (frame-root-window-p (window-parent cur-win)))
+      (let ((forward-siblings
+             (splice-window--get-all-window-siblings 'next cur-win))
+            (backward-siblings
+             (splice-window--get-all-window-siblings 'prev cur-win)))
+        ;; Remove current siblings
+        ;; once all siblings are closed, emacs automatically splices the
+        ;; remaining window into the above level.
+        (delete-other-windows-internal cur-win (window-parent cur-win))
+        ;; If selected window is in the windows to put back, `window-state-put'
+        ;; deals with selecting the window. If it isn't
+        ;; `delete-other-windows-internal' has just selected the wrong window,
+        ;; and won't change it back, so we deal with that here
+        (when (window-live-p original-win) (select-window original-win))
+        (splice-window--add-back-windows cur-win forward-siblings t)
+        (splice-window--add-back-windows cur-win backward-siblings nil)))))
+
+(defun merge-windows (window1 &rest windows)
+  "Merge all WINDOWS into WINDOW1.
+
+This is the opposite of `splice-window-upwards'."
+  (let ((confs (mapcar #'window-state-get windows))
+        (direction (if (window-combined-p window1) 'right 'below)))
+    (dolist (add-window windows)
+      (delete-window add-window))
+    (dolist (add-conf confs)
+      (window-state-put add-conf (split-window window1 nil direction)))))
+
+(define-key ctl-x-4-map "s" 'splice-window-upwards)
+
+;;; Swap windows
+(defun swap-windows-properly (window1 &optional window2)
+  "Swap WINDOW1 and WINDOW2 respecting any splits
+
+Takes two windows, and swaps them, works if one or both of the
+windows are internal ones, i.e. if `window-live-p' returns `nil'
+on them."
+  (unless (windowp window1)
+    (error "Must supply valid WINDOW1 to SWAP-WINDOWS-PROPERLY"))
+  (let ((window2 (or window2 (selected-window))))
+    (let ((state1 (window-state-get window1 t))
+          (state2 (window-state-get window2 t)))
+      (window-state-put state1 window2 'safe)
+      (window-state-put state2 window1 'safe))))
+
+;;; Run command in other window
+;; For a similar function see my configuration for smart-window
+(defun run-command-other-window (command &optional window)
+  "Run COMMAND in a different window.
+
+Takes a function to run, and calls it interactively in a
+different window.
+
+If WINDOW is nil, and `one-window-p' split the current window and
+select the result, else select WINDOW or `other-window'.
+
+Then run the COMMAND."
+  (interactive "C")
+  (if (window-live-p window)
+      (select-window window)
+    (if (one-window-p)
+        (select-window (split-window-sensibly))
+      (other-window 1)))
+  (call-interactively command))
+
+(define-key ctl-x-4-map (kbd "M-x") 'run-command-other-window)
+
+
+;;; New window commands
+;;;
+(defun run-command-split-window (direction)
+  "Return a function that calls `split-window' in DIRECTION, then
+runs a user defined command."
+  `(lambda (command)
+     "Split the current window in ,direction then run COMMAND in
+that window."
+     (interactive "C")
+     (select-window (split-window (selected-window) nil ',direction))
+     (call-interactively command)))
+
+(define-key ctl-x-map "2"
+  (lambda (arg) (interactive "P")
+    "
+
+Without argument, call `split-window-below'
+
+With the universal argument, split the window below, and run a
+command given by the user in that window.
+
+"
+    (if arg (call-interactively (run-command-split-window 'below))
+      (select-window (split-window-below)))))
+
+(define-key ctl-x-map "3"
+  (lambda (arg) (interactive "P")
+    "
+
+Without argument, call `split-window-right'
+
+With the universal argument, split the window to the right, and
+run a command given by the user in that window.
+
+"
+    (if arg (call-interactively (run-command-split-window 'right))
+      (select-window (split-window-right)))))
 
 
 
