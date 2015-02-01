@@ -338,14 +338,14 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
-(defmacro run-command-split-window (direction)
+(defun run-command-split-window (direction)
   "Return a function that calls `split-window' in DIRECTION, then
 runs a user defined command."
   `(lambda (command)
      "Split the current window in ,direction then run COMMAND in
 that window."
      (interactive "C")
-     (select-window (split-window (selected-window) nil ,direction))
+     (select-window (split-window (selected-window) nil ',direction))
      (call-interactively command)))
 
 (define-key ctl-x-map "2"
