@@ -5,6 +5,15 @@
 (c-set-offset 'case-label '+)
 
 
+;;;; Elisp Settings
+;;;;
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (define-key emacs-lisp-mode-map [mouse-3]
+              (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
+                                        (pop-tag-mark)))))
+
+
 ;;;; Latex Settings
 ;;;;
 (add-hook 'latex-mode-hook
