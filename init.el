@@ -71,6 +71,8 @@
 ;;;; Help settings
 ;;;;
 (setq help-window-select nil)
+(define-key help-map "I" 'info-apropos)
+(define-key help-map "A" 'apropos)
 
 
 ;;;; Indentation Motion
