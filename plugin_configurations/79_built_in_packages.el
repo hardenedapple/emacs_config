@@ -282,6 +282,7 @@ as yet."
  (lambda ()
    (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
 (setq ido-use-filename-at-point 'guess)
+(setq buffer-choose-default-function 'ido-switch-buffer)
 (setq ido-everywhere 1)
 (ido-mode 1)
 
