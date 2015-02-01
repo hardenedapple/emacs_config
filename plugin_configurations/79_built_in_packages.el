@@ -48,7 +48,7 @@
                                  (list "hg" "log" "diff")))
 
 (defun eshell/emacs (&rest args)
-  "Open a file in emacs. Some habits die hard."
+  "Open a file in emacs."
   (if (null args)
       ;; If I just ran "emacs", I probably expect to be launching
       ;; Emacs, which is rather silly since I'm already in Emacs.
@@ -152,7 +152,7 @@ as yet."
 ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
 ;; emacs wiki page)
 (defadvice he-substitute-string (after he-paredit-fix activate)
-  "remove extra paren when expanding line in paredit"
+  "Remove extra paren when expanding line in paredit"
   (if (and paredit-mode (equal (substring str -1) ")"))
       (progn (backward-delete-char 1) (forward-char))))
 
@@ -240,22 +240,24 @@ as yet."
 ;;;
 (transient-mark-mode 1)
 (defun push-mark-no-activate ()
-  "Pushes `point' to `mark-ring' and does not activate the region.
-Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled."
+  "Push `point' to `mark-ring' and does not activate the region.
+Equivalent to \\[set-mark-command] when \\[transient-mark-mode]
+is disabled."
   (interactive)
   (push-mark (point) t nil)
   (message "Pushed mark to ring"))
 
 (defun jump-to-mark ()
-  "Jumps to the local mark, respecting the `mark-ring' order.
-This is the same as using \\[set-mark-command] with the prefix argument, when
-\\[transient-mark-mode] is disabled"
+  "Jump to local mark, respecting the `mark-ring' order.
+This is the same as using \\[set-mark-command] with the prefix
+argument, when \\[transient-mark-mode] is disabled"
   (interactive)
   (set-mark-command 1))
 
 (defun exchange-point-and-mark-keep-activation (&optional arg)
-  "Identical to \\[exchange-point-and-mark] but will not activate the region if
-it isn't already activated."
+  "Identical to \\[exchange-point-and-mark] but will keep current
+region activation state witowithout ARG, and toggle activation
+state otherwise."
   (interactive "P")
   (let ((should-deactivate (eq mark-active (not (not arg)))))
     (exchange-point-and-mark should-deactivate)))

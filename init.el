@@ -1,8 +1,7 @@
 ;;;; Align
 ;;;;
 (defun align-repeat (start end regexp)
-  "repeat alignment with respect to
-     the given regular expression"
+  "Repeat alignment w.r.t REGEXP."
   (interactive "r\nsAlign regexp: ")
   (align-regexp start end
                 (concat "\\(\\s-*\\)" regexp) 1 1 t))
@@ -28,9 +27,8 @@
 (define-key minibuffer-local-map (kbd "M-i")
   (lambda ()
     (interactive)
-    (insert
-     (expand-file-name (buffer-name
-                        (window-buffer (minibuffer-selected-window)))))))
+    (insert (expand-file-name (buffer-name (window-buffer
+                                            (minibuffer-selected-window)))))))
 
 
 ;;;; Enable commands
@@ -78,7 +76,7 @@
 ;;;; Indentation Motion
 ;;;;
 (defun beginning-of-line-or-indentation ()
-  "Move to the beginning of the line or indentation."
+  "Toggle between beginning of the line and indentation."
   (interactive)
   (let ((orig-point (point)))
     (back-to-indentation)
@@ -92,11 +90,13 @@
 ;;;;
 ;;; New lines
 (defun open-line-below ()
+  "Add a new line below current one."
   (interactive)
   (end-of-line)
   (indent-new-comment-line))
 
 (defun open-line-above ()
+  "Add new line above the current one."
   (interactive)
   (end-of-line)
   (indent-new-comment-line)
@@ -109,6 +109,7 @@
 
 ;;; Move lines around
 (defun move-this-line-down (numlines)
+  "Drag current line NUMLINES downwards."
   (interactive "p")
   (let ((col (current-column)))
     (forward-line)
@@ -117,6 +118,7 @@
     (move-to-column col)))
 
 (defun move-this-line-up (numlines)
+  "Drag current line NUMLINES upwards."
   (interactive "p")
   (let ((col (current-column)))
     (forward-line)
@@ -142,11 +144,13 @@
 ;;;; Mouse navigation
 ;;;;
 (defun get-clicked-symbol (event)
+  "Move to event point, and find the symbol at point."
   (mouse-set-point event)
   (let ((current-symbol (thing-at-point 'symbol t)))
     current-symbol))
 
 (defmacro mouse-function-on-symbol (&rest body)
+  "Put EVENT and CURRENT-SYMBOL in lexical environment for BODY."
   `(lambda (event) (interactive "e")
      (let ((current-symbol (get-clicked-symbol event)))
        (if current-symbol
@@ -174,6 +178,7 @@
 ;;;; Redefining sexp motion
 ;;;;
 (defun backward-up-sexp (arg)
+  "Move up whatever sexp we're in."
   (interactive "p")
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
@@ -260,17 +265,20 @@
 (setq indent-line-function 'insert-tab)
 
 (defun cleanup-buffer-safe ()
-  "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
+  "Perform some safe whitespace operations on `current-buffer'.
+
+Does not indent buffer, as it's used for a `before-save-hook',
+and that might be bad."
   (interactive)
   (untabify (point-min) (point-max))
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
 (defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
+  "Perform unsafe whitespace operations on `current-buffer'.
+
+Include `indent-buffer', which should not be called automatically
+on save."
   (interactive)
   (cleanup-buffer-safe)
   (indent-region (point-min) (point-max)))
@@ -282,10 +290,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;; Window history buffer switch
 ;;;;
 (defvar buffer-choose-default-function 'switch-to-buffer
-  "Function to call with the key C-x b  with no prefix.")
+  "Function to call with unprefixed C-x b")
 
 (defun window-history-buffer-choose (&optional prefix)
-  "Select a buffer from the current window history."
+  "Select a buffer from the history of `current-window'."
   (interactive "P")
   (if prefix
       (let ((buffer-names
@@ -307,7 +315,7 @@ Including indent-buffer, which should not be called automatically on save."
 (define-key ctl-x-map "=" 'balance-windows)
 
 (defun fix-window-horizontal-size (&optional num-columns)
-  "Set the window's size to 80 (or prefix arg WIDTH) columns wide."
+  "Set `current-window' size to 80 NUM-COLUMNS columns wide."
   (interactive)
   (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
 
@@ -317,6 +325,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; DISPLAY-BUFFER settings
 (defun display-buffer-some/pop-window (buffer alist)
   "If `one-window-p' display in new window.
+
 Otherwise try `display-buffer-use-some-window'."
   (if (one-window-p)
       (display-buffer-pop-up-window buffer alist)
@@ -336,17 +345,17 @@ Otherwise try `display-buffer-use-some-window'."
   "Commands to use same window when calling `pop-to-buffer'")
 
 (defun display-buffer-same-window-from-command (buffer alist)
-  "Opens BUFFER in `current-window' if `this-command' is in
+  "Open BUFFER in `current-window' if `this-command' is in
 `display-buffer-here-commands'"
   (when (memq this-command display-buffer-here-commands)
     (display-buffer-same-window buffer alist)))
 
 (defun display-buffer-previous-other-window (buffer alist)
-  "Calls `display-buffer-in-previous-window' with
-  `inhibit-same-window' set so never open in the current window.
+  "Call `display-buffer-in-previous-window' with
+  `inhibit-same-window' set so never open in `current-window'.
 
 Not included in the `display-buffer-base-action' by default, but
-  kept here for when I want this sort of thing."
+  kept here for if it's useful."
   (let ((alist (cons '(inhibit-same-window . t) alist)))
     (display-buffer-in-previous-window buffer alist)))
 
@@ -365,7 +374,7 @@ Not included in the `display-buffer-base-action' by default, but
 
 ;;; Splice window functions
 (defun splice-window--get-split-type (&optional window forwards)
-  "Return the direction to split WINDOW.
+  "Return split direction for WINDOW.
 Returns nil if WINDOW is either the root window or the minibuffer window."
   (cond
    ((window-combined-p window) (if forwards 'below 'above))
@@ -373,9 +382,9 @@ Returns nil if WINDOW is either the root window or the minibuffer window."
 
 (defun splice-window--get-all-window-siblings
     (&optional direction window)
-  "Return a list of WINDOW's siblings in given DIRECTION.
+  "Return list of WINDOW's siblings in given DIRECTION.
 
-Default direction is forward."
+Default direction is next."
   (let* ((window-iterator-function (case direction
                                      (prev 'window-prev-sibling)
                                      (t 'window-next-sibling)))
@@ -391,7 +400,7 @@ Default direction is forward."
 
 (defun splice-window--add-back-windows (base-window to-add forwards
                                                     &optional direction)
-  "Add window specification TO-ADD into the BASE-WINDOW's config."
+  "Add window specification TO-ADD into BASE-WINDOW's config."
   (let ((direction
          (or direction
              (splice-window--get-split-type base-window forwards)

@@ -32,7 +32,7 @@
 
 ;; Elisp find thing at point in other window.
 (defun elisp-slime-nav-find-thing-at-point-other-window ()
-  "Go to the definition of `symbol-at-point' in other window."
+  "Go to definition of `symbol-at-point' in other window."
   (interactive)
   (let ((current-symbol (thing-at-point 'symbol t)))
     (other-window 1)
@@ -175,7 +175,7 @@
 ;;;;
 (setq magit-repo-dirs '("~/.emacs.d" "~/share/repos/useful-files"))
 (defun magit-stage-this-file ()
-  "Stage the file the current buffer is visiting."
+  "Stage file the current buffer is visiting."
   (interactive)
   (magit-stage-item (buffer-file-name)))
 
@@ -223,16 +223,16 @@
       eshell-magit->git-transformations)
 
 (defun eshell-delegate-external (command args)
-  "Call an external command "
+  "Call external command "
   (eshell-wait-for-process (eshell-external-command command args)))
 
 (defun eshell/git (&rest args)
-  "Function to use some of magit abilities in eshell.
+  "Function to use some of `magit' abilities in `eshell'.
 
-Checks if  the subcommand is  one of the  keys in the  assoc list
-  `eshell-magit->git-transformations' if it isn't, we simply pass
-  it  on to  the external  git command,  otherwise, do  something
-  almost equivalent with `magit'"
+Checks if the subcommand is one of the keys in the assoc list
+`eshell-magit->git-transformations' if it isn't, we simply pass
+it on to the external git command, otherwise, do something almost
+equivalent with `magit'"
   (let ((function-to-call
          (or (cdr (assoc (car args) eshell-magit->git-transformations))
              (lambda (args)
@@ -287,6 +287,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
        (not (nth 4 (syntax-ppss))))) ;; inside comment
 
 (defun paredit-duplicate-closest-list ()
+  "Duplicate sexp the point is at."
   (interactive)
   ;; skips to start of current sexp
   (while (not (paredit--is-at-start-of-list))
