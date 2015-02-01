@@ -38,23 +38,23 @@
 
 ;;;; File Handling
 ;;;;
-(defun remove-buffer-and-file ()
-  "Removes file connected to current buffer and kills buffer."
+(defun remove-buffer-and-file (&optional buffer-or-name)
+  "Removes `get-buffer' BUFFER-OR-NAME kills it too."
   (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
+  (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
+         (filename (buffer-file-name buffer)))
     (unless (and filename (file-exists-p filename))
-      (error "Buffer '%s' is not visiting a file!" name))
+      (error "Buffer '%s' is not visiting a file!" (buffer-name buffer)))
     (delete-file filename)
     (kill-buffer buffer)
     (message "File '%s' removed" filename)))
 
-(defun rename-buffer-and-file ()
-  "Renames current buffer and file it is visiting."
+(defun rename-buffer-and-file (&optional buffer-or-name)
+  "Rename BUFFER-OR-NAME and file it's visiting."
   (interactive)
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
+  (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
+        (filename (buffer-file-name buffer))
+        (name (buffer-name buffer)))
     (unless (and filename (file-exists-p filename))
       (error "Buffer '%s' is not visiting a file!" name))
     (let ((new-name (read-file-name "New name: " filename)))
