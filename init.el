@@ -139,6 +139,25 @@
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 
+;;;; Mouse navigation
+;;;;
+(defun get-clicked-symbol (event)
+  (mouse-set-point event)
+  (let ((current-symbol (thing-at-point 'symbol t)))
+    current-symbol))
+
+(defmacro mouse-function-on-symbol (&rest body)
+  `(lambda (event) (interactive "e")
+     (let ((current-symbol (get-clicked-symbol event)))
+       (if current-symbol
+           ,@body))))
+
+(global-set-key [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
+(global-set-key [mouse-2] (mouse-function-on-symbol
+                           (occur (concat "\\_<" current-symbol "\\_>"))))
+(global-set-key [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
+
+
 ;;;; Move more quickly
 ;;;;
 (global-set-key (kbd "C-S-n") (lambda (numtimes) (interactive "p")
