@@ -6,7 +6,7 @@
 ;;;;
 ;;; Have to be before paredit so the exception works
 (wrap-region-global-mode t)
-(add-to-list 'wrap-region-except-modes 'paredit-mode)
+(add-to-list 'wrap-region-except-modes 'paredit-mode 'tex-mode)
 
 
 ;;;; Ace jump Mode Settings
