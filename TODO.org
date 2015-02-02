@@ -1,126 +1,83 @@
 * To Document:
-  Make a note of all the keybindings I've set up.
-  Write down all the customisation I might have to change
-      (e.g. python shell type)
+Make a note of all the keybindings I've set up.
+Write down all the customisation I might have to change depending on machine
+    (e.g. python shell type)
 
 * To Fix:
-  Figure out why python-mode's inbuilt flymake settings aren't working.
+Figure out why python-mode's inbuilt flymake settings aren't working.
 
 * Things to Do
 Add org-capture template for work things
+Create a blacklist for commands in repeat-last-command
+    possibly something to do with last-repeatable-command
 
 * Things to learn:
-  [[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
-  [[info:calc][Read about the calc package.]]
-  Learn about the simple emacs spreadsheet
-  EDE (hopefully help with Makefiles)
-  Semantic (another CEDET tool)
-  Learn all about navigating info files.
+IBuffer
+Dired
+[[info:org#Capture%20-%20Refile%20-%20Archive][Continue reading Org manual]]
+[[info:calc][Read about the calc package.]]
+Learn about the simple emacs spreadsheet
+EDE (hopefully help with Makefiles)
+Semantic (another CEDET tool)
+Learn all about navigating info files.
 
 * I want:
-  1) Filter grep and occur lists. (helm grep and helm occur mitigate this)
-  2) GrepAdd equivalent.
-     + append-to-buffer
-  3) Evil surround - deleting surroundings removes everything inside and to
-     + the left of the cursor with it.
-  4) Shortcut to switch to magit in current window.
-     find if a magit buffer exists, then
-     (switch-to-buffer " ... ")
-     + temporarily set same-window-regexps?
-  5) Add imenu regexp for my setting headers.
-  6) Save window configuration for each elscreen tab along with nameses-save
-  7) Look through the options in Emacs Sessions
-  8) Make each namesession create a temporary fileset so I can run commands on it
-  9) Search google/youtube/github for thing under point
-  10) Automatic indirect buffers for folding.
-  11) Open multiple help files at the same time.
-      + C-u C-h to invoke
-      + rename-uniquely
+1) Evil surround - deleting surroundings removes everything inside and to
+   + the left of the cursor with it.
+2) Shortcut to switch to magit in current window.
+   find if a magit buffer exists, then
+   (switch-to-buffer " ... ")
+   + temporarily set same-window-regexps?
+3) Search google/youtube/github for thing under point
 
 * Check out:
 ** Stephs emacs config
-
 *** cjp-library
-    + [[file:stephs_emacs/lisp/cjp-library.el::12][Create a window setup function]]
-    + [[file:stephs_emacs/lisp/cjp-library.el::228][Find double words]]
-    + [[file:stephs_emacs/lisp/cjp-library.el::305][wc (count number of words in region)]]
-    + [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
-
++ [[file:stephs_emacs/lisp/cjp-library.el::228][Find double words]]
++ [[file:stephs_emacs/lisp/cjp-library.el::305][wc (count number of words in region)]]
++ [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
 *** Packages to check out
-
 **** flymake cursor
-     Puts the error message in the minibuffer when point is on an error
-     Apparently usually have to mouse over.
-     Must check if that's built in by now.
-
+Puts the error message in the minibuffer when point is on an error
+Apparently usually have to mouse over.
+Must check if that's built in by now.
 **** pydoc info
-     Browse python documentation in info buffers
-
+Browse python documentation in info buffers
 **** Sunrise Commander
-     Midnight commander clone inside emacs.
-
+Midnight commander clone inside emacs.
 * Plugins:
 ** Plugins to check out:
-       + ecb          :: emacs code browser
-       + el-get       :: an "extra" package manager for emacs packages.
-       + dired+       :: Extra functions for dired
-       + direx        :: Tree viewer - can be used for viewing tree of code
++ ecb          :: emacs code browser
++ el-get       :: an "extra" package manager for emacs packages.
++ dired+       :: Extra functions for dired
++ direx        :: Tree viewer - can be used for viewing tree of code
++ use-package  :: contain code within package requirements.
 
 ** Code Folding.
-       + folding      :: Must be automatic for code.
-
-            Own version.
-                         Should make my own version of code folding.
-                         Have set of functions to fold/unfold in both
-                         hs-minor-mode and outline-mode.
-                         Want version to automatically make clone buffers to
-                         allow for differently folded code in different
-                         buffers.
-                         Add the ability to fold on markers (for hiding
-                            passwords in my password files)
-            hs-minor-mode
-                         Has hide and show
-                         Doesn't have motion by folds
-                         Commands built in to evil
-                         Works nicely for more lancuaces than outline mode
-            fold-dwim
-                         "Unified interface to folding modes"
-                         Same interface to outline, hs and folding
-                         I already have a home-grown version that fits my
-                           preferences more.
-            global-semantic-folding-mode
-                         apparently in cedet
-            outline-minor-mode
-                         Seems to do the same as hs-minor-mode
-                         Adds in navigation commands
-                         Have no idea why both these modes are in emacs.
-                         Doesn't work well with C
-
-* Evil mode:
-** Next
-   Find out the benefit of evil-define-command
-   Read this [[http://zuttobenkyou.wordpress.com/2011/02/15/some-thoughts-on-emacs-and-vim/][blog post]] for some ideas.
-
-** Map paredit mappings into evil normal mode.
-   The functions that start at the end of an sexp don't work well due to the
-   paint of the cursor being one off that in emacs.
-   Though not sure it's possible with the <( and >) mappings
-   i.e.
-        W   - Move sexp
-        B   - Move sexp
-        gE  - Move sexp
-        E   - Move sexp
-        w   - Move WORD
-        b   - Move WORD
-        e   - Move WORD
-        ge  - Move WORD
-
-** Porting my vimrc
-   Get submodes (like submode.vim)
-        evil-define-state
-        (info "(evil) States")
-
-** Things not in evil that are in vim:
-   C-x C-(anything not linewise)
-   [I, ]I, [D, ]D, [d, ]d, [i, ]i
-   gp, gP
++ folding      :: Must be automatic for code.
+     Own version.
+                  Should make my own version of code folding.
+                  Have set of functions to fold/unfold in both
+                  hs-minor-mode and outline-mode.
+                  Want version to automatically make clone buffers to
+                  allow for differently folded code in different
+                  buffers.
+                  Add the ability to fold on markers (for hiding
+                     passwords in my password files)
+     hs-minor-mode
+                  Has hide and show
+                  Doesn't have motion by folds
+                  Commands built in to evil
+                  Works nicely for more lancuaces than outline mode
+     fold-dwim
+                  "Unified interface to folding modes"
+                  Same interface to outline, hs and folding
+                  I already have a home-grown version that fits my
+                    preferences more.
+     global-semantic-folding-mode
+                  apparently in cedet
+     outline-minor-mode
+                  Seems to do the same as hs-minor-mode
+                  Adds in navigation commands
+                  Have no idea why both these modes are in emacs.
+                  Doesn't work well with C
