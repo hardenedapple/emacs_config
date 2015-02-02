@@ -363,10 +363,10 @@ and run a command given by the user in that window.
 
 "
     (cond
+     ((null arg) (call-interactively 'sw-below))
      ((= (car arg) 4) (select-window (split-window-below)))
      ((> (car arg) 4)
-      (call-interactively (run-command-split-window 'below)))
-     (t (call-interactively 'sw-below)))))
+      (call-interactively (run-command-split-window 'below))))))
 
 (define-key ctl-x-map "3"
   (lambda (arg) (interactive "P")
@@ -383,10 +383,10 @@ and run a command given by the user in that window.
 
 "
     (cond
+     ((null arg) (call-interactively 'sw-right))
      ((= (car arg) 4) (select-window (split-window-right)))
      ((> (car arg) 4)
-      (call-interactively (run-command-split-window 'right)))
-     (t (call-interactively 'sw-right)))))
+      (call-interactively (run-command-split-window 'right))))))
 
 
 ;;;; Slime Settings
