@@ -1,12 +1,15 @@
 ;;;; Evil plugin settings
 ;;;; (key bindings for non-evil plugins here)
+;; Packages to get:
+;;      evil-args
+;;      evil-commentary
+;;      evil-exchange
+;;      evil-leader
+;;      evil-surround
 
 ;;; Ace jump mode keybindings
 (define-key evil-normal-state-map "s" nil)
 (define-key evil-motion-state-map "s" 'ace-jump-word-mode)
-
-;;; Auto-Complete keybindings
-(define-key evil-insert-state-map (kbd "C-SPC") 'auto-complete)
 
 ;;; Buffer Move keybindings
 (evil-leader/set-key
@@ -23,14 +26,6 @@
   "gp" 'magit-push
   "gf" 'magit-pull
   "gs" 'magit-status)
-
-;; ;;; Multiple Cursors keybindings
-;; ;; Doesn't really work with evil, as the cursor position is different
-;; ;; (i.e. the whole cursor at the end of the visual selection thing messes up
-;; ;; MC
-;; (define-key evil-visual-state-map "mn" 'mc/mark-next-like-this)
-;; (define-key evil-visual-state-map "mp" 'mc/mark-previous-like-this)
-;; (define-key evil-visual-state-map "ma" 'mc/mark-all-like-this)
 
 ;;; Window Number keybindings
 (dotimes (winnum 5)
@@ -143,8 +138,6 @@
 ;; Ex Mode Mappings
 (define-key evil-ex-map "e" 'helm-find-files)
 (define-key evil-ex-map "b" 'helm-mini)
-(define-key evil-ex-map "tabe" 'elscreen-find-file)
-(define-key evil-ex-map "tabx" 'elscreen-execute-extended-command)
 
 ;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
@@ -175,74 +168,6 @@
   (if (whitespace-only-p (buffer-substring beg end))
       (ad-set-arg 3 ?_))
   ad-do-it)
-
-
-;; ;;;; Evil Folding Settings
-;; ;;;;
-;; (defun fold-close ()
-;;   (interactive)
-;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-;;       (hide-subtree)
-;;     (evil-close-fold)))
-
-;; (defun fold-close-all ()
-;;   (interactive)
-;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-;;       (hide-sublevels
-;;        (cond
-;;         ((outline-on-heading-p) (outline-level))
-;;         (t 1)))
-;;     (evil-close-folds)))
-
-;; (defun fold-open ()
-;;   (interactive)
-;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-;;     (show-subtree)
-;;     (evil-open-fold)))
-
-;; (defun fold-open-all ()
-;;   (interactive)
-;;   (if (or outline-minor-mode (eq major-mode 'outline-mode))
-;;       (show-all)
-;;     (evil-open-folds)))
-
-;; (defun fold-move-down (num-moves)
-;;   (interactive "p")
-;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
-;;     (outline-next-visible-heading num-moves)))
-
-;; (defun fold-move-up (num-moves)
-;;   (interactive "p")
-;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
-;;     (outline-previous-visible-heading num-moves)))
-
-;; (defun fold-shift-down (num-shifts)
-;;   (interactive "p")
-;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
-;;     (outline-move-subtree-down num-shifts)))
-
-;; (defun fold-shift-up (num-shifts)
-;;   (interactive "p")
-;;   (when (or outline-minor-mode (eq major-mode 'outline-mode))
-;;     (outline-move-subtree-up num-shifts)))
-
-;; (define-key evil-normal-state-map "zc" 'fold-close)
-;; (define-key evil-normal-state-map "zm" 'fold-close-all)
-;; (define-key evil-normal-state-map "zo" 'fold-open)
-;; (define-key evil-normal-state-map "zr" 'fold-open-all)
-;; (define-key evil-normal-state-map "zj" 'fold-move-down)
-;; (define-key evil-normal-state-map "zk" 'fold-move-up)
-;; (define-key evil-normal-state-map "zJ" 'fold-shift-down)
-;; (define-key evil-normal-state-map "zK" 'fold-shift-up)
-
-
-;; ;;;; Settings for when in paredit
-;; ;;;;
-;; ;; Copy mappings from sexp-vim and tpopes' sexp-mappings ...
-;; ;; plugins for vim.
-;; (evil-define-key 'normal paredit-mode-map ")" 'paredit-forward-up)
-;; (evil-define-key 'normal paredit-mode-map "(" 'paredit-backward-up)
-;; ;; (evil-define-key 'normal paredit-mode-map "W" 'paredit-forward)
 
 ;;;; Evil Unimpaired Settings
 ;;;;
@@ -275,9 +200,7 @@
 (define-key evil-normal-state-map "[e" 'move-this-line-up)
 (define-key evil-normal-state-map "]q" 'next-error)
 (define-key evil-normal-state-map "[q" 'previous-error)
-(define-key evil-normal-state-map "[Q" (lambda () (interactive) (next-error 1 t)))
-;; Make sure counts work on the error cycling
-;; Add [Q and ]Q
+(define-key evil-normal-state-map "[Q" 'first-error)
 
 
 ;;;; Evil Args Settings
@@ -297,41 +220,6 @@
 ;;;;
 ;; (use gx<motion> to select a range, once selected two ranges they are swapped
 (evil-exchange-install)
-
-
-;;;; Evil Numbers Settings
-;;;;
-(evil-leader/set-key
-  "nu" 'evil-numbers/inc-at-pt
-  "nd" 'evil-numbers/dec-at-pt)
-
-
-;;;; Evil Nerd Commenter Settings
-;;;;
-;; WANT
-;;     gcd - comment and copy
-;;     gci - invert comment status
-;; Doesn't work as to make a mapping to gci, need gc to be a prefix command
-;; That means gc mapping wouldn't be available for the main function.
-;;
-;; To counter this, have everything under the prifix gc, and have the main
-;; function under gcc
-
-(define-prefix-command 'evilnc-key-map)
-(define-key evil-normal-state-map (kbd "gc") evilnc-key-map)
-(define-key evil-visual-state-map (kbd "gc") evilnc-key-map)
-
-;;; Make the function to invert all lines' comment status interactive.
-(evil-define-operator evilnc-invert-comment-once (beg end)
-  "Toggle comment status over a motion."
-  :type 'line
-  :repeat t
-  (evilnc--invert-comment beg end))
-
-(define-key evilnc-key-map "c" 'evilnc-comment-operator)
-(define-key evilnc-key-map "i" 'evilnc-invert-comment-once)
-(define-key evilnc-key-map "d" 'evilnc-copy-and-comment-lines)
-(define-key evilnc-key-map "t" 'evilnc-comment-or-uncomment-to-the-line)
 
 
 ;;;; Evil Surround Settings
