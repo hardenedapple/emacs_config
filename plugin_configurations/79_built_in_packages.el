@@ -6,12 +6,6 @@
 (setq calendar-longitude 0)
 
 
-;;;; Cua Settings
-;;;;
-(setq cua-auto-tabify-rectangles nil)
-(cua-selection-mode t)
-
-
 ;;;; Diary Settings
 ;;;;
 (setq diary-file "~/.emacs.d/diary")
