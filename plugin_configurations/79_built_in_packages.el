@@ -154,6 +154,8 @@ as yet."
 ;;;; Imenu Settings
 ;;;;
 (global-set-key (kbd "C-c i") 'imenu)
+(defadvice imenu (after move-to-top activate)
+  (recenter 10))
 
 ;;; Python imenu
 (add-hook 'python-mode-hook
