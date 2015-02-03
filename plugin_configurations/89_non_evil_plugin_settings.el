@@ -302,6 +302,9 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
 (define-key paredit-mode-map (kbd "C-j") 'nil)
+;; Keep the search commands under M-s by moving PAREDIT-SPLICE-SEXP to M-k
+(define-key paredit-mode-map (kbd "M-s") 'nil)
+(define-key paredit-mode-map (kbd "M-k") 'paredit-splice-sexp)
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
 (add-hook 'ielm-mode-hook
