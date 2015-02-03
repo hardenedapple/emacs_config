@@ -13,8 +13,8 @@
 ;;;;
 (key-chord-define-global ";-" 'ace-jump-word-mode)
 (key-chord-define-global ";," 'ace-jump-char-mode)
-(global-set-key (kbd "M-g M-w") 'ace-jump-word-mode)
-(global-set-key (kbd "M-g w") 'ace-jump-word-mode)
+(global-set-key (kbd "M-g M-s") 'ace-jump-word-mode)
+(global-set-key (kbd "M-g s") 'ace-jump-word-mode)
 (setq ace-jump-mode-scope 'window)
 
 
