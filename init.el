@@ -352,10 +352,7 @@ Otherwise try `display-buffer-use-some-window'."
 
 (defun display-buffer-previous-other-window (buffer alist)
   "Call `display-buffer-in-previous-window' with
-  `inhibit-same-window' set so never open in `current-window'.
-
-Not included in the `display-buffer-base-action' by default, but
-  kept here for if it's useful."
+`inhibit-same-window' set so never open in `current-window'."
   (let ((alist (cons '(inhibit-same-window . t) alist)))
     (display-buffer-in-previous-window buffer alist)))
 
@@ -363,7 +360,7 @@ Not included in the `display-buffer-base-action' by default, but
       display-buffer-base-action (list (list
                                         'display-buffer-reuse-window
                                         'display-buffer-same-window-from-command
-                                        'display-buffer-in-previous-window
+                                        'display-buffer-previous-other-window
                                         'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
