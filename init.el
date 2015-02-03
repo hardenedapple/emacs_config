@@ -168,6 +168,9 @@
                                 (ignore-errors (next-line (* numtimes 5)))))
 (global-set-key (kbd "C-S-p") (lambda (numtimes) (interactive "p")
                                 (ignore-errors (previous-line (* numtimes 5)))))
+(define-key search-map "O"
+  (lambda () (interactive)
+    (occur (concat "\\_<" (thing-at-point 'symbol t) "\\_>"))))
 
 
 ;;;; Recursive minibuffers
