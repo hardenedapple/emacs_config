@@ -15,10 +15,6 @@
 
 (global-set-key (kbd "M-g h") 'previous-error)
 
-;;; Using M-f and M-b for word motion is a pain, add M-a and M-e for word motion
-(global-set-key (kbd "M-a") 'subword-backward)
-(global-set-key (kbd "M-e") 'subword-forward)
-
 (defvar dvorak-keyswaps
   '(("M-p" . "M-h")
     ("M-h" . "M-p")
@@ -48,10 +44,3 @@
 (add-hook 'after-make-frame-functions
           (lambda (f) (with-selected-frame f
                         (apply-my-keyswaps))))
-
-;;;; Org mode Dvorak settings
-;;;
-(add-hook 'org-mode-hook
-          (lambda ()
-            (define-key org-mode-map (kbd "M-a") nil)
-            (define-key org-mode-map (kbd "M-e") nil)))
