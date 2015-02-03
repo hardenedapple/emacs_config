@@ -10,6 +10,7 @@
         cua-clear-rectangle-mark
         cua-cut-region
         cua-delete-region
+        cua-exchange-point-and-mark
         cua-paste
         dabbrev-expand
         eval-last-sexp
@@ -30,6 +31,7 @@
         evil-paste-before
         evil-previous-line
         evil-visual-char
+        exchange-point-and-mark-keep-activation
         jump-char-backward
         jump-char-process-char
         kill-sexp
