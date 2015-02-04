@@ -532,23 +532,25 @@ on them."
 
 ;;; Run command in other window
 ;; For a similar function see my configuration for smart-window
-(defun run-command-other-window (command &optional window)
-  "Run COMMAND in a different window.
+(defun run-function-other-window (function &optional window &rest args)
+  "Call FUNCTION with arguments ARGS in a different window.
 
-Takes a function to run, and calls it interactively in a
-different window.
+Takes a function to run, and executes it with WINDOW selected.
 
-If WINDOW is nil, and `one-window-p' split the current window and
-select the result, else select WINDOW or `other-window'.
+If WINDOW is `nil', and `one-window-p' split the current window
+and select the result, else select WINDOW or `other-window'.
 
-Then run the COMMAND."
-  (interactive "C")
+Then `apply' ARGS to FUNCTION."
   (if (window-live-p window)
       (select-window window)
     (if (one-window-p)
         (select-window (split-window-sensibly))
       (other-window 1)))
-  (call-interactively command))
+  (apply function args))
+
+(defun run-command-other-window (command &optional window)
+  (interactive "C")
+  (run-function-other-window #'call-interactively window command))
 
 (define-key ctl-x-4-map (kbd "M-x") 'run-command-other-window)
 
