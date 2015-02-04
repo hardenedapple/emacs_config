@@ -241,7 +241,7 @@
       minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
-(set-default-font "Tamsyn-10")
+(set-frame-font "Tamsyn-10")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
 (show-paren-mode 1)
