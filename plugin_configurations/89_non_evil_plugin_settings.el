@@ -36,8 +36,8 @@
   "Go to definition of `symbol-at-point' in other window."
   (interactive)
   (let ((current-symbol (thing-at-point 'symbol t)))
-    (other-window 1)
-    (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))
+    (run-function-other-window #'elisp-slime-nav-find-elisp-thing-at-point nil
+                               current-symbol)))
 
 ;; Left click finds elisp thing
 (add-hook 'emacs-lisp-mode-hook
