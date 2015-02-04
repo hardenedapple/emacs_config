@@ -31,8 +31,8 @@
 (setq eshell-prompt-function
       (lambda ()
         (concat (file-name-nondirectory (directory-file-name (eshell/pwd)))
-         (format-time-string " [%H:%M:%S]")
-         (if (= (user-uid) 0) " # " " $ "))))
+                (format-time-string " [%H:%M:%S]")
+                (if (= (user-uid) 0) " # " " $ "))))
 
 ;; These commands are the ones I don't want running in eshell.
 ;; I either want them to be run in ansi-term or by some personally defined
@@ -215,11 +215,11 @@ as yet."
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
  python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
+ "from IPython.core.completerlib import module_completion"
  python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
+ "';'.join(module_completion('''%s'''))\n"
  python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+ "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
 (add-hook 'inferior-python-mode-hook
           (lambda ()

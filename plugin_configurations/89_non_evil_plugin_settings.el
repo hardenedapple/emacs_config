@@ -374,7 +374,7 @@ and run a command given by the user in that window.
 
 (define-key ctl-x-map "3"
   (lambda (arg) (interactive "P")
-     "
+    "
 
 Do one of three actions depending on ARG.
 Calling directly, split the window right, and switch to a buffer

@@ -53,8 +53,8 @@
   "Rename BUFFER-OR-NAME and file it's visiting."
   (interactive)
   (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
-        (filename (buffer-file-name buffer))
-        (name (buffer-name buffer)))
+         (filename (buffer-file-name buffer))
+         (name (buffer-name buffer)))
     (unless (and filename (file-exists-p filename))
       (error "Buffer '%s' is not visiting a file!" name))
     (let ((new-name (read-file-name "New name: " filename)))
@@ -251,7 +251,7 @@
   (when (< arg 0)
     (if special
         (goto-char (car (funcall mover arg)))
-        (funcall mover arg))))
+      (funcall mover arg))))
 
 
 ;;;; User Interface
@@ -588,7 +588,7 @@ Then `apply' ARGS to FUNCTION."
 
      (require-only
       '(desktop eldoc em-smart eshell le-eval-and-insert-results
-                    nameses transpose-frame uniquify epa-file)))
+                nameses transpose-frame uniquify epa-file)))
 
   (let
       ((require-packages

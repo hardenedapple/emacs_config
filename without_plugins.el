@@ -53,8 +53,8 @@
   "Rename BUFFER-OR-NAME and file it's visiting."
   (interactive)
   (let* ((buffer (get-buffer (or buffer-or-name (current-buffer))))
-        (filename (buffer-file-name buffer))
-        (name (buffer-name buffer)))
+         (filename (buffer-file-name buffer))
+         (name (buffer-name buffer)))
     (unless (and filename (file-exists-p filename))
       (error "Buffer '%s' is not visiting a file!" name))
     (let ((new-name (read-file-name "New name: " filename)))
@@ -251,7 +251,7 @@
   (when (< arg 0)
     (if special
         (goto-char (car (funcall mover arg)))
-        (funcall mover arg))))
+      (funcall mover arg))))
 
 
 ;;;; User Interface
@@ -601,8 +601,8 @@ run a command given by the user in that window.
 (require 'ido)
 (setq ido-enable-flex-matching 1)
 (add-hook 'ido-setup-hook
- (lambda ()
-   (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
+          (lambda ()
+            (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
 (setq ido-use-filename-at-point 'guess)
 (setq ido-everywhere 1)
 (ido-mode 1)
