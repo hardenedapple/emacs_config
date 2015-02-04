@@ -28,9 +28,6 @@
 
 ;;;; Elisp Slime Nav Settings
 ;;;;
-(dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-  (add-hook hook 'turn-on-elisp-slime-nav-mode))
-
 ;; Elisp find thing at point in other window.
 (defun elisp-slime-nav-find-thing-at-point-other-window ()
   "Go to definition of `symbol-at-point' in other window."
@@ -39,14 +36,16 @@
     (run-function-other-window #'elisp-slime-nav-find-elisp-thing-at-point nil
                                current-symbol)))
 
+(define-key elisp-slime-nav-mode-map (kbd "C-x 4 M-.")
+  'elisp-slime-nav-find-thing-at-point-other-window)
+
 ;; Left click finds elisp thing
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (define-key emacs-lisp-mode-map (kbd "C-x 4 M-.")
-              'elisp-slime-nav-find-thing-at-point-other-window)
-            (define-key emacs-lisp-mode-map [mouse-1]
-              (mouse-function-on-symbol
-               (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))))
+(define-key elisp-slime-nav-mode-map [mouse-1]
+  (mouse-function-on-symbol
+   (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))
+
+(dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+  (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
 
 ;;;; Expand Region Settings
