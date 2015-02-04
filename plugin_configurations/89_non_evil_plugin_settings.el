@@ -298,7 +298,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
          (dup-sexp (buffer-substring start end)))
     ;; go to the next line and copy the sexprs we encountered
     (paredit-newline)
-    (insert dup-sexp)))
+    (insert dup-sexp)
+    (goto-char (+ end 1))))
 
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
