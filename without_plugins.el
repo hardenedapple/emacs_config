@@ -65,6 +65,9 @@
       (message "File '%s' successfully renamed to '%s'" name
                (file-name-nondirectory new-name)))))
 
+(global-set-key (kbd "C-x f") 'find-file)
+(global-set-key (kbd "C-x C-f") 'dired)
+
 
 ;;;; Help settings
 ;;;;
@@ -107,31 +110,48 @@
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
-;;; Move lines around
-(defun move-this-line-down (numlines)
-  "Drag current line NUMLINES downwards."
-  (interactive "p")
-  (let ((col (current-column)))
-    (forward-line)
-    (transpose-lines numlines)
-    (forward-line -1)
-    (move-to-column col)))
+;;; Moving lines
+;; Taken from the old version of http://www.emacswiki.org/emacs/move-text.el
+;; as the change in TRANSPOSE-LINES in 24.3 is negated by my advice on
+;; TRANSPOSE-SUBR
+(defun move-text-internal (arg)
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
+        (exchange-point-and-mark))
+    (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (let ((column (current-column)))
+      (beginning-of-line)
+      (when (or (> arg 0) (not (bobp)))
+        (forward-line)
+        (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+        (forward-line -1))
+      (move-to-column column t)))))
 
-(defun move-this-line-up (numlines)
-  "Drag current line NUMLINES upwards."
-  (interactive "p")
-  (let ((col (current-column)))
-    (forward-line)
-    (transpose-lines (- numlines))
-    ;; Note: I have advised `transpose-subr', which means I need to call
-    ;;       `forward-line' with argument -1, if I hadn't I'd need to call it
-    ;;       with argument (- (1+ NUMLINES))
-    (forward-line -1)
-    ;;(forward-line (- (1+ numlines)))
-    (move-to-column col)))
+(defun move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines down."
+  (interactive "*p")
+  (move-text-internal arg))
 
-(global-set-key (kbd "<C-s-up>") 'move-this-line-up)
-(global-set-key (kbd "<C-s-down>") 'move-this-line-down)
+(defun move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines up."
+  (interactive "*p")
+  (move-text-internal (- arg)))
+
+(global-set-key (kbd "C-s-<up>") 'move-text-up)
+(global-set-key (kbd "C-s-<down>") 'move-text-down)
+
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
@@ -168,6 +188,9 @@
                                 (ignore-errors (next-line (* numtimes 5)))))
 (global-set-key (kbd "C-S-p") (lambda (numtimes) (interactive "p")
                                 (ignore-errors (previous-line (* numtimes 5)))))
+(define-key search-map "O"
+  (lambda () (interactive)
+    (occur (concat "\\_<" (thing-at-point 'symbol t) "\\_>"))))
 
 
 ;;;; Recursive minibuffers
@@ -235,9 +258,10 @@
 ;;;;
 (setq inhibit-startup-message t
       default-frame-alist '((font . "Tamsyn-10"))
+      minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
-(set-default-font "Tamsyn-10")
+(set-frame-font "Tamsyn-10")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
 (show-paren-mode 1)
@@ -246,7 +270,6 @@
 (menu-bar-mode -1)
 ;; Remove face commands, and emacs suspension commands
 (global-unset-key (kbd "M-o"))
-(global-unset-key (kbd "M-k"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x C-z"))
 
@@ -352,10 +375,7 @@ Otherwise try `display-buffer-use-some-window'."
 
 (defun display-buffer-previous-other-window (buffer alist)
   "Call `display-buffer-in-previous-window' with
-  `inhibit-same-window' set so never open in `current-window'.
-
-Not included in the `display-buffer-base-action' by default, but
-  kept here for if it's useful."
+`inhibit-same-window' set so never open in `current-window'."
   (let ((alist (cons '(inhibit-same-window . t) alist)))
     (display-buffer-in-previous-window buffer alist)))
 
@@ -363,7 +383,7 @@ Not included in the `display-buffer-base-action' by default, but
       display-buffer-base-action (list (list
                                         'display-buffer-reuse-window
                                         'display-buffer-same-window-from-command
-                                        'display-buffer-in-previous-window
+                                        'display-buffer-previous-other-window
                                         'display-buffer-some/pop-window)))
 
 ;;; Make it more likely that split-window-sensibly will split vertically
@@ -512,23 +532,25 @@ on them."
 
 ;;; Run command in other window
 ;; For a similar function see my configuration for smart-window
-(defun run-command-other-window (command &optional window)
-  "Run COMMAND in a different window.
+(defun run-function-other-window (function &optional window &rest args)
+  "Call FUNCTION with arguments ARGS in a different window.
 
-Takes a function to run, and calls it interactively in a
-different window.
+Takes a function to run, and executes it with WINDOW selected.
 
-If WINDOW is nil, and `one-window-p' split the current window and
-select the result, else select WINDOW or `other-window'.
+If WINDOW is `nil', and `one-window-p' split the current window
+and select the result, else select WINDOW or `other-window'.
 
-Then run the COMMAND."
-  (interactive "C")
+Then `apply' ARGS to FUNCTION."
   (if (window-live-p window)
       (select-window window)
     (if (one-window-p)
         (select-window (split-window-sensibly))
       (other-window 1)))
-  (call-interactively command))
+  (apply function args))
+
+(defun run-command-other-window (command &optional window)
+  (interactive "C")
+  (run-function-other-window #'call-interactively window command))
 
 (define-key ctl-x-4-map (kbd "M-x") 'run-command-other-window)
 

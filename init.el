@@ -571,7 +571,6 @@ Then `apply' ARGS to FUNCTION."
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;;; In a let as I don't like polluting the namespace.
 (let
     ((download-only '(helm monokai-theme tangotango-theme))
 
