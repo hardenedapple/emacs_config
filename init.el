@@ -65,6 +65,9 @@
       (message "File '%s' successfully renamed to '%s'" name
                (file-name-nondirectory new-name)))))
 
+(global-set-key (kbd "C-x f") 'find-file)
+(global-set-key (kbd "C-x C-f") 'dired)
+
 
 ;;;; Help settings
 ;;;;
