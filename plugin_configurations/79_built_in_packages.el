@@ -6,6 +6,23 @@
 (setq calendar-longitude 0)
 
 
+;;;; Dired Additions
+;;;;
+(defun dired-load-marked-files ()
+  "Lead all the marked files into emacs"
+  (interactive)
+  (dolist (current-file (dired-get-marked-files))
+    (find-file-noselect current-file)))
+
+(defun dired-emacs-command-marked-files (command-form)
+  "Load marked files into emacs, and run COMMAND on them all"
+  (interactive "C")
+  (dolist (current-file (dired-get-marked-files))
+    (with-current-buffer (find-file-noselect current-file)
+      (save-excursion
+        (call-interactively command-form)))))
+
+
 ;;;; Diary Settings
 ;;;;
 (setq diary-file "~/.emacs.d/diary")
