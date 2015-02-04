@@ -110,31 +110,48 @@
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
-;;; Move lines around
-(defun move-this-line-down (numlines)
-  "Drag current line NUMLINES downwards."
-  (interactive "p")
-  (let ((col (current-column)))
-    (forward-line)
-    (transpose-lines numlines)
-    (forward-line -1)
-    (move-to-column col)))
+;;; Moving lines
+;; Taken from the old version of http://www.emacswiki.org/emacs/move-text.el
+;; as the change in TRANSPOSE-LINES in 24.3 is negated by my advice on
+;; TRANSPOSE-SUBR
+(defun move-text-internal (arg)
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
+        (exchange-point-and-mark))
+    (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (let ((column (current-column)))
+      (beginning-of-line)
+      (when (or (> arg 0) (not (bobp)))
+        (forward-line)
+        (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg))
+        (forward-line -1))
+      (move-to-column column t)))))
 
-(defun move-this-line-up (numlines)
-  "Drag current line NUMLINES upwards."
-  (interactive "p")
-  (let ((col (current-column)))
-    (forward-line)
-    (transpose-lines (- numlines))
-    ;; Note: I have advised `transpose-subr', which means I need to call
-    ;;       `forward-line' with argument -1, if I hadn't I'd need to call it
-    ;;       with argument (- (1+ NUMLINES))
-    (forward-line -1)
-    ;;(forward-line (- (1+ numlines)))
-    (move-to-column col)))
+(defun move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines down."
+  (interactive "*p")
+  (move-text-internal arg))
 
-(global-set-key (kbd "<C-s-up>") 'move-this-line-up)
-(global-set-key (kbd "<C-s-down>") 'move-this-line-down)
+(defun move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines up."
+  (interactive "*p")
+  (move-text-internal (- arg)))
+
+(global-set-key (kbd "C-s-<up>") 'move-text-up)
+(global-set-key (kbd "C-s-<down>") 'move-text-down)
+
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
@@ -558,10 +575,11 @@ Then run the COMMAND."
 
      (elpa-packages
       '(ace-jump-mode arduino-mode elisp-slime-nav expand-region goto-chg
-                      helm-descbinds jump-char key-chord list-register magit monky
-                      multiple-cursors paredit projectile python-pylint quack smart-tab
-                      smart-window smartscan undo-tree vimrc-mode window-number wrap-region
-                      xcscope yasnippet
+                      helm-descbinds jump-char key-chord list-register magit
+                      monky multiple-cursors paredit projectile
+                      python-pylint quack smart-tab smart-window smartscan
+                      undo-tree vimrc-mode window-number wrap-region xcscope
+                      yasnippet
                       ;; I occasionally use this, but not usually -- shows currently
                       ;; unbound keys, which is useful for deciding on a keybinding.
                       ;; unbound
