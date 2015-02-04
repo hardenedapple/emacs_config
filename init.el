@@ -576,9 +576,9 @@ Then `apply' ARGS to FUNCTION."
     ((download-only '(helm monokai-theme tangotango-theme))
 
      (elpa-packages
-      '(ace-jump-mode arduino-mode elisp-slime-nav expand-region goto-chg
-                      helm-descbinds jump-char key-chord list-register magit
-                      monky multiple-cursors paredit projectile
+      '(ace-jump-mode arduino-mode buffer-move elisp-slime-nav expand-region
+                      goto-chg helm-descbinds jump-char key-chord list-register
+                      magit monky multiple-cursors paredit projectile
                       python-pylint quack smart-tab smart-window smartscan
                       undo-tree vimrc-mode window-number wrap-region xcscope
                       yasnippet
@@ -588,7 +588,7 @@ Then `apply' ARGS to FUNCTION."
                       ))
 
      (require-only
-      '(buffer-move desktop eldoc em-smart eshell le-eval-and-insert-results
+      '(desktop eldoc em-smart eshell le-eval-and-insert-results
                     nameses transpose-frame uniquify epa-file)))
 
   (let
