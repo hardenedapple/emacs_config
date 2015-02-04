@@ -148,7 +148,7 @@ as yet."
 (defadvice he-substitute-string (after he-paredit-fix activate)
   "Remove extra paren when expanding line in paredit"
   (if (and paredit-mode (equal (substring str -1) ")"))
-      (progn (backward-delete-char 1) (forward-char))))
+      (backward-delete-char 1)))
 
 
 ;;;; Imenu Settings
