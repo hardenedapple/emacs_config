@@ -113,12 +113,13 @@ as yet."
 ;;;; Filesets Settings
 ;;;;
 (filesets-init)
-(setq filesets-data `(("Emacs Config"
-                       (:files "~/.emacs.d/TODO.txt"
-                               "~/.emacs.d/init.el"
-                               ,@(directory-files
-                                  "~/.emacs.d/plugin_configurations" t
-                                  "^.+\\.elc?$")))))
+(setq filesets-data (append filesets-data
+                     `(("Emacs Config"
+                        (:files "~/.emacs.d/TODO.org"
+                                "~/.emacs.d/init.el"
+                                ,@(directory-files
+                                   "~/.emacs.d/plugin_configurations" t
+                                   "^.+\\.elc?$"))))))
 
 ;; Note can run any command on all files in a set once command is in the variable
 ;; "filesets_commands"
