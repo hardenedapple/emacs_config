@@ -22,6 +22,28 @@
       (save-excursion
         (call-interactively command-form)))))
 
+(defun dired-do-grep (command-args)
+  "Run `grep' on marked files.
+A prefix argument behaves according to the ARG argument of
+`dired-get-marked-files'.
+
+This function is a stripped down version of `diredp-do-grep' from
+dired+.el as I wanted this function, but not most of the rest of
+it."
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (list
+      (read-from-minibuffer
+       "grep <pattern> <files> :  "
+       (cons (concat grep-command "  "
+                     (mapconcat 'shell-quote-argument
+                                (dired-get-marked-files nil current-prefix-arg)
+                                " "))
+             (+ 1 (length grep-command)))
+       nil nil 'grep-history (grep-default-command)))))
+  (grep command-args))
+
 
 ;;;; Diary Settings
 ;;;;
