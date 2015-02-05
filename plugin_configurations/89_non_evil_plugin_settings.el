@@ -73,6 +73,12 @@
 (ido-ubiquitous-mode)
 
 
+;;;; Ido Vertical Mode
+;;;;
+(ido-vertical-mode 1)
+(setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+
+
 ;;;; Jump Char Settings
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
