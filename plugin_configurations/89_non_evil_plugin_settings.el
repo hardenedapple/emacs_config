@@ -11,8 +11,6 @@
 
 ;;;; Ace jump Mode Settings
 ;;;;
-(key-chord-define-global ";-" 'ace-jump-word-mode)
-(key-chord-define-global ";," 'ace-jump-char-mode)
 (global-set-key (kbd "M-g M-s") 'ace-jump-word-mode)
 (global-set-key (kbd "M-g s") 'ace-jump-word-mode)
 (setq ace-jump-mode-scope 'window)
@@ -160,11 +158,6 @@
 (global-set-key (kbd "M-M") 'jump-char-backward)
 
 
-;;;; Key Chord Settings
-;;;;
-(key-chord-mode 1)
-
-
 ;;;; List Registers Settings
 ;;;;
 (define-key ctl-x-r-map "v" 'list-register)
@@ -178,7 +171,7 @@
   (interactive)
   (magit-stage-item (buffer-file-name)))
 
-(key-chord-define-global ";g" 'magit-status)
+(global-set-key (kbd "C-c g") 'magit-status)
 ;; git commit mode usually starts flyspell
 (setq git-commit-mode-hook '(turn-on-auto-fill))
 
@@ -248,7 +241,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 
 ;;;; Monky Settings
-(key-chord-define-global ";h" 'monky-status)
+(global-set-key (kbd "C-c h") 'monky-status)
 
 (defun eshell/hr (&rest args)
   "Go to the current mercurial repositorys' root dir.

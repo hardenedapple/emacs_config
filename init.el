@@ -576,7 +576,7 @@ Then `apply' ARGS to FUNCTION."
 
      (elpa-packages
       '(ace-jump-mode arduino-mode buffer-move elisp-slime-nav expand-region
-                      goto-chg helm-descbinds jump-char key-chord list-register
+                      goto-chg helm-descbinds jump-char list-register
                       magit monky multiple-cursors paredit projectile
                       python-pylint quack smart-tab smart-window smartscan
                       undo-tree vimrc-mode window-number wrap-region xcscope
