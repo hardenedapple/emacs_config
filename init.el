@@ -176,10 +176,10 @@
        (if current-symbol
            ,@body))))
 
-(global-set-key [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
-(global-set-key [mouse-2] (mouse-function-on-symbol
-                           (occur (concat "\\_<" current-symbol "\\_>"))))
-(global-set-key [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
+(define-key prog-mode-map [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
+(define-key prog-mode-map [mouse-2] (mouse-function-on-symbol
+                                     (occur (concat "\\_<" current-symbol "\\_>"))))
+(define-key prog-mode-map [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
 
 
 ;;;; Move more quickly
