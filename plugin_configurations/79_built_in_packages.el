@@ -28,8 +28,8 @@ A prefix argument behaves according to the ARG argument of
 `dired-get-marked-files'.
 
 This function is a stripped down version of `diredp-do-grep' from
-dired+.el as I wanted this function, but not most of the rest of
-it."
+dired+.el as I wanted this function, but not the rest of the
+package."
   (interactive
    (progn
      (grep-compute-defaults)
@@ -113,17 +113,8 @@ as yet."
 ;;;; Filesets Settings
 ;;;;
 (filesets-init)
-(setq filesets-data (append filesets-data
-                     `(("Emacs Config"
-                        (:files "~/.emacs.d/TODO.org"
-                                "~/.emacs.d/init.el"
-                                ,@(directory-files
-                                   "~/.emacs.d/plugin_configurations" t
-                                   "^.+\\.elc?$"))))))
-
-;; Note can run any command on all files in a set once command is in the variable
-;; "filesets_commands"
-;; [[http://stackoverflow.com/questions/7071915/emacs-filesets-how-to-run-other-elisp-not-shell-commands][look here]]
+;; Save current state of filesets between sessions
+(push 'filesets-data filesets-menu-cache-contents)
 
 
 ;;;; Flymake Settings
