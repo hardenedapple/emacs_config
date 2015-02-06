@@ -44,6 +44,57 @@ package."
        nil nil 'grep-history (grep-default-command)))))
   (grep command-args))
 
+;;; Setting filesets from a dired buffer
+(defun dired-set-fileset (flset-name)
+  "Set files in fileset named FLSE-NAME to
+`dired-get-marked-files'.
+
+If that fileset doesn't exist, create it."
+  (interactive (list (completing-read "Set fileset: " filesets-data)))
+  (filesets-entry-set-files (or (assoc-string flset-name filesets-data)
+                                (progn
+                                  (add-to-list 'filesets-data
+                                               (list flset-name '(:files)))
+                                  (car filesets-data)))
+                            (dired-get-marked-files) t)
+  (filesets-set-config flset-name 'filesets-data filesets-data))
+
+(defun dired-add-to-fileset (flset-name)
+  "Add `dired-get-marked-files' to
+`fileset-get-fileset-from-name' on FLSET-NAME
+
+Ensure no duplicates in the fileset.
+
+If there is no fileset by the name FLSET-NAME, create it."
+  (interactive (list (completing-read "Set fileset: " filesets-data)))
+  (let ((entry (assoc-string flset-name filesets-data)))
+    (cond
+     ((null entry) (dired-set-fileset flset-name))
+     ((equal (filesets-entry-mode entry) ':files)
+      (filesets-entry-set-files
+       entry
+       (cl-union (filesets-entry-get-files entry)
+                 (dired-get-marked-files)
+                 :test 'filesets-files-equalp) t)
+      (filesets-set-config flset-name 'filesets-data filesets-data))
+     (t
+      (message "Fileset is of wrong type to set manually.")))))
+
+(defun dired-remove-from-fileset (flset-name)
+  "Remove `dired-get-marked-files' from
+  `fileset-get-fileset-from-name' on FLSET-NAME
+
+Ignore any files that aren't in the fileset."
+  (interactive (list (completing-read "Set fileset: " filesets-data nil t)))
+  (let ((entry (assoc-string flset-name filesets-data)))
+    (when (equal (filesets-entry-mode entry) ':files)
+      (filesets-entry-set-files
+       entry
+       (cl-set-difference (filesets-entry-get-files entry)
+                          (dired-get-marked-files)
+                          :test 'filesets-files-equalp) t)
+      (filesets-set-config flset-name 'filesets-data filesets-data))))
+
 
 ;;;; Diary Settings
 ;;;;
