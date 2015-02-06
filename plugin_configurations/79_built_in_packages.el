@@ -44,6 +44,34 @@ package."
        nil nil 'grep-history (grep-default-command)))))
   (grep command-args))
 
+;;; View filesets in a dired buffer
+;;; Almost direct copy from dired+.el
+(defun dired-fileset (flset-name)
+  "Open Dired on the files in fileset FLSET-NAME."
+  (interactive (list (completing-read "Open Dired on fileset: " filesets-data)))
+  (dired--fileset-1 flset-name))
+
+(defun dired-fileset-other-window (flset-name)
+  "Open Dired in another window on the files in fileset FLSET-NAME."
+  (interactive (list (completing-read "Open Dired on fileset: " filesets-data)))
+  (dired--fileset-1 flset-name 'OTHER-WINDOW))
+
+(defun dired--fileset-1 (flset-name &optional other-window-p)
+  "Helper for `dired-fileset(-other-window)'."
+  (let ((flset   (filesets-get-fileset-from-name flset-name))
+        (dirfun  (if other-window-p #'dired-other-window #'dired))
+        mode)
+    (unless (setq mode (filesets-entry-mode flset))
+      (error "Bad fileset: %S" flset-name))
+    (message "Gathering file names...")
+    (let ((files (filesets-entry-get-files flset)))
+      (funcall dirfun (cons (generate-new-buffer-name flset-name)
+                            (nreverse (mapcar (lambda (file)
+                                                (if (file-name-absolute-p file)
+                                                    (expand-file-name file)
+                                                  file))
+                                              files)))))))
+
 ;;; Setting filesets from a dired buffer
 (defun dired-set-fileset (flset-name)
   "Set files in fileset named FLSE-NAME to
