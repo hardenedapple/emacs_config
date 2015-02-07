@@ -104,7 +104,6 @@
 (define-key evil-motion-state-map (kbd "C-SPC") 'helm-find-files)
 (define-key helm-map [escape] 'helm-keyboard-quit)
 
-
 ;; ESC is quit
 (define-key evil-normal-state-map [escape] 'keyboard-quit)
 (define-key evil-visual-state-map [escape] 'keyboard-quit)
@@ -113,6 +112,9 @@
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+;;; Evil ex settings
+(evil-ex-define-cmd "occur" 'occur)
 
 ;; Normal mode mappings
 (defun copy-to-end-of-line ()
