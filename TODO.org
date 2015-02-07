@@ -87,3 +87,11 @@ Midnight commander clone inside emacs.
                   Adds in navigation commands
                   Have no idea why both these modes are in emacs.
                   Doesn't work well with C
+* Evil
+** Make <ESC> exit helm
+** Work out all the submodes.
+Start with setting 'j' and 'k' to do what 'n' and 'p' currently do, then figure
+out everything else when it bothers me.
+*** Magit
+*** Dired
+*** Ibuffer

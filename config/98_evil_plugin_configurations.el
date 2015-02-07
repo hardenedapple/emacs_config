@@ -18,7 +18,7 @@
   "wk" 'buf-move-up
   "wl" 'buf-move-right)
 
-;;; Mogit keybindings
+;;; Magit keybindings
 (evil-leader/set-key
   "gg" 'magit-log
   "gw" 'magit-stage-this-file
@@ -26,6 +26,14 @@
   "gp" 'magit-push
   "gf" 'magit-pull
   "gs" 'magit-status)
+
+;;; Monky Settings
+(evil-leader/set-key
+  "hg" 'monky-log
+  "hw" 'monky-stage-file
+  "hp" 'monky-push
+  "hf" 'monky-pull
+  "hs" 'monky-status)
 
 ;;; Window Number keybindings
 (dotimes (winnum 5)
@@ -37,23 +45,23 @@
 ;;;;
 ;; Has to be initialised before evil-mode so is available in *scratch*,
 ;; *Messages* etc (i.e. in initial buffers)
-
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
+  "'"  'evil-ex
+  "b"  'helm-mini
+  "cpf" 'imenu
+  "fd" 'ediff-current-file
+  "fm" 'rename-buffer-and-file
+  "fr" 'remove-buffer-and-file
   "nh" 'evil-ex-nohighlight
   "s"  'save-buffer
-  "bs" 'helm-mini
-  "fr" 'remove-buffer-and-file
-  "fm" 'rename-buffer-and-file
-  "fd" 'ediff-current-file
-  "z"  'evil-ex
-  "'"  'evil-ex)
+  "z"  'evil-ex)
 
 
 ;;;; Evil Mode Settings
 ;;;;
-(evil-mode 0)
+(evil-mode 1)
 
 ;; Mappings because of my specific keyboard layout
 (define-key evil-motion-state-map "," 'evil-repeat-find-char)
@@ -93,6 +101,18 @@
 ;;; Mappings
 (define-key evil-motion-state-map " " nil)
 (define-key evil-motion-state-map (kbd "RET") nil)
+(define-key evil-motion-state-map (kbd "C-SPC") 'helm-find-files)
+(define-key helm-map [escape] 'helm-keyboard-quit)
+
+
+;; ESC is quit
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 ;; Normal mode mappings
 (defun copy-to-end-of-line ()
@@ -135,21 +155,15 @@
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (kill-line 0)))
 
-;; Ex Mode Mappings
-(define-key evil-ex-map "e" 'helm-find-files)
-(define-key evil-ex-map "b" 'helm-mini)
-
 ;; Remove keychords and wrap-region when in evil-mode
 (add-hook 'evil-normal-state-entry-hook
           (lambda ()
-            (key-chord-mode -1)
             (wrap-region-mode -1)))
 (add-hook 'evil-emacs-state-entry-hook
           (lambda ()
-            (key-chord-mode 1)
             (wrap-region-mode 1)))
 
-(evil-define-motion evil-little-word (count)
+(evil-define-motion evil-mini-word (count)
   :type exclusive
   (let* ((case-fold-search nil)
          (count (if count count 1)))
@@ -159,14 +173,14 @@
       (backward-char)
       (decf count))))
 
-(define-key evil-operator-state-map "lw" 'evil-little-word)
+(define-key evil-operator-state-map "mw" 'evil-mini-word)
 
 (defun whitespace-only-p (string)
   (equal "" (replace-regexp-in-string "[ \t\n]" "" string)))
 
 (defadvice evil-delete (around evil-delete-yank activate)
-  (if (whitespace-only-p (buffer-substring beg end))
-      (ad-set-arg 3 ?_))
+  (when (whitespace-only-p (buffer-substring beg end))
+    (ad-set-arg 3 ?_))
   ad-do-it)
 
 ;;;; Evil Unimpaired Settings
