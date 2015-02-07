@@ -21,9 +21,10 @@
                                      list-register magit monky multiple-cursors
                                      paredit projectile python-pylint quack
                                      smart-tab smart-window smex undo-tree
-                                     vimrc-mode window-number wrap-region
-                                     xcscope yasnippet transpose-mark
-                                     markdown-mode
+                                     vimrc-mode window-number xcscope yasnippet
+                                     markdown-mode wrap-region
+                                     evil-leader evil evil-args evil-commentary
+                                     evil-exchange evil-surround
                                      ;; Occasionally use the below to show
                                      ;; currently unbound keys, which is useful
                                      ;; for deciding on a keybinding.
