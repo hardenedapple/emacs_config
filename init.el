@@ -22,7 +22,7 @@
                                      paredit projectile python-pylint quack
                                      smart-tab smart-window smex undo-tree
                                      vimrc-mode window-number xcscope yasnippet
-                                     markdown-mode wrap-region
+                                     markdown-mode
                                      evil-leader evil evil-args evil-commentary
                                      evil-exchange evil-surround
                                      ;; Occasionally use the below to show

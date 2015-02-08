@@ -157,14 +157,6 @@
 (define-key evil-insert-state-map (kbd "C-u")
   (lambda () (interactive) (kill-line 0)))
 
-;; Remove keychords and wrap-region when in evil-mode
-(add-hook 'evil-normal-state-entry-hook
-          (lambda ()
-            (wrap-region-mode -1)))
-(add-hook 'evil-emacs-state-entry-hook
-          (lambda ()
-            (wrap-region-mode 1)))
-
 (evil-define-motion evil-mini-word (count)
   :type exclusive
   (let* ((case-fold-search nil)
