@@ -49,7 +49,7 @@
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
   "'"  'evil-ex
-  "b"  'helm-mini
+  "b"  'window-history-buffer-choose
   "cpf" 'imenu
   "fd" 'ediff-current-file
   "fm" 'rename-buffer-and-file
@@ -94,24 +94,22 @@
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
                            (git-rebase-mode . emacs)
-                           (helm-grep-mode . emacs)
                            (paredit-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 ;;; Mappings
 (define-key evil-motion-state-map " " nil)
 (define-key evil-motion-state-map (kbd "RET") nil)
-(define-key evil-motion-state-map (kbd "C-SPC") 'helm-find-files)
-(define-key helm-map [escape] 'helm-keyboard-quit)
+(define-key evil-motion-state-map (kbd "C-SPC") 'find-file)
 
 ;; ESC is quit
 (define-key evil-normal-state-map [escape] 'keyboard-quit)
 (define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-map [escape] 'abort-recursive-edit)
+(define-key minibuffer-local-ns-map [escape] 'abort-recursive-edit)
+(define-key minibuffer-local-completion-map [escape] 'abort-recursive-edit)
+(define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
+(define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
 ;;; Evil ex settings
 (evil-ex-define-cmd "occur" 'occur)
