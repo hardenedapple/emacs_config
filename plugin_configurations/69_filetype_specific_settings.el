@@ -13,6 +13,26 @@
               (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
                                         (pop-tag-mark)))))
 
+;;;; Help mode settings
+;;;;
+(defun help-follow-source-link ()
+  "Follow \"defined in ...\" link at top of *Help* buffer.
+
+This function is really dumb about doing this -- it goes to first
+window with the *Help* buffer showing, moves to the first link in
+that buffer, and follows it."
+  (interactive)
+  (when (string-match "^\*Help\.*"  (buffer-name (current-buffer)))
+      (let ((first-button (button-at (next-button 1))))
+        (when (not (string-match "C source code" (button-label first-button)))
+          ;; Act fully as if the user pressed the button themselves
+          ;; (here as I look for the value of THIS-COMMAND in my custom
+          ;; DISPLAY-BUFFER functions, because of precisely these commands)
+          (let ((this-command 'push-button))
+            (button-activate first-button))))))
+
+(define-key help-mode-map (kbd "M-g M-f") 'help-follow-source-link)
+
 
 ;;;; Latex Settings
 ;;;;
