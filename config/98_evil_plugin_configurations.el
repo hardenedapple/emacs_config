@@ -94,6 +94,7 @@
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
                            (git-rebase-mode . emacs)
+                           (diff-mode . emacs)
                            (paredit-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
