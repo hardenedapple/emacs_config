@@ -209,11 +209,6 @@
 (define-key evil-normal-state-map "[q" 'previous-error)
 (define-key evil-normal-state-map "[Q" 'first-error)
 
-;;; Remove Info 'g' mapping, and move it to 'gt' so the other mappings on the
-;;; 'g' key work.
-(define-key Info-mode-map "g" nil)
-(evil-define-key 'motion Info-mode-map "gt" 'Info-goto-node)
-
 
 ;;;; Evil Args Settings
 ;;;;
@@ -237,3 +232,22 @@
 ;;;; Evil Surround Settings
 ;;;;
 (global-evil-surround-mode 1)
+
+
+;;;; Filetype Specific Settings
+;;;;
+
+;;; Remap the jump-to-tag mapping in evil to ELISP-SLIME-NAV-FIND-THING-AT-POINT
+;;; when in emacs-lisp-mode
+(evil-define-key 'motion elisp-slime-nav-mode-map "\C-]"
+  'elisp-slime-nav-find-elisp-thing-at-point)
+
+;;; Remove Info 'g' mapping, and move it to 'gt' so the other mappings on the
+;;; 'g' key work.
+;;; Not sure why I have to unmap 'g' before setting everything for this to work
+;;; -- will have to read the evil source code soon.
+(define-key Info-mode-map "g" nil)
+(evil-define-key 'motion Info-mode-map
+  "l" nil
+  "h" nil
+  "gt" 'Info-goto-node)
