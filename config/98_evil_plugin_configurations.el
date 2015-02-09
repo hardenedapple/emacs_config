@@ -208,6 +208,11 @@
 (define-key evil-normal-state-map "[q" 'previous-error)
 (define-key evil-normal-state-map "[Q" 'first-error)
 
+;;; Remove Info 'g' mapping, and move it to 'gt' so the other mappings on the
+;;; 'g' key work.
+(define-key Info-mode-map "g" nil)
+(evil-define-key 'motion Info-mode-map "gt" 'Info-goto-node)
+
 
 ;;;; Evil Args Settings
 ;;;;
