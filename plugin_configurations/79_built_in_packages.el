@@ -350,6 +350,25 @@ as yet."
             (define-key org-mode-map (kbd "C-;") 'org-cycle-agenda-files)))
 
 
+;;;; Process Menu Settings
+;;;;
+;; Be able to send the kill signal to the process at point
+;; Code gotten from Joao Tavora's answer in
+;; http://stackoverflow.com/questions/10627289/emacs-internal-process-killing-any-command
+(define-key process-menu-mode-map "k" 'process-menu-delete-process-at-point)
+
+(defun process-menu-delete-process-at-point ()
+  "Kill the process at point in a `process-menu' buffer."
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
+
 ;;;; Python Settings
 ;;;;
 (setq
