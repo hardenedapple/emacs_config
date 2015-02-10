@@ -195,6 +195,11 @@ as yet."
 ;; Save current state of filesets between sessions
 (push 'filesets-data filesets-menu-cache-contents)
 
+(defun filesets-remove (name)
+  "Remove a fileset from `filesets-data'"
+  (interactive (list (completing-read "Remove fileset: " filesets-data nil t)))
+  (setq filesets-data (delete* name filesets-data :test #'string= :key #'car)))
+
 
 ;;;; Flymake Settings
 ;;;;
