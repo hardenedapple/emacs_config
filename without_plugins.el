@@ -176,10 +176,10 @@
        (if current-symbol
            ,@body))))
 
-(global-set-key [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
-(global-set-key [mouse-2] (mouse-function-on-symbol
-                           (occur (concat "\\_<" current-symbol "\\_>"))))
-(global-set-key [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
+(define-key prog-mode-map [mouse-1] (mouse-function-on-symbol (find-tag current-symbol)))
+(define-key prog-mode-map [mouse-2] (mouse-function-on-symbol
+                                     (occur (concat "\\_<" current-symbol "\\_>"))))
+(define-key prog-mode-map [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
 
 
 ;;;; Move more quickly
@@ -257,11 +257,11 @@
 ;;;; User Interface
 ;;;;
 (setq inhibit-startup-message t
-      default-frame-alist '((font . "Tamsyn-10"))
+      default-frame-alist '((font . "Tamsyn-11"))
       minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
-(set-frame-font "Tamsyn-10")
+(set-frame-font "Tamsyn-11")
 (mouse-avoidance-mode 'exile)
 (global-linum-mode t)
 (show-paren-mode 1)
@@ -594,7 +594,6 @@ run a command given by the user in that window.
       (select-window (split-window-right)))))
 
 
-
 ;;;; Settings to replace external plugins
 ;;;;
 ;;; Ido (instead of helm)
@@ -608,9 +607,12 @@ run a command given by the user in that window.
 (ido-mode 1)
 
 
+(require 'help-mode)
+(require 'ibuffer)
 ;;;; Load Dvorak keybindings
 (dolist (conf-file (list
                     "~/.emacs.d/plugin_configurations/69_filetype_specific_settings.el"
                     "~/.emacs.d/plugin_configurations/79_built_in_packages.el"
                     "~/.emacs.d/plugin_configurations/99_dvorak_keybindings.el"))
   (load conf-file))
+
