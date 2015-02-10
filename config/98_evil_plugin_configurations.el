@@ -83,13 +83,13 @@
 (define-key evil-motion-state-map "gk" 'evil-four-lines-up)
 
 ;;; Variables
-(setq evil-cross-lines t)
-(setq evil-flash-delay 5)
-(setq evil-search-module 'evil-search)
-(setq evil-want-C-i-jump t)
-(setq evil-want-C-u-scroll t)
-(setq evil-want-change-word-to-end nil)
-(setq evil-move-cursor-back t) ; Unset this for paredit to work well.
+(setq evil-cross-lines t
+      evil-flash-delay 5
+      evil-search-module 'evil-search
+      evil-want-C-i-jump t
+      evil-want-C-u-scroll t
+      evil-want-change-word-to-end nil
+      evil-move-cursor-back t)          ; Unset this for paredit to work well.
 
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((git-commit-mode . insert)
