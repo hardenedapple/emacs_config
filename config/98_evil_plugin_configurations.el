@@ -248,6 +248,23 @@
 ;;; -- will have to read the evil source code soon.
 (define-key Info-mode-map "g" nil)
 (evil-define-key 'motion Info-mode-map
-  "l" nil
-  "h" nil
+  "l" 'Info-history-back
+  "h" 'Info-help
   "gt" 'Info-goto-node)
+
+;; Remove 'n' from EVIL-MOTION-STATE in Man-mode
+(evil-define-key 'motion Man-mode-map
+  "n" 'Man-next-section
+  (kbd "<tab>") 'forward-button
+  (kbd "C-i") 'evil-jump-forward
+  "s" 'Man-goto-see-also-section)
+
+;; Remove 'l' and 'h' mappings from Help-mode
+(evil-define-key 'motion help-mode-map
+  "l" 'help-go-back
+  "h" 'describe-mode
+  (kbd "<tab>") 'forward-button)
+
+;; Remove TAB from apropos map
+(evil-define-key 'motion apropos-mode-map
+  (kbd "<tab>") 'forward-button)
