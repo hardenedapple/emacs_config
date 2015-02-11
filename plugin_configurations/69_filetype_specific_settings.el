@@ -47,6 +47,12 @@ that buffer, and follows it."
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
 
+;;;; Man Settings
+;;;;
+(setq Man-notify-method 'pushy)
+
+
 ;;;; Scheme Settings
+;;;;
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")
