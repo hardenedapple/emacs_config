@@ -176,6 +176,12 @@
     (ad-set-arg 3 ?_))
   ad-do-it)
 
+;;;; Evil Window commands
+;;;;
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
+
+
 ;;;; Evil Unimpaired Settings
 ;;;;
 ;;; maybe evil-define-command for these
