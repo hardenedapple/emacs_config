@@ -400,7 +400,6 @@ and run a command given by the user in that window.
 
 (add-hook 'slime-mode-hook
           (lambda ()
-            (define-key slime-mode-map (kbd "C-c h") 'slime-highlight-edits-mode)
             (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)
             (define-key slime-mode-map [mouse-1]
               (mouse-function-on-symbol (slime-edit-definition current-symbol)))
