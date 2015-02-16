@@ -229,6 +229,13 @@
   "ak" 'evil-jump-out-args)
 
 
+;;;; Evil Commentary Settings
+;;;;
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (evil-commentary-mode 1)))
+
+
 ;;;; Evil Exchange Settings
 ;;;;
 ;; (use gx<motion> to select a range, once selected two ranges they are swapped
