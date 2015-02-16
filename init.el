@@ -587,7 +587,7 @@ Then `apply' ARGS to FUNCTION."
                       ))
 
      (require-only
-      '(desktop eldoc em-smart eshell le-eval-and-insert-results
+      '(desktop dired-x eldoc em-smart eshell le-eval-and-insert-results
                 nameses transpose-frame uniquify epa-file)))
 
   (let

@@ -124,6 +124,16 @@ Ignore any files that aren't in the fileset."
       (filesets-set-config flset-name 'filesets-data filesets-data))))
 
 
+;;;; Dired-X Settings
+;;;;
+(setq dired-bind-info nil
+      dired-bind-jump nil
+      dired-bind-man nil
+      dired-bind-vm nil
+      dired-clean-up-buffers-too t)
+(global-set-key (kbd "C-x d") 'dired-jump)
+
+
 ;;;; Diary Settings
 ;;;;
 (setq diary-file "~/.emacs.d/diary")
