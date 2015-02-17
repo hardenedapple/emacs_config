@@ -126,15 +126,6 @@
 (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
 (define-key evil-normal-state-map (kbd "<f10>") 'delete-trailing-whitespace)
 
-;; C-6 go to previous buffer
-(defun switch-to-last-seen-buffer ()
-  "Switch to last open buffer."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-(define-key evil-motion-state-map (kbd "C-6") 'switch-to-last-seen-buffer)
-
-
 ;;; Visual state mappings
 ;;; indent keeping selection
 (defun indent-keeping-selection (beg end)
