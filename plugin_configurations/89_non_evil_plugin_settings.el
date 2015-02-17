@@ -186,19 +186,25 @@
 ;;     Add something for my shell aliases gr and hr
 ;;     Possibly get the output from 'start-file-process, then use that in the
 ;;     function to change directory
+(defun eshell--magit-log-function (range &optional type arguments)
+  "Runs `magit-log', but with optional arguments.
+
+Just a reworking of `magit-log' and `magit-log-long' for my
+`eshell' customisation ease."
+  (let ((range (cadr range))
+        (type (if type type 'oneline)))
+    (cond ((not range) (setq range "HEAD"))
+          ;; Forward compatibility kludge.
+          ((listp range) (setq range (car range))))
+    (magit-mode-setup magit-log-buffer-name
+                      #'switch-to-buffer
+                      #'magit-log-mode
+                      #'magit-refresh-log-buffer
+                      type range arguments)))
+
 (setq eshell-magit->git-transformations
       (list
-       '("log" . (lambda (range)
-                   (let ((range (cadr range)))
-                     (cond ((not range) (setq range "HEAD"))
-                           ;; Forward compatibility kludge.
-                           ((listp range) (setq range (car range))))
-                     (magit-mode-setup magit-log-buffer-name
-                                       #'switch-to-buffer
-                                       #'magit-log-mode
-                                       #'magit-refresh-log-buffer
-                                       'oneline range magit-custom-options))
-                   nil))
+       '("log" . eshell--magit-log-function)
        '("diff" . (lambda (args)
                     (magit-mode-setup magit-diff-buffer-name
                                       #'switch-to-buffer
@@ -208,11 +214,9 @@
                     nil))
        '("status" . (lambda (args)
                       (magit-status default-directory
-                                    #'switch-to-buffer
-                                    nil)))))
-
-(push (cons "graph" (cdr (assoc "log" eshell-magit->git-transformations)))
-      eshell-magit->git-transformations)
+                                    #'switch-to-buffer)))
+       '("graph" . (lambda (range)
+                     (eshell--magit-log-function range 'long (list "--graph"))))))
 
 (defun eshell-delegate-external (command args)
   "Call external command "
@@ -229,7 +233,8 @@ equivalent with `magit'"
          (or (cdr (assoc (car args) eshell-magit->git-transformations))
              (lambda (args)
                (eshell-delegate-external (eshell-search-path "git") args)))))
-    (funcall function-to-call args)))
+    (funcall function-to-call args)
+    nil))
 
 (defun eshell/gr (&rest args)
   "Go to the current repositorys' root dir.
