@@ -364,7 +364,7 @@ Otherwise try `display-buffer-use-some-window'."
     (display-buffer-use-some-window buffer alist)))
 
 (defvar display-buffer-here-commands
-  (list 'previous-error 'next-error 'push-button)
+  (list 'previous-error 'next-error 'push-button 'occur-mode-goto-occurrence)
   "Commands to use same window when calling `pop-to-buffer'")
 
 (defun display-buffer-same-window-from-command (buffer alist)
