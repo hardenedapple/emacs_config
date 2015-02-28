@@ -24,6 +24,11 @@
 (global-set-key (kbd "<C-S-right>")  'buf-move-right)
 
 
+;;;; C-ELDOC-MODE
+;;;;
+(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+
+
 ;;;; Elisp Slime Nav Settings
 ;;;;
 ;; Elisp find thing at point in other window.
