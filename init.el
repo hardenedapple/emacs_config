@@ -36,6 +36,11 @@
 (setq disabled-command-function nil)
 
 
+;;;; Environment Variables
+;;;;
+(setenv "EDITOR" "emacs")
+
+
 ;;;; File Handling
 ;;;;
 (defun remove-buffer-and-file (&optional buffer-or-name)
