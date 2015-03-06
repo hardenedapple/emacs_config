@@ -5,6 +5,13 @@
 (c-set-offset 'case-label '+)
 
 
+;;;; Comint Mode
+;;;;
+(add-hook 'comint-mode-hook
+          (lambda ()
+            (auto-fill-mode -1)))
+
+
 ;;;; Elisp Settings
 ;;;;
 (add-hook 'emacs-lisp-mode-hook
