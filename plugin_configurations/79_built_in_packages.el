@@ -429,7 +429,15 @@ state otherwise."
   (let ((should-deactivate (eq mark-active (not (not arg)))))
     (exchange-point-and-mark should-deactivate)))
 
+(defun toggle-current-mark-activation ()
+  "Set `mark-active' to `t'.
+
+Sometimes you want to reselect the current area, run this function."
+  (interactive)
+  (setq mark-active (not mark-active)))
+
 (global-set-key (kbd "C-`") 'push-mark-no-activate)
+(global-set-key (kbd "C-~") 'toggle-current-mark-activation)
 (global-set-key (kbd "M-`") 'jump-to-mark)
 ;; Can't use the 'remap' thing, as there is already a remap from
 ;; cua-exchange-point-and-mark
