@@ -92,9 +92,13 @@
       evil-move-cursor-back t)          ; Unset this for paredit to work well.
 
 ;;; Set the default mode for certain buffers
-(dolist (mode-state-pair '((git-commit-mode . insert)
-                           (git-rebase-mode . emacs)
-                           (dired-mode . emacs)
+(dolist (mode-state-pair '((dired-mode . emacs)
+                           (Buffer-menu-mode . emacs)
+                           (ibuffer-mode . emacs)
+                           (Info-mode . emacs)
+                           (Man-mode . emacs)
+                           (help-mode . emacs)
+                           (apropos-mode . emacs)
                            (diff-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
@@ -245,30 +249,3 @@
 ;;; when in emacs-lisp-mode
 (evil-define-key 'motion elisp-slime-nav-mode-map "\C-]"
   'elisp-slime-nav-find-elisp-thing-at-point)
-
-;;; Remove Info 'g' mapping, and move it to 'gt' so the other mappings on the
-;;; 'g' key work.
-;;; Not sure why I have to unmap 'g' before setting everything for this to work
-;;; -- will have to read the evil source code soon.
-(define-key Info-mode-map "g" nil)
-(evil-define-key 'motion Info-mode-map
-  "l" 'Info-history-back
-  "h" 'Info-help
-  "gt" 'Info-goto-node)
-
-;; Remove 'n' from EVIL-MOTION-STATE in Man-mode
-(evil-define-key 'motion Man-mode-map
-  "n" 'Man-next-section
-  (kbd "<tab>") 'forward-button
-  (kbd "C-i") 'evil-jump-forward
-  "s" 'Man-goto-see-also-section)
-
-;; Remove 'l' and 'h' mappings from Help-mode
-(evil-define-key 'motion help-mode-map
-  "l" 'help-go-back
-  "h" 'describe-mode
-  (kbd "<tab>") 'forward-button)
-
-;; Remove TAB from apropos map
-(evil-define-key 'motion apropos-mode-map
-  (kbd "<tab>") 'forward-button)
