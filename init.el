@@ -343,9 +343,9 @@ called automatically on save."
 (define-key ctl-x-map "=" 'balance-windows)
 
 (defun fix-window-horizontal-size (&optional num-columns)
-  "Set `current-window' size to 80 NUM-COLUMNS columns wide."
+  "Set `current-window' size to 90 NUM-COLUMNS columns wide."
   (interactive "P")
-  (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
+  (enlarge-window (- (or num-columns 90) (window-width)) 'horizontal))
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
