@@ -284,6 +284,7 @@ as yet."
 (setq ido-use-filename-at-point 'guess)
 (setq buffer-choose-default-function 'ido-switch-buffer)
 (setq ido-everywhere 1)
+(setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
 
 
