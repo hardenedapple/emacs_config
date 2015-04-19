@@ -293,17 +293,17 @@
 Does not indent buffer, as it's used for a `before-save-hook',
 and that might be bad."
   (interactive)
-  (untabify (point-min) (point-max))
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
 (defun cleanup-buffer ()
   "Perform unsafe whitespace operations on `current-buffer'.
 
-Include `indent-buffer', which should not be called automatically
-on save."
+Include `indent-buffer' and `untabify', which should not be
+called automatically on save."
   (interactive)
   (cleanup-buffer-safe)
+  (untabify (point-min) (point-max))
   (indent-region (point-min) (point-max)))
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
@@ -615,4 +615,3 @@ run a command given by the user in that window.
                     "~/.emacs.d/plugin_configurations/79_built_in_packages.el"
                     "~/.emacs.d/plugin_configurations/99_dvorak_keybindings.el"))
   (load conf-file))
-
