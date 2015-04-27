@@ -373,6 +373,11 @@ and run a command given by the user in that window.
 (define-key ctl-x-5-map "r" 'rotate-frame-clockwise)
 
 
+;;;; Transpose Mark Settings
+;;;;
+(global-set-key (kbd "C-c t") 'transpose-mark)
+
+
 ;;;; Undo Tree Settings
 ;;;;
 (global-undo-tree-mode)
