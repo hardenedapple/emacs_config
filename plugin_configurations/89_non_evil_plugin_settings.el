@@ -101,6 +101,7 @@
 (global-set-key (kbd "C-c g") 'magit-status)
 ;; git commit mode usually starts flyspell
 (setq git-commit-mode-hook '(turn-on-auto-fill))
+(setq magit-last-seen-setup-instructions "1.4.0")
 
 ;;; Intercept calling git in Eshell and parse some into Magit
 ;;
