@@ -39,6 +39,7 @@
 ;;;; Environment Variables
 ;;;;
 (setenv "EDITOR" "emacs")
+(setq shell-file-name "bash")
 
 
 ;;;; File Handling
