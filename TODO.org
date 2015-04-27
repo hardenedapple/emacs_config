@@ -5,8 +5,12 @@ Write down all the customisation I might have to change depending on machine
 
 * To Fix:
 Figure out why python-mode's inbuilt flymake settings aren't working.
+Slime -- when stepping through functions, buffers move around.
 
 * Things to Do
+Add capability to kill a patch hunk in Monky
+    Could be as simple as calling "patch -R" ith the selected hunk, then
+    reverting the buffer.
 Add org-capture template for work things
 Create a blacklist for commands in repeat-last-command
     possibly something to do with last-repeatable-command
@@ -47,12 +51,7 @@ Browse python documentation in info buffers
 Midnight commander clone inside emacs.
 * Plugins:
 ** Plugins to check out:
-+ ecb          :: emacs code browser
-+ el-get       :: an "extra" package manager for emacs packages.
-+ dired+       :: Extra functions for dired
-+ direx        :: Tree viewer - can be used for viewing tree of code
-+ use-package  :: contain code within package requirements.
-
++ hydra          :: Equivalent to submode in vim
 ** Code Folding.
 + folding      :: Must be automatic for code.
      Own version.
