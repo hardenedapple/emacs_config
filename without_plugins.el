@@ -36,6 +36,12 @@
 (setq disabled-command-function nil)
 
 
+;;;; Environment Variables
+;;;;
+(setenv "EDITOR" "emacs")
+(setq shell-file-name "bash")
+
+
 ;;;; File Handling
 ;;;;
 (defun remove-buffer-and-file (&optional buffer-or-name)
@@ -338,9 +344,9 @@ called automatically on save."
 (define-key ctl-x-map "=" 'balance-windows)
 
 (defun fix-window-horizontal-size (&optional num-columns)
-  "Set `current-window' size to 80 NUM-COLUMNS columns wide."
-  (interactive)
-  (enlarge-window (- (or num-columns 82) (window-width)) 'horizontal))
+  "Set `current-window' size to 90 NUM-COLUMNS columns wide."
+  (interactive "P")
+  (enlarge-window (- (or num-columns 90) (window-width)) 'horizontal))
 
 (define-key ctl-x-4-map "w" 'fix-window-horizontal-size)
 (define-key ctl-x-4-map "g" 'delete-other-windows-vertically)
@@ -364,7 +370,7 @@ Otherwise try `display-buffer-use-some-window'."
     (display-buffer-use-some-window buffer alist)))
 
 (defvar display-buffer-here-commands
-  (list 'previous-error 'next-error 'push-button)
+  (list 'previous-error 'next-error 'first-error 'push-button 'occur-mode-goto-occurrence)
   "Commands to use same window when calling `pop-to-buffer'")
 
 (defun display-buffer-same-window-from-command (buffer alist)
