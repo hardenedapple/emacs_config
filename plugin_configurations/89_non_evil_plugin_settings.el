@@ -205,24 +205,25 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
                 slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
-(defun paredit--is-at-start-of-list ()
-  (and (looking-at "(\\|\\[")
+(defun paredit--is-at-end-of-list ()
+  (and (looking-back ")\\|\\]")
        (not (nth 3 (syntax-ppss))) ;; inside string
        (not (nth 4 (syntax-ppss))))) ;; inside comment
 
 (defun paredit-duplicate-closest-list ()
   "Duplicate sexp the point is at."
   (interactive)
-  ;; skips to start of current sexp
-  (while (not (paredit--is-at-start-of-list))
-    (paredit-backward))
-  (let* ((start (point))
-         (end (progn (paredit-forward) (move-end-of-line nil) (point)))
-         (dup-sexp (buffer-substring start end)))
-    ;; go to the next line and copy the sexprs we encountered
-    (paredit-newline)
+  ;; Go to end of current sexp.
+  ;; Not sure when the loop will be needed, but better safe than sorry
+  (while (not (paredit--is-at-end-of-list))
+    (paredit-forward-up))
+  (let* ((end (point))
+         (dup-sexp (buffer-substring (progn (paredit-backward) (point)) end)))
+    ;; Insert copy, make sure we're on a new line, put us at the end of both
+    ;; sexps
     (insert dup-sexp)
-    (goto-char (+ end 1))))
+    (paredit-newline)
+    (paredit-forward)))
 
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
