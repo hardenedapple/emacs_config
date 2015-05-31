@@ -268,7 +268,7 @@
       column-number-mode t)
 (setq-default major-mode nil)
 (set-frame-font "Tamsyn-10")
-(mouse-avoidance-mode 'exile)
+(mouse-avoidance-mode 'none)
 (global-linum-mode t)
 (show-paren-mode 1)
 (scroll-bar-mode -1)
