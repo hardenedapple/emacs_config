@@ -342,7 +342,12 @@ and run a command given by the user in that window.
 
 (add-hook 'slime-mode-hook
           (lambda ()
+            ;; Make TAB do my completion, and since I don't have any way to
+            ;; press C-j, remap SLIME-EVAL-LAST-EXPRESSION-IN-REPL to C-c C-i
+            ;; (C-i for "interpreter") instead of SLIME-COMPLETE-SYMBOL, which
+            ;; I'll now use TAB for.
             (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)
+            (define-key slime-mode-map (kbd "C-c C-i") 'slime-eval-last-expression-in-repl)
             (define-key slime-mode-map [mouse-1]
               (mouse-function-on-symbol (slime-edit-definition current-symbol)))
             (define-key slime-mode-map [mouse-3]
