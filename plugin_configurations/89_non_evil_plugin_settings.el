@@ -369,7 +369,32 @@ and run a command given by the user in that window.
 (define-key smartscan-map (kbd "M-o") 'smartscan-symbol-go-backward)
 (define-key smartscan-map (kbd "M-n") nil)
 (define-key smartscan-map (kbd "M-p") nil)
-(define-key smartscan-map (kbd "M-'") 'smartscan-symbol-replace)
+
+;; Copy and paste of `smartscan-symbol-replace' from smartscan.el, but does a
+;; `re-search-forward' for an entire symbol instead of `search-forward' for a
+;; string.
+(defun smartscan-just-symbol-replace (arg)
+  "Does the same as `smartscan-symbol-replace', but searches in the same method
+as `smartscan-symbol-goto' to avoid inconsistencies."
+  (interactive "P")
+  (save-excursion
+    (let* ((oldsymbol (smartscan-symbol-at-pt 'beginning))
+           (newsymbol (query-replace-read-to
+                       oldsymbol (format "%sSmart Scan replace"
+                                         (if arg "[Defun] " "")) nil))
+           (counter 0))
+      (if arg (goto-char (save-excursion (beginning-of-defun) (point)))
+        ;; go to the beginning of the buffer as it's assumed you want to
+        ;; apply it from there onwards. beginning
+        (goto-char (point-min)))
+      (smartscan-with-symbol
+        (while (re-search-forward
+                (concat "\\<" oldsymbol "\\>")
+                (if arg (save-excursion (end-of-defun) (point)) nil) t nil)
+          (replace-match newsymbol nil t) (cl-incf counter 1)))
+      (message "Smart Scan replaced %d matches" counter))))
+
+(define-key smartscan-map (kbd "M-'") 'smartscan-just-symbol-replace)
 
 
 ;;;; Transpose Frame Settings
