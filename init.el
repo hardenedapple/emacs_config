@@ -587,7 +587,7 @@ Then `apply' ARGS to FUNCTION."
                       paredit projectile python-pylint quack smart-tab
                       smart-window smartscan smex undo-tree vimrc-mode
                       window-number wrap-region xcscope yasnippet
-                      transpose-mark
+                      transpose-mark markdown-mode
                       ;; I occasionally use this, but not usually -- shows currently
                       ;; unbound keys, which is useful for deciding on a keybinding.
                       ;; unbound
