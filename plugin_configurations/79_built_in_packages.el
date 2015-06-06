@@ -276,7 +276,13 @@ as yet."
       (backward-delete-char 1)))
 
 
+;;;; Ibuffer Settings
+;;;;
+(define-key ibuffer-mode-map (kbd "M-g") nil)
+
+
 ;;;; Ido Settings
+;;;;
 (setq ido-enable-flex-matching 1)
 (add-hook 'ido-setup-hook
  (lambda ()
