@@ -8,12 +8,6 @@
 
 ;;;; Dired Additions
 ;;;;
-(defun dired-load-marked-files ()
-  "Lead all the marked files into emacs"
-  (interactive)
-  (dolist (current-file (dired-get-marked-files))
-    (find-file-noselect current-file)))
-
 (defun dired-emacs-command-marked-files (command-form)
   "Load marked files into emacs, and run COMMAND on them all"
   (interactive "C")
