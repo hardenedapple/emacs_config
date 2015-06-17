@@ -8,6 +8,9 @@ Figure out why python-mode's inbuilt flymake settings aren't working.
 Slime -- when stepping through functions, buffers move around.
 
 * Things to Do
+Make single function to restart ipython interpreter in inferior python mode
+    Currently I send "quit" to the kernel, move into a python buffer, then run
+    `python-shell-switch-to-shell' again, this should be easy to automate.
 Add capability to kill a patch hunk in Monky
     Could be as simple as calling "patch -R" ith the selected hunk, then
     reverting the buffer.
