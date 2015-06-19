@@ -59,6 +59,29 @@ that buffer, and follows it."
 (setq Man-notify-method 'pushy)
 
 
+;;;; Python Settings
+;;;;
+(defun python-shell-restart-inferior-python (&optional buffer)
+  "Restarts the python shell currently running.
+
+If `buffer' is given, restarts the process in that buffer, if `arg' is non-null
+stops the current python process using `delete-process' rather than
+`process-send-eof'"
+  (interactive)
+  ;; Be on the lookout for having to do something different with dedicated and
+  ;; non-dedicated processes.
+  (let* ((python-buffer (or (python-shell-get-buffer) buffer))
+         (python-process (get-buffer-process python-buffer)))
+    ;; If there's currently no process, then just start one.
+    ;; Otherwise, call `delete-process' on it and start a new python shell with
+    ;; the same arguments as the current one.
+    (if (not python-process)
+        (python-shell-get-or-create-process)
+      (delete-process python-process)
+      (python-shell-get-or-create-process
+       (mapconcat 'identity (process-command python-process) " ")))))
+
+
 ;;;; Scheme Settings
 ;;;;
 ;; I'm using guile at the moment
