@@ -326,19 +326,15 @@ Is a mostly copy of the `isearch-forward-symbol-at-point'
 function, but instead of calling `isearch-forward-symbol', calls
 `isearch-mode' directly.
 
-Have also used `find-tag-default' instead of
-`find-tag-default-bounds' as it seems neater to me, and this
-removes the `goto-char' call in the original version.
-
-This means that if `point' is in the middle of a symbol, then we
-move on the first button press instead of the second. If invoked
-on the very first character, or just after the last character,
-then `isearch' is still called, but `point' moves to the other
-end of the symbol instead of to the next one."
+Also move `point' so it's not at either end of the symbol, meaning we
+move on the first invokation."
   (isearch-mode forwards nil nil nil 'isearch-symbol-regexp)
-  (let ((search-string (find-tag-default)))
-    (if search-string
-        (isearch-yank-string search-string)
+  (let ((bounds (find-tag-default-bounds)))
+    (if bounds
+        (progn
+          (goto-char (+ 1 (car bounds)))
+          (isearch-yank-string
+           (buffer-substring-no-properties (car bounds) (cdr bounds))))
       (setq isearch-error "No symbol at point")
       (isearch-update))))
 
@@ -355,8 +351,9 @@ end of the symbol instead of to the next one."
   "Does the same as `smartscan-symbol-replace', but searches for
 entire symbols instead of words.
 
-Also doesn't use any `smartscan' functions, as I use `isearch'
-instead and hence don't have the package installed."
+Also doesn't use any `smartscan' functions, as I use an `isearch'
+wrapper called `snappy-isearch-symbol-at-point' instead and hence
+don't have the package installed."
   (interactive "P")
   (save-excursion
     (let* ((oldsymbol (find-tag-default))
