@@ -8,6 +8,10 @@ Figure out why python-mode's inbuilt flymake settings aren't working.
 Slime -- when stepping through functions, buffers move around.
 
 * Things to Do
+Copy across smartscan-symbol and modify to use the same method as isearch does
+    when looking for symbols.
+    I prefer the matches that isearch gets to those of smartscan, but the
+    interface of smartscan is better.
 Add capability to kill a patch hunk in Monky
     Could be as simple as calling "patch -R" ith the selected hunk, then
     reverting the buffer.
