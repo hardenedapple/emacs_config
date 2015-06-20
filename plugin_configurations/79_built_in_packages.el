@@ -317,6 +317,65 @@ as yet."
                   imenu-generic-expression)))
 
 
+;;;; ISearch Settings
+;;;;
+(defun snappy-isearch-symbol-at-point (forwards)
+  "Do the same as `isearch-forward-symbol-at-point', but snappier.
+
+Is a mostly copy of the `isearch-forward-symbol-at-point'
+function, but instead of calling `isearch-forward-symbol', calls
+`isearch-mode' directly.
+
+Have also used `find-tag-default' instead of
+`find-tag-default-bounds' as it seems neater to me, and this
+removes the `goto-char' call in the original version.
+
+This means that if `point' is in the middle of a symbol, then we
+move on the first button press instead of the second. If invoked
+on the very first character, or just after the last character,
+then `isearch' is still called, but `point' moves to the other
+end of the symbol instead of to the next one."
+  (isearch-mode forwards nil nil nil 'isearch-symbol-regexp)
+  (let ((search-string (find-tag-default)))
+    (if search-string
+        (isearch-yank-string search-string)
+      (setq isearch-error "No symbol at point")
+      (isearch-update))))
+
+(global-set-key (kbd "M-i") (lambda ()
+                              (interactive)
+                              (snappy-isearch-symbol-at-point t)))
+(global-set-key (kbd "M-o") (lambda ()
+                              (interactive)
+                              (snappy-isearch-symbol-at-point nil)))
+(define-key isearch-mode-map (kbd "M-i") 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd "M-o") 'isearch-repeat-backward)
+
+(defun symbol-replace-this (arg)
+  "Does the same as `smartscan-symbol-replace', but searches for
+entire symbols instead of words.
+
+Also doesn't use any `smartscan' functions, as I use `isearch'
+instead and hence don't have the package installed."
+  (interactive "P")
+  (save-excursion
+    (let* ((oldsymbol (find-tag-default))
+           (newsymbol (query-replace-read-to
+                       oldsymbol (format "%sSymbol replace"
+                                         (if arg "[Defun] " "")) nil))
+           (counter 0))
+      (if arg (goto-char (save-excursion (beginning-of-defun) (point)))
+        ;; go to the beginning of the buffer as it's assumed you want to
+        ;; apply it from there onwards. beginning
+        (goto-char (point-min)))
+      (while (re-search-forward (concat "\\_<" oldsymbol "\\_>")
+              (if arg (save-excursion (end-of-defun) (point)) nil) t nil)
+        (replace-match newsymbol nil t) (cl-incf counter 1))
+      (message "Have replaced %d matches" counter))))
+
+(global-set-key (kbd "M-'") 'symbol-replace-this)
+
+
 ;;;; List Buffer Settings
 ;;;;
 (global-set-key [remap list-buffers] 'ibuffer)

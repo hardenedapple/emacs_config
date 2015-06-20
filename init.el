@@ -585,7 +585,7 @@ Then `apply' ARGS to FUNCTION."
                       goto-chg ido-ubiquitous ido-at-point ido-vertical-mode
                       jump-char list-register magit monky multiple-cursors
                       paredit projectile python-pylint quack smart-tab
-                      smart-window smartscan smex undo-tree vimrc-mode
+                      smart-window smex undo-tree vimrc-mode
                       window-number wrap-region xcscope yasnippet
                       transpose-mark markdown-mode
                       ;; I occasionally use this, but not usually -- shows currently
