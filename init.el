@@ -609,12 +609,12 @@ Then `apply' ARGS to FUNCTION."
     (dolist (p require-packages)
       (require p))))
 
-;;; Load all files in the directory plugin_configurations
+;;; Load all files in the directory config
 ;;; Name of file denotes order it's loaded in.
 ;;; Note order matters in way here:
 ;;;    wrap-region after paredit to not overwrite '('
 (dolist (conf-file
-         (directory-files "~/.emacs.d/plugin_configurations" t "^[^.].+\\.elc?$"))
+         (directory-files "~/.emacs.d/config/" t "^[^.].+\\.elc?$"))
   (load conf-file))
 
 ;;; Remove some settings from MINOR-MODE-ALIST

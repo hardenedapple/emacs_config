@@ -604,7 +604,7 @@ run a command given by the user in that window.
 (require 'ibuffer)
 ;;;; Load Dvorak keybindings
 (dolist (conf-file (list
-                    "~/.emacs.d/plugin_configurations/69_filetype_specific_settings.el"
-                    "~/.emacs.d/plugin_configurations/79_built_in_packages.el"
-                    "~/.emacs.d/plugin_configurations/99_dvorak_keybindings.el"))
+                    "~/.emacs.d/config/69_filetype_specific_settings.el"
+                    "~/.emacs.d/config/79_built_in_packages.el"
+                    "~/.emacs.d/config/99_dvorak_keybindings.el"))
   (load conf-file))
