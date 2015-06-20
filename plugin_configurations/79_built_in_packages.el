@@ -439,8 +439,6 @@ don't have the package installed."
 ;; Be able to send the kill signal to the process at point
 ;; Code gotten from Joao Tavora's answer in
 ;; http://stackoverflow.com/questions/10627289/emacs-internal-process-killing-any-command
-(define-key process-menu-mode-map "k" 'process-menu-delete-process-at-point)
-
 (defun process-menu-delete-process-at-point ()
   "Kill the process at point in a `process-menu' buffer."
   (interactive)
@@ -451,6 +449,8 @@ don't have the package installed."
            (revert-buffer))
           (t
            (error "no process at point!")))))
+
+(define-key process-menu-mode-map "k" 'process-menu-delete-process-at-point)
 
 
 ;;;; Python Settings
