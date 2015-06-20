@@ -8,17 +8,20 @@ Figure out why python-mode's inbuilt flymake settings aren't working.
 Slime -- when stepping through functions, buffers move around.
 
 * Things to Do
-Copy across smartscan-symbol and modify to use the same method as isearch does
-    when looking for symbols.
-    I prefer the matches that isearch gets to those of smartscan, but the
-    interface of smartscan is better.
-Add capability to kill a patch hunk in Monky
-    Could be as simple as calling "patch -R" ith the selected hunk, then
-    reverting the buffer.
-Add org-capture template for work things
-Create a blacklist for commands in repeat-last-command
-    possibly something to do with last-repeatable-command
+** Monky kill hunk
+There are many things in magit missing in monky, one of the more useful things
+is the ability to kill a single hunk in the diff.
 
+It might be as simple as calling "patch -R" ith the selected hunk, then
+reverting the buffer to add this functionality.
+** Org mode templates
+Add org-capture template for work things
+** repeat-last-command blacklist
+I like the `repeat-last-command' keybindings, but there's just too many commands
+in emacs, so the last command is generally a useless one, usually a motion
+command bound to just as conventiant a keybinding.
+
+There may be something with last-repeatable-command that I can do.
 * Things to learn:
 IBuffer
 Dired
