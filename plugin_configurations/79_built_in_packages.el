@@ -193,6 +193,13 @@ as yet."
 (setq eshell-review-quick-commands 'not-even-short-output)
 
 
+;;;; ETags Settings
+;;;;
+;; Match keybindings for slime, and elisp-slime.
+(global-set-key (kbd "M-,") 'pop-tag-mark)
+(global-set-key (kbd "M-*") 'tags-loop-continue)
+
+
 ;;;; Filesets Settings
 ;;;;
 (filesets-init)
