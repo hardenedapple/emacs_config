@@ -127,7 +127,7 @@
   (when (nameses-current-name)
     (nameses-save (nameses-current-name))))
 
-(defun nameses-detach ()
+(defun nameses-unfollow ()
   "Save and leave the current session without losing the current buffers."
   (interactive)
   (let ((current-session (nameses-current-name)))
@@ -136,7 +136,7 @@
       (desktop-release-lock)
       (setq desktop-dirname nil))))
 
-(defun nameses-leave ()
+(defun nameses-detach ()
   "Save and leave the current session, completely exit."
   (interactive)
   (let ((cur-name (nameses-current-name)))
