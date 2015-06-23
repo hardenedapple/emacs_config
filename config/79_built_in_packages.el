@@ -268,14 +268,6 @@ as yet."
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
 (global-set-key (kbd "C-\\") 'dabbrev-completion)
 
-;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
-;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
-;; emacs wiki page)
-(defadvice he-substitute-string (after he-paredit-fix activate)
-  "Remove extra paren when expanding line in paredit"
-  (if (and paredit-mode (equal (substring str -1) ")"))
-      (backward-delete-char 1)))
-
 
 ;;;; Ibuffer Settings
 ;;;;

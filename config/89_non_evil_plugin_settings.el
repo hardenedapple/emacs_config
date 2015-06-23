@@ -243,6 +243,14 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
  'paredit-backward-delete
  'paredit-close-round)
 
+;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
+;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
+;; emacs wiki page)
+(defadvice he-substitute-string (after he-paredit-fix activate)
+  "Remove extra paren when expanding line in paredit"
+  (if (and paredit-mode (equal (substring str -1) ")"))
+      (backward-delete-char 1)))
+
 
 ;;;; Projectile Settings
 ;;;;
