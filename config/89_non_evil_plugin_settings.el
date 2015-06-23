@@ -243,6 +243,18 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
  'paredit-backward-delete
  'paredit-close-round)
 
+(defun paredit-downsexp-newline-and-parenthesis (&optional arg)
+  "Do same as `downlist-newline-and-parentheses', but using
+paredit functions on the assumption they'll be more robust."
+  (interactive "^p")
+  (paredit-forward-up arg)
+  (paredit-newline)
+  (paredit-open-round))
+
+(define-key paredit-mode-map (kbd "<C-return>")
+  'paredit-downsexp-newline-and-parenthesis)
+
+
 ;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
 ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
 ;; emacs wiki page)
