@@ -206,16 +206,32 @@
 
 ;;;; Redefining sexp motion
 ;;;;
-(defun backward-up-sexp (arg)
-  "Move up whatever sexp we're in."
-  (interactive "p")
-  (let ((ppss (syntax-ppss)))
-    (cond ((elt ppss 3)
-           (goto-char (elt ppss 8))
-           (backward-up-sexp (1- arg)))
-          ((backward-up-list arg)))))
+(defun backward-down-list (&optional arg)
+  "Does `down-list' but with a negative argument"
+  (interactive "^p")
+  (down-list (- (or arg 1))))
 
+(defun backward-up-sexp (&optional arg)
+  "Does `backward-up-list' accounting for strings."
+  (interactive "^p")
+  (up-sexp (- (or arg 1))))
+
+(defun up-sexp (&optional arg)
+  "Move up whatever sexp we're in."
+  (interactive "^p")
+  (let ((ppss (syntax-ppss)))
+    (cond ((nth 3 ppss)
+           (goto-char (nth 8 ppss))
+           (if (< arg 0)
+               (up-sexp (1+ arg))
+             (forward-sexp)
+             (up-sexp (1- arg))))
+          ((up-list arg)))))
+
+(global-set-key [remap up-list] 'up-sexp)
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
+(global-set-key (kbd "C-M-n") 'up-sexp)
+(global-set-key (kbd "C-M-p") 'backward-down-list)
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 
 
