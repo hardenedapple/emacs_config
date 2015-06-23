@@ -51,7 +51,21 @@ that buffer, and follows it."
 
 ;;;; Lisp Settings
 ;;;;
+(defun downlist-newline-and-parentheses ()
+  "Move outside the current list, start a newline, leave `point'
+inside a new list.
+
+Taken from \"speed-of-thought-lisp\"
+https://github.com/Malabarba/speed-of-thought-lisp"
+  (interactive)
+  (up-list)
+  (newline-and-indent)
+  (insert "()")
+  (forward-char -1))
+
 (setq inferior-lisp-program "/usr/bin/sbcl")
+(define-key lisp-mode-map (kbd "<M-return>") 'newline-and-parentheses)
+(define-key lisp-mode-map (kbd "<C-return>") 'downlist-newline-and-parentheses)
 
 
 ;;;; Man Settings
@@ -81,6 +95,8 @@ stops the current python process using `delete-process' rather than
       (python-shell-get-or-create-process
        (mapconcat 'identity (process-command python-process) " ")))))
 
+(define-key emacs-lisp-mode-map (kbd "<M-return>") 'newline-and-parentheses)
+(define-key emacs-lisp-mode-map (kbd "<C-return>") 'downlist-newline-and-parentheses)
 
 ;;;; Scheme Settings
 ;;;;
