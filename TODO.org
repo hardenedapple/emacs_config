@@ -88,7 +88,11 @@ Midnight commander clone inside emacs.
                   Have no idea why both these modes are in emacs.
                   Doesn't work well with C
 * Evil
-** Make <ESC> exit helm
+** C-w C-] mapping
+Make this mapping work by default in evil.
+Use find-tag-other-window function
+** Make the 'vert' modifier work
+Currently the 'vert' modifier isn't recognised, I want it.
 ** Work out all the submodes.
 Start with setting 'j' and 'k' to do what 'n' and 'p' currently do, then figure
 out everything else when it bothers me.
