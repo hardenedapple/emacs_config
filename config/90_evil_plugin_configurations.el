@@ -104,13 +104,7 @@
 
 ;;; Set the default mode for certain buffers
 (dolist (mode-state-pair '((dired-mode . emacs)
-                           (Buffer-menu-mode . emacs)
-                           (ibuffer-mode . emacs)
-                           (Info-mode . emacs)
-                           (Man-mode . emacs)
-                           (help-mode . emacs)
-                           (apropos-mode . emacs)
-                           (diff-mode . emacs)))
+                           (ibuffer-mode . emacs)))
   (evil-set-initial-state (car mode-state-pair) (cdr mode-state-pair)))
 
 ;;; Mappings
