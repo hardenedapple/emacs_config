@@ -127,9 +127,6 @@
 (define-key minibuffer-local-must-match-map [escape] 'abort-recursive-edit)
 (define-key minibuffer-local-isearch-map [escape] 'abort-recursive-edit)
 
-;;; Evil ex settings
-(evil-ex-define-cmd "occur" 'occur)
-
 ;; Normal mode mappings
 (defun copy-to-end-of-line ()
   (interactive)
