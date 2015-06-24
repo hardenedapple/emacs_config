@@ -88,22 +88,12 @@ Midnight commander clone inside emacs.
                   Have no idea why both these modes are in emacs.
                   Doesn't work well with C
 * Evil
-** Work out all the submodes.
-Start with setting 'j' and 'k' to do what 'n' and 'p' currently do, then figure
-out everything else when it bothers me.
-*** Magit
-*** Dired
-*** Ibuffer
 ** Things that don't work
 *** C-w C-] mapping
 Make this mapping work by default in evil.
 Use find-tag-other-window function
 *** Make the 'vert' modifier work
 Currently the 'vert' modifier isn't recognised, I want it.
-*** C-6 / C-^ use count like vim
-My implementation of C-6 / C-^ doesn't account for a given count in the same way
-    as vim
-    If given a count, should load that buffer number.
 *** Start and end paragraph marks.
 The '{ and '} marks in Ex commands for start and end of paragraph.
 *** C-w c  (and similar) count like vim
@@ -112,14 +102,15 @@ The CTRL-W c command doesn't take a count, and I assume others don't either.
 'o' when in a comment doesn't keep the comment.
 *** History mappings g+ and g-
 g+ and g-  aren't implemented
+Will have to first check undo-tree maintains time info.
 *** :windo :bufdo and :argdo
 :windo  --  use walk-windows, but have to make it accept an :ex command
 Maybe the idea of the other two commands is hard to port
-** Make <ESC> exit helm
+*** C-6 / C-^ use count like vim
+My implementation of C-6 / C-^ doesn't account for a given count in the same way
+    as vim
+    If given a count, should load that buffer number.
 ** Work out all the submodes.
-Start with setting 'j' and 'k' to do what 'n' and 'p' currently do, then figure
-out everything else when it bothers me.
-
 Main thing I want in quite a lot of modes, is to keep SPC as leader bindings,
 keep C-w and g\d window motion bindings, and the scrolling maps, but lose
 everything else.
@@ -135,12 +126,10 @@ Make this file where these are all stored.
 g -- refresh --> C-l
 r -- older   --> o
 l -- newer   --> i
-n -- down    --> j
-p -- up      --> k
-**** Magit
-**** Dired
-**** Ibuffer
-**** Help
-**** Info
-**** Man
-Remove as much as possible to keep the original mappings
+n -- down    --> C-n
+p -- up      --> C-p
+x -- execute --> r  (for 'run')
+*** Ediff
+*** Magit
+*** Dired
+*** Ibuffer
