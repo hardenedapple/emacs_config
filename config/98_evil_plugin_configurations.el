@@ -82,6 +82,17 @@
 (define-key evil-motion-state-map "gj" 'evil-four-lines-down)
 (define-key evil-motion-state-map "gk" 'evil-four-lines-up)
 
+
+;; C-w C-]
+(evil-define-motion evil-jump-to-tag-other-window (arg)
+  "Find a tag in a different window."
+  :jump t
+  (interactive "P")
+  (run-function-other-window #'call-interactively nil 'evil-jump-to-tag))
+
+(define-key evil-window-map (kbd "C-]") 'evil-jump-to-tag-other-window)
+
+
 ;;; Variables
 (setq evil-cross-lines t
       evil-flash-delay 5
