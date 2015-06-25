@@ -30,6 +30,8 @@ run this command."
   "O" 'Info-history
   "d" 'Info-scroll-up
   "u" 'Info-scroll-down
+  "]]" 'Info-next
+  "[[" 'Info-prev
   "\C-n" 'Info-next
   "\C-p" 'Info-prev
   "c" 'Info-toc
@@ -54,8 +56,10 @@ run this command."
 
 ;;; Man Mode evil mappings
 (evil-define-key 'motion Man-mode-map
+  "]]" 'Man-next-section
+  "[[" 'Man-previous-section
   "\C-n" 'Man-next-section
-  "\C-p" 'Man-prev-section
+  "\C-p" 'Man-previous-section
   "gs" 'Man-goto-section
   "ga" 'Man-goto-see-also-section
   "gr" 'Man-follow-manual-reference
@@ -91,6 +95,8 @@ run this command."
 ;;; Diff Mode
 (evil-define-key 'normal diff-mode-map
   "\C-l" 'revert-buffer
+  "]]" 'diff-hunk-next
+  "[[" 'diff-hunk-prev
   "\C-n" 'diff-hunk-next
   "\C-p" 'diff-hunk-prev)
 
