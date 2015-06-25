@@ -11,7 +11,8 @@
   "i" 'help-go-forward
   "u" 'View-scroll-half-page-forward
   "d" 'View-scroll-half-page-backward
-  "C-l" 'revert-buffer
+  (kbd "C-l") 'revert-buffer
+  (kbd "<tab>")'forward-button
   )
 
 
@@ -30,14 +31,12 @@ run this command."
   "O" 'Info-history
   "d" 'Info-scroll-up
   "u" 'Info-scroll-down
-  "]]" 'Info-next
-  "[[" 'Info-prev
-  "\C-n" 'Info-next
-  "\C-p" 'Info-prev
+  (kbd "C-n") 'Info-next
+  (kbd "C-p") 'Info-prev
   "c" 'Info-toc
   "D" 'Info-directory
   "^" 'Info-up
-  "\C-]" 'Info-follow-reference
+  (kbd "C-]") 'Info-follow-reference
   "<return>" 'Info-follow-nearest-node
   "gi" 'Info-nth-menu-item-modified
   "gn" 'Info-goto-node
@@ -58,12 +57,12 @@ run this command."
 (evil-define-key 'motion Man-mode-map
   "]]" 'Man-next-section
   "[[" 'Man-previous-section
-  "\C-n" 'Man-next-section
-  "\C-p" 'Man-previous-section
+  (kbd "C-n") 'Man-next-section
+  (kbd "C-p") 'Man-previous-section
   "gs" 'Man-goto-section
   "ga" 'Man-goto-see-also-section
   "gr" 'Man-follow-manual-reference
-  "\C-l" 'Man-update-manpage
+  (kbd "C-l") 'Man-update-manpage
   )
 
 (add-hook 'Man-mode-hook
@@ -73,7 +72,8 @@ run this command."
 
 ;;; Apropos mode
 (evil-define-key 'motion apropos-mode-map
-  "\C-l" 'revert-buffer)
+  (kbd "<tab>") 'forward-button
+  (kbd "C-l") 'revert-buffer)
 (add-hook 'apropos-mode-hook
           (lambda ()
             (remove-mappings (list "g" " ") apropos-mode-map)))
@@ -81,7 +81,7 @@ run this command."
 
 ;;; Buffer menu mode
 (evil-define-key 'motion Buffer-menu-mode-map
-  "\C-l" 'revert-buffer
+  (kbd "C-l") 'revert-buffer
   "P" 'Buffer-menu-switch-other-window
   "O" 'Buffer-menu-1-window
   "p" 'Buffer-menu-2-window
@@ -89,16 +89,18 @@ run this command."
   "x" 'Buffer-menu-delete-backwards
   "D" 'Buffer-menu-bury
   )
-(remove-mappings (list "\C-k" "\C-o" "1" "2" "t" "T" "g" "b") Buffer-menu-mode-map)
+
+(remove-mappings (list (kbd "C-k") (kbd "C-o") "1" "2" "t" "T" "g" "b") Buffer-menu-mode-map)
 
 
 ;;; Diff Mode
 (evil-define-key 'normal diff-mode-map
-  "\C-l" 'revert-buffer
+  "q" 'View-quit
+  (kbd "C-l") 'revert-buffer
   "]]" 'diff-hunk-next
   "[[" 'diff-hunk-prev
-  "\C-n" 'diff-hunk-next
-  "\C-p" 'diff-hunk-prev)
+  (kbd "C-n") 'diff-hunk-next
+  (kbd "C-p") 'diff-hunk-prev)
 
 (remove-mappings (list "n" "g" "?" "k") diff-mode-map)
 (dotimes (digit 9)
