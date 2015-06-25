@@ -249,5 +249,6 @@
 
 ;;; Remap the jump-to-tag mapping in evil to ELISP-SLIME-NAV-FIND-THING-AT-POINT
 ;;; when in emacs-lisp-mode
-(evil-define-key 'motion elisp-slime-nav-mode-map "\C-]"
-  'elisp-slime-nav-find-elisp-thing-at-point)
+(evil-define-key 'motion elisp-slime-nav-mode-map
+  "\C-]" 'elisp-slime-nav-find-elisp-thing-at-point
+  (kbd "C-w C-]") 'elisp-slime-nav-find-thing-at-point-other-window)
