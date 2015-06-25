@@ -29,7 +29,9 @@
     (?\C-z . ?\C-x)
     (?\C-h . ?\C-p)
     (?\C-p . ?\C-h)
-    (?\C-j . ?\C-c)))
+    (?\C-w . ?\C-c)
+    (?\C-j . ?\C-c)
+    (?\C-c . ?\C-w)))
 
 (defun apply-my-keyswaps ()
   (dolist (key-pair dvorak-keyswaps)
