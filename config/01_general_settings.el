@@ -16,6 +16,11 @@
 ;;;; CamelCase word motion
 ;;;;
 (global-subword-mode 1)
+;; Make motion almost the same as in my shell
+(global-set-key (kbd "M-F") 'forward-symbol)
+(global-set-key (kbd "M-B") (lambda (arg)
+                              (interactive "^p")
+                              (forward-symbol (- arg))))
 
 
 ;;;; Compile Settings
