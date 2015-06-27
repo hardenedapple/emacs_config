@@ -234,9 +234,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
-(add-hook 'ielm-mode-hook
-          (lambda ()
-            (define-key ielm-map (kbd "C-q") 'comint-history-isearch-backward-regexp)))
+(with-eval-after-load 'ielm
+    (define-key ielm-map (kbd "C-q") 'comint-history-isearch-backward-regexp))
 
 ;;; paredit with eldoc
 (eldoc-add-command
@@ -360,26 +359,24 @@ and run a command given by the user in that window.
 
 (global-set-key (kbd "C-c s") 'slime-selector)
 
-(add-hook 'slime-mode-hook
-          (lambda ()
-            ;; Make TAB do my completion, and since I don't have any way to
-            ;; press C-j, remap `slime-eval-last-expression-in-repl' to C-c C-i
-            ;; (C-i for "interpreter") instead of `slime-complete-symbol', which
-            ;; I'll now use TAB for.
-            (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)
-            (define-key slime-mode-map (kbd "C-c C-i") 'slime-eval-last-expression-in-repl)
-            ;; Remove the M-? mapping for `slime-edit-uses', can still use M-_,
-            ;; but `paredit-convolute-sexp' is now unshadowed.
-            (define-key slime-mode-map (kbd "M-?") nil)
-            (define-key slime-mode-map [mouse-1]
-              (mouse-function-on-symbol (slime-edit-definition current-symbol)))
-            (define-key slime-mode-map [mouse-3]
-              (lambda (event) (interactive "e") (slime-pop-find-definition-stack)))))
+(with-eval-after-load 'slime
+  ;; Make TAB do my completion, and since I don't have any way to
+  ;; press C-j, remap `slime-eval-last-expression-in-repl' to C-c C-i
+  ;; (C-i for "interpreter") instead of `slime-complete-symbol', which
+  ;; I'll now use TAB for.
+  (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)
+  (define-key slime-mode-map (kbd "C-c C-i") 'slime-eval-last-expression-in-repl)
+  ;; Remove the M-? mapping for `slime-edit-uses', can still use M-_,
+  ;; but `paredit-convolute-sexp' is now unshadowed.
+  (define-key slime-mode-map (kbd "M-?") nil)
+  (define-key slime-mode-map [mouse-1]
+    (mouse-function-on-symbol (slime-edit-definition current-symbol)))
+  (define-key slime-mode-map [mouse-3]
+    (lambda (event) (interactive "e") (slime-pop-find-definition-stack))))
 
-(add-hook 'slime-repl-mode-hook
-          (lambda ()
-            (define-key slime-repl-mode-map "(" 'self-insert-command)
-            (define-key slime-repl-mode-map ")" 'self-insert-command)))
+(with-eval-after-load 'slime-repl
+  (define-key slime-repl-mode-map "(" 'self-insert-command)
+  (define-key slime-repl-mode-map ")" 'self-insert-command))
 
 (setq slime-autodoc-use-multiline-p t)
 

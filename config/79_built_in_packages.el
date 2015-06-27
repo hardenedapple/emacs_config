@@ -183,6 +183,9 @@ as yet."
   (interactive)
   (insert (or (car (last eshell-last-arguments)) "")))
 
+;; This has to be in a hook rather than in `with-eval-after-load', as eshell
+;; creates a new, local, keymap every time it's invoked.
+;; (search for "FIXME: What the hell?" in esh-mode.el.gz
 (add-hook 'eshell-mode-hook
           (lambda ()
             (define-key eshell-mode-map (kbd "M-.") 'eshell--get-last-input)
@@ -277,14 +280,14 @@ as yet."
 ;;;; Ido Settings
 ;;;;
 (setq ido-enable-flex-matching 1)
-(add-hook 'ido-setup-hook
- (lambda ()
-   (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
 (setq ido-use-filename-at-point 'guess)
 (setq buffer-choose-default-function 'ido-switch-buffer)
 (setq ido-everywhere 1)
 (setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
+;; This has to be run after the map has been assigned with
+;; `ido-init-completion-maps', which is called (eventually) in `ido-mode'
+(define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)
 
 
 ;;;; Imenu Settings
@@ -418,12 +421,11 @@ don't have the package installed."
                              "~/TODO/Soon.org"
                              "~/TODO/Someday.org"))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            ;; Remove the CYCLE-ORG-AGENDA-FILES mapping to leave the
-            ;; GOTO-LAST-CHANGE-REVERSE global mapping
-            ;; Don't really use ORG-MODE's agenda functionality anyway
-            (define-key org-mode-map (kbd "C-,") nil)))
+(with-eval-after-load 'org
+    ;; Remove the CYCLE-ORG-AGENDA-FILES mapping to leave the
+    ;; GOTO-LAST-CHANGE-REVERSE global mapping
+    ;; Don't really use ORG-MODE's agenda functionality anyway
+    (define-key org-mode-map (kbd "C-,") nil))
 
 
 ;;;; Process Menu Settings
@@ -459,10 +461,9 @@ don't have the package installed."
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
-(add-hook 'inferior-python-mode-hook
-          (lambda ()
-            (define-key inferior-python-mode-map (kbd "TAB")
-              'python-shell-completion-complete-or-indent)))
+(with-eval-after-load 'python
+    (define-key inferior-python-mode-map (kbd "TAB")
+      'python-shell-completion-complete-or-indent))
 
 
 ;;;; Regexp Builder
