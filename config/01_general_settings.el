@@ -13,7 +13,7 @@
       auto-save-interval 500)
 
 
-;;;; CamelCase word motion
+;;;; Word motion
 ;;;;
 (global-subword-mode 1)
 ;; Make motion almost the same as in my shell
@@ -202,6 +202,23 @@
 (define-key search-map "O"
   (lambda () (interactive)
     (occur (concat "\\_<" (thing-at-point 'symbol t) "\\_>"))))
+
+;; Taken from http://oremacs.com/2015/01/26/occur-dwim/ -- makes a guess for
+;; the default search pattern with occur.
+(defun occur-dwim ()
+  "Call `occur' with a sane default."
+  (interactive)
+  (push (if (region-active-p)
+            (buffer-substring-no-properties
+             (region-beginning)
+             (region-end))
+          (let ((sym (thing-at-point 'symbol)))
+            (when (stringp sym)
+              (regexp-quote sym))))
+        regexp-history)
+  (call-interactively 'occur))
+
+(define-key search-map "o" 'occur-dwim)
 
 
 ;;;; Recursive minibuffers
