@@ -16,11 +16,28 @@
 ;;;; Word motion
 ;;;;
 (global-subword-mode 1)
-;; Make motion almost the same as in my shell
-(global-set-key (kbd "M-F") 'forward-symbol)
-(global-set-key (kbd "M-B") (lambda (arg)
-                              (interactive "^p")
-                              (forward-symbol (- arg))))
+
+;; Make motion the same as in my shell
+(defun forward-to-whitespace (&optional arg)
+  "Move until the next whitespace character."
+  (interactive "^p")
+  (let ((motion-function (if (< arg 0) #'skip-chars-backward
+                           #'skip-chars-forward))
+        (arg (abs arg)))
+    (while (/= arg 0)
+      (funcall motion-function " \r\n\t\f")
+      (funcall motion-function "^ \r\n\t\f")
+      (setq arg (1- arg)))))
+
+(defun backward-to-whitespace (&optional arg)
+  (interactive "^p")
+  (forward-to-whitespace (- (or arg 1))))
+
+(global-set-key (kbd "M-F") 'forward-to-whitespace)
+(global-set-key (kbd "M-B") 'backward-to-whitespace)
+
+;; Don't automatically activate the mark when holding down shift.
+(setq shift-select-mode nil)
 
 
 ;;;; Compile Settings
