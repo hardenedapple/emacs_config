@@ -13,6 +13,7 @@
         cua-exchange-point-and-mark
         cua-paste
         dabbrev-expand
+        eval-defun
         eval-last-sexp
         evil-backward-char
         evil-backward-word-begin
@@ -43,6 +44,7 @@
         paredit-backward
         paredit-backward-kill-word
         paredit-backward-up
+        paredit-close-round
         paredit-forward
         paredit-forward-delete
         paredit-forward-down
@@ -56,6 +58,8 @@
         paredit-wrap-round
         slime-autodoc-space
         slime-space
+        toggle-current-mark-activation
+        transpose-sexps
         ))
 
 (setq mc/cmds-to-run-once
