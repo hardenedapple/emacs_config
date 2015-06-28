@@ -119,8 +119,6 @@ This is the opposite of `splice-window-upwards'."
     (dolist (add-conf confs)
       (window-state-put add-conf (split-window window1 nil direction)))))
 
-(define-key ctl-x-4-map "s" 'splice-window-upwards)
-
 ;;; Swap windows
 (defun swap-windows-properly (window1 &optional window2)
   "Swap WINDOW1 and WINDOW2 respecting any splits
@@ -135,3 +133,5 @@ on them."
           (state2 (window-state-get window2 t)))
       (window-state-put state1 window2 'safe)
       (window-state-put state2 window1 'safe))))
+
+(provide 'splice-windows)

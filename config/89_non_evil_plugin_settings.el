@@ -1,3 +1,8 @@
+;;;; My packages
+;;;;
+(define-key ctl-x-4-map "s" 'splice-window-upwards)
+
+
 ;;;; Colour theme
 ;;;;
 (load-theme 'monokai)

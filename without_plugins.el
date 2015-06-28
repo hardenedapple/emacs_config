@@ -4,7 +4,6 @@
 (dolist (conf-file (list
                     "~/.emacs.d/config/01_general_settings.el"
                     "~/.emacs.d/config/02_window_commands.el"
-                    "~/.emacs.d/config/03_splice_windows.el"
                     "~/.emacs.d/config/69_filetype_specific_settings.el"
                     "~/.emacs.d/config/79_built_in_packages.el"
                     "~/.emacs.d/config/99_dvorak_keybindings.el"))
