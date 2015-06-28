@@ -1,6 +1,97 @@
-;;;; My packages
+;;;; My non-standard-stuff
 ;;;;
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
+
+(defun next-beginning-of-defun (&optional arg)
+  (interactive "p")
+  (beginning-of-defun (- arg)))
+
+(defvar swift-motion-mode-map
+  (easy-mmode-define-keymap
+   (list (cons " " 'set-mark-command)
+         (cons "'" 'reposition-window)
+         (cons "/" 'undo-tree-undo)
+         (cons ";" 'jump-to-mark)
+         (cons "<down>" 'windmove-down)
+         (cons "<left>" 'windmove-left)
+         (cons "<right>" 'windmove-right)
+         (cons "<up>" 'windmove-up)
+         (cons "\\" 'undo-tree-redo)
+         (cons "`" 'push-mark-no-activate)
+         (cons "a" 'beginning-of-defun)
+         (cons "b" 'backward-sentence)
+         (cons "e" 'end-of-defun)
+         (cons "f" 'forward-sentence)
+         ;; Note doesn't work when reading line from input -- digits are all
+         ;; `digit-argument'
+         (cons "g" 'goto-line)
+         (cons "h" 'previous-error)
+         (cons "i" 'snappy-isearch-symbol-at-point-forwards)
+         (cons "j" 'next-beginning-of-defun)
+         (cons "k" 'kill-sentence)
+         (cons "l" 'recenter-top-bottom)
+         (cons "m" 'imenu)
+         (cons "n" 'next-error)
+         (cons "o" 'snappy-isearch-symbol-at-point-backwards)
+         (cons "p" 'mark-defun)
+         (cons "r" 'indent-region)
+         (cons "s" 'ace-jump-word-mode)
+         (cons "t" 'first-error)
+         (cons "v" 'View-scroll-half-page-forward)
+         (cons "w" 'kill-region)
+         (cons "x" 'exchange-point-and-mark-keep-activation)
+         (cons "y" 'yank)
+         (cons "z" 'View-scroll-half-page-backward)
+         (cons "~" 'toggle-current-mark-activation)
+         ;; Quit the current mode
+         (cons "q" 'swift-motion-mode)
+         ;; '.' and ',' both run their respective macros M-. and M-, i.e. they follow
+         ;; whatever this mapping is doing in the current mode.
+         ;; This is a very dirty hack, and I'm going to remove it later
+         (cons "." (lambda ()
+                     (interactive) (kmacro-exec-ring-item (quote ("\256" 0 "%d")) 1)))
+         (cons "," (lambda ()
+                     (interactive) (kmacro-exec-ring-item (quote ("\254" 0 "%d")) 1))))
+   "swift-motion-mode" nil
+   (list :suppress t)))
+
+(define-minor-mode swift-motion-mode
+  "Bind a bunch of single key mappings to motion keys.
+
+Exit this mode with 'q' or '<escape>'"
+  :lighter "swift-motion"
+  :keymap swift-motion-mode-map
+  :global t)
+
+(global-set-key (kbd "<escape>") 'swift-motion-mode)
+
+(defvar lisp-motion-mode-map
+  (easy-mmode-define-keymap
+   (list (cons "n" 'up-sexp)
+         ;; This would be "p" were I not swapping C-M-h and C-M-p
+         (cons "h" 'backward-down-list)
+         (cons "d" 'down-list)
+         (cons "u" 'backward-up-sexp)
+         (cons "f" 'forward-sexp)
+         (cons "b" 'backward-sexp)
+         (cons "(" 'wrap-parentheses-always)
+         (cons "t" 'transpose-sexps)
+         (cons "r" 'kill-backward-up-list)
+         ;; This would be "h" were I not swapping C-M-h and C-M-p
+         (cons "p" 'mark-sexp)
+         (cons "<backspace>" 'backward-kill-sexp)
+         (cons "k" 'kill-sexp)
+         (cons "q" 'lisp-motion-mode))
+   "lisp-motion-mode" nil
+   (list :inherit swift-motion-mode-map)))
+
+(define-minor-mode lisp-motion-mode
+  "Bind a bunch of single key mappings to lisp s-expression commands."
+  :lighter "lisp-motion"
+  :keymap lisp-motion-mode-map
+  :require 'lisp)
+
+(define-key lisp-mode-shared-map (kbd "<escape>") 'lisp-motion-mode)
 
 
 ;;;; Colour theme
@@ -268,6 +359,32 @@ paredit functions on the assumption they'll be more robust."
   "Remove extra paren when expanding line in paredit"
   (if (and paredit-mode (equal (substring str -1) ")"))
       (backward-delete-char 1)))
+
+;;;; Motion-mode for paredit
+;;;;
+(defvar paredit-motion-mode-map
+  (easy-mmode-define-keymap
+   (list (cons "n" 'paredit-forward-up)
+         ;; This would be "p" were I not swapping C-M-h and C-M-p
+         (cons "h" 'paredit-backward-down)
+         (cons "d" 'paredit-forward-down)
+         (cons "u" 'paredit-backward-up)
+         (cons "f" 'paredit-forward)
+         (cons "b" 'paredit-backward)
+         (cons "(" 'paredit-wrap-round)
+         (cons "r" 'paredit-raise-sexp)
+         (cons "?" 'paredit-convolute-sexp)
+         (cons "q" 'paredit-motion-mode))
+   "paredit-motion-mode" nil
+   (list :inherit lisp-motion-mode-map)))
+
+(define-minor-mode paredit-motion-mode
+  "Bind a bunch of single key mappings to lisp s-expression commands."
+  :lighter "paredit-motion"
+  :keymap paredit-motion-mode-map
+  :require 'paredit)
+
+(define-key paredit-mode-map (kbd "<escape>") 'paredit-motion-mode)
 
 
 ;;;; Projectile Settings
