@@ -267,6 +267,12 @@
              (up-sexp (1- arg))))
           ((up-list arg)))))
 
+(defun wrap-parentheses-always (&optional arg)
+  "Call `insert-parentheses' with ARG a default of 1."
+  (interactive "P")
+  (insert-parentheses (if arg arg 1)))
+
+(global-set-key [remap insert-parentheses] 'wrap-parentheses-always)
 (global-set-key [remap up-list] 'up-sexp)
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
 (global-set-key (kbd "C-M-n") 'up-sexp)
