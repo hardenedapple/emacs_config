@@ -12,13 +12,6 @@
             (auto-fill-mode -1)))
 
 
-;;;; Elisp Settings
-;;;;
-(with-eval-after-load 'lisp-mode
-  (define-key emacs-lisp-mode-map [mouse-3]
-    (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
-                              (pop-tag-mark))))
-
 ;;;; Help mode settings
 ;;;;
 (defun help-follow-source-link ()
@@ -65,8 +58,15 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   (insert "()")
   (forward-char -1))
 
+(define-key lisp-mode-shared-map (kbd "<C-return>") 'upsexp-newline-and-parentheses)
+(define-key lisp-mode-shared-map (kbd "M-r") 'kill-backward-up-list)
+(define-key lisp-mode-shared-map (kbd "M-s M-s") 'delete-pair)
 
-(define-key lisp-mode-map (kbd "<C-return>") 'upsexp-newline-and-parentheses)
+;; Elisp specifically
+(with-eval-after-load 'lisp-mode
+  (define-key emacs-lisp-mode-map [mouse-3]
+    (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
+                              (pop-tag-mark))))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
