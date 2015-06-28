@@ -189,6 +189,10 @@
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 
+;;;; Minibuffer -- escape quits it
+(define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
+
+
 ;;;; Mouse navigation
 ;;;;
 (defun get-clicked-symbol (event)
