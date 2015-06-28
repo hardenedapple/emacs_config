@@ -333,12 +333,16 @@ move on the first invokation."
       (setq isearch-error "No symbol at point")
       (isearch-update))))
 
-(global-set-key (kbd "M-i") (lambda ()
-                              (interactive)
-                              (snappy-isearch-symbol-at-point t)))
-(global-set-key (kbd "M-o") (lambda ()
-                              (interactive)
-                              (snappy-isearch-symbol-at-point nil)))
+(defun snappy-isearch-symbol-at-point-forwards ()
+  (interactive)
+  (snappy-isearch-symbol-at-point t))
+
+(defun snappy-isearch-symbol-at-point-backwards ()
+  (interactive)
+  (snappy-isearch-symbol-at-point nil))
+
+(global-set-key (kbd "M-i") 'snappy-isearch-symbol-at-point-forwards)
+(global-set-key (kbd "M-o") 'snappy-isearch-symbol-at-point-backwards)
 (define-key isearch-mode-map (kbd "M-i") 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "M-o") 'isearch-repeat-backward)
 
