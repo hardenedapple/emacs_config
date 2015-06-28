@@ -339,6 +339,7 @@
 (global-unset-key (kbd "M-o"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x C-z"))
+(global-set-key (kbd "<delete>") 'execute-extended-command)
 
 
 ;;;; Whitespace and indent

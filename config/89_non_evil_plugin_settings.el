@@ -232,6 +232,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s") nil)
 (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
+(define-key paredit-mode-map (kbd "<delete>") nil)
+
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
 (with-eval-after-load 'ielm
@@ -343,7 +345,14 @@ and run a command given by the user in that window.
 (setq smex-history-length 20)
 (setq smex-save-file "~/.emacs.d/smex-items")
 (smex-initialize)
+;; Want to remap the keys I'm currently using for `execute-extended-command',
+;; but leave one just in case everything goes wrong (e.g. my keymappings have
+;; all broken somehow, and `smex' isn't opening, I want to be able to run some
+;; kind of command, so leave <menu> as `execute-extended-command' for this
+;; hypothetical scenario)
 (global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "<delete>") 'smex)
+;;(global-set-key (kbd "<menu>") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 
