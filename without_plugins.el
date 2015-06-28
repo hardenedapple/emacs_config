@@ -10,6 +10,8 @@
                     "~/.emacs.d/config/99_dvorak_keybindings.el"))
   (load conf-file))
 
+;; Color with an existing default emacs theme.
+(load-theme 'wombat)
 
 ;;; New window commands
 ;;;
