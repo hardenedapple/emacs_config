@@ -343,7 +343,10 @@
 (global-unset-key (kbd "M-o"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x C-z"))
-(global-set-key (kbd "<delete>") 'execute-extended-command)
+;; Some general key bindings
+(global-set-key (kbd "<escape>") 'execute-extended-command)
+(global-set-key (kbd "<tab>") 'completion-at-point)
+(global-set-key (kbd "C-M-i") 'indent-for-tab-command)
 
 
 ;;;; Whitespace and indent

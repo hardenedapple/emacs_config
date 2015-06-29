@@ -58,12 +58,12 @@
 (define-minor-mode swift-motion-mode
   "Bind a bunch of single key mappings to motion keys.
 
-Exit this mode with 'q' or '<escape>'"
+Exit this mode with 'q' or '<delete>'"
   :lighter "swift-motion"
   :keymap swift-motion-mode-map
   :global t)
 
-(global-set-key (kbd "<escape>") 'swift-motion-mode)
+(global-set-key (kbd "<delete>") 'swift-motion-mode)
 
 (defvar lisp-motion-mode-map
   (easy-mmode-define-keymap
@@ -91,7 +91,7 @@ Exit this mode with 'q' or '<escape>'"
   :keymap lisp-motion-mode-map
   :require 'lisp)
 
-(define-key lisp-mode-shared-map (kbd "<escape>") 'lisp-motion-mode)
+(define-key lisp-mode-shared-map (kbd "<delete>") 'lisp-motion-mode)
 
 
 ;;;; Colour theme
@@ -328,7 +328,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s") nil)
 (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
-(define-key paredit-mode-map (kbd "<delete>") nil)
+(define-key paredit-mode-map (kbd "<escape>") nil)
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
@@ -384,7 +384,7 @@ paredit functions on the assumption they'll be more robust."
   :keymap paredit-motion-mode-map
   :require 'paredit)
 
-(define-key paredit-mode-map (kbd "<escape>") 'paredit-motion-mode)
+(define-key paredit-mode-map (kbd "<delete>") 'paredit-motion-mode)
 
 
 ;;;; Projectile Settings
@@ -473,7 +473,7 @@ and run a command given by the user in that window.
 ;; kind of command, so leave <menu> as `execute-extended-command' for this
 ;; hypothetical scenario)
 (global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "<delete>") 'smex)
+(global-set-key (kbd "<escape>") 'smex)
 ;;(global-set-key (kbd "<menu>") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
