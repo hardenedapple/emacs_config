@@ -12,10 +12,10 @@
          (cons "'" 'reposition-window)
          (cons "/" 'undo-tree-undo)
          (cons ";" 'jump-to-mark)
-         (cons "<down>" 'windmove-down)
-         (cons "<left>" 'windmove-left)
-         (cons "<right>" 'windmove-right)
-         (cons "<up>" 'windmove-up)
+         (cons (kbd "<down>") 'windmove-down)
+         (cons (kbd "<left>") 'windmove-left)
+         (cons (kbd "<right>") 'windmove-right)
+         (cons (kbd "<up>") 'windmove-up)
          (cons "\\" 'undo-tree-redo)
          (cons "`" 'push-mark-no-activate)
          (cons "a" 'beginning-of-defun)
@@ -79,7 +79,7 @@ Exit this mode with 'q' or '<delete>'"
          (cons "r" 'kill-backward-up-list)
          ;; This would be "h" were I not swapping C-M-h and C-M-p
          (cons "p" 'mark-sexp)
-         (cons "<backspace>" 'backward-kill-sexp)
+         (cons (kbd "<backspace>") 'backward-kill-sexp)
          (cons "k" 'kill-sexp)
          (cons "q" 'lisp-motion-mode))
    "lisp-motion-mode" nil
