@@ -345,7 +345,7 @@
 (global-unset-key (kbd "C-x C-z"))
 ;; Some general key bindings
 (global-set-key (kbd "<escape>") 'execute-extended-command)
-(global-set-key (kbd "<tab>") 'completion-at-point)
+(global-set-key (kbd "TAB") 'completion-at-point)
 (global-set-key (kbd "C-M-i") 'indent-for-tab-command)
 
 
