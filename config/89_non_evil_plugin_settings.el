@@ -43,15 +43,10 @@
          (cons "y" 'yank)
          (cons "z" 'View-scroll-half-page-backward)
          (cons "~" 'toggle-current-mark-activation)
+         (cons "." 'find-this-definition)
+         (cons "," 'pop-tag-mark)
          ;; Quit the current mode
-         (cons "q" 'swift-motion-mode)
-         ;; '.' and ',' both run their respective macros M-. and M-, i.e. they follow
-         ;; whatever this mapping is doing in the current mode.
-         ;; This is a very dirty hack, and I'm going to remove it later
-         (cons "." (lambda ()
-                     (interactive) (kmacro-exec-ring-item (quote ("\256" 0 "%d")) 1)))
-         (cons "," (lambda ()
-                     (interactive) (kmacro-exec-ring-item (quote ("\254" 0 "%d")) 1))))
+         (cons "q" 'swift-motion-mode))
    "swift-motion-mode" nil
    (list :suppress t)))
 
@@ -127,21 +122,9 @@ Exit this mode with 'q' or '<delete>'"
 
 ;;;; Elisp Slime Nav Settings
 ;;;;
-;; Elisp find thing at point in other window.
-(defun elisp-slime-nav-find-thing-at-point-other-window ()
-  "Go to definition of `symbol-at-point' in other window."
-  (interactive)
-  (let ((current-symbol (thing-at-point 'symbol t)))
-    (run-function-other-window #'elisp-slime-nav-find-elisp-thing-at-point nil
-                               current-symbol)))
-
-(define-key elisp-slime-nav-mode-map (kbd "C-x 4 M-.")
-  'elisp-slime-nav-find-thing-at-point-other-window)
-
-;; Left click finds elisp thing
-(define-key elisp-slime-nav-mode-map [mouse-1]
-  (mouse-function-on-symbol
-   (elisp-slime-nav-find-elisp-thing-at-point current-symbol)))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (setq find-definition-function 'elisp-slime-nav-find-elisp-thing-at-point)))
 
 (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
@@ -500,10 +483,10 @@ and run a command given by the user in that window.
   ;; Remove the M-? mapping for `slime-edit-uses', can still use M-_,
   ;; but `paredit-convolute-sexp' is now unshadowed.
   (define-key slime-mode-map (kbd "M-?") nil)
-  (define-key slime-mode-map [mouse-1]
-    (mouse-function-on-symbol (slime-edit-definition current-symbol)))
   (define-key slime-mode-map [mouse-3]
-    (lambda (event) (interactive "e") (slime-pop-find-definition-stack))))
+    (lambda (event) (interactive "e") (slime-pop-find-definition-stack)))
+  (add-hook 'slime-mode-hook
+            (lambda () (setq find-definition-function 'slime-edit-definition))))
 
 (with-eval-after-load 'slime-repl
   (define-key slime-repl-mode-map "(" 'self-insert-command)
