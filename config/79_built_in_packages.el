@@ -211,8 +211,8 @@ as yet."
 
 (defun filesets-remove (name)
   "Remove a fileset from `filesets-data'"
-  (interactive (list (completing-read "Remove fileset: " filesets-data nil t)))
-  (setq filesets-data (delete* name filesets-data :test #'string= :key #'car)))
+   (interactive (list (completing-read "Remove fileset: " filesets-data nil t)))
+   (setq filesets-data (delete* name filesets-data :test #'string= :key #'car)))
 
 
 ;;;; Flymake Settings
@@ -285,9 +285,14 @@ as yet."
 (setq ido-everywhere 1)
 (setq ido-default-buffer-method 'selected-window)
 (ido-mode 1)
-;; This has to be run after the map has been assigned with
-;; `ido-init-completion-maps', which is called (eventually) in `ido-mode'
-(define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)
+;; While this works initially, every time `ido-init-completion-maps' is run (and
+;; hence every time `ido-common-initialisation' is run), then
+;; `ido-common-completion-map' is redefined.
+;; Hence I need to add a hook, and am doing in the recommended hook
+;; `ido-setup-hook' (which is the one used in `ido-read-internal')
+(add-hook 'ido-setup-hook
+          (lambda ()
+            (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
 
 
 ;;;; Imenu Settings
