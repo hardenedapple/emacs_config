@@ -93,12 +93,6 @@ Exit this mode with 'q' or '<delete>'"
 ;;;;
 (load-theme 'monokai)
 
-;;;; Wrap Region Settings
-;;;;
-;;; Have to be before paredit so the exception works
-(wrap-region-global-mode t)
-(add-to-list 'wrap-region-except-modes 'paredit-mode 'tex-mode)
-
 
 ;;;; Ace jump Mode Settings
 ;;;;
@@ -276,6 +270,14 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (setq nameses-ido-mode t)
 
 
+;;;; Wrap Region Settings
+;;;;
+;;; Have to be before paredit so the exception works
+;;; wrap-region and paredit-mode don't play nicely together, so I have their
+;;; settings next to each other.
+(add-hook 'python-mode-hook 'wrap-region-mode)
+(add-hook 'c-mode-hook 'wrap-region-mode)
+
 ;;;; Paredit Settings
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
@@ -312,6 +314,29 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "<escape>") nil)
+;; When writing lisp I use the braces very often, hence I don't want to have to
+;; press shift each time I want them.
+(define-key paredit-mode-map "9" 'paredit-open-round)
+(define-key paredit-mode-map "(" (lambda (&optional arg) (interactive "p")
+                                   (insert-char 57 arg)))
+(define-key paredit-mode-map "0" 'paredit-close-round)
+(define-key paredit-mode-map ")" (lambda (&optional arg) (interactive "p")
+                                   (insert-char 48 arg)))
+(define-key paredit-mode-map "3" (lambda (&optional arg) (interactive "p")
+                                   (insert-char ?\# arg)))
+(define-key paredit-mode-map "#" (lambda (&optional arg) (interactive "p")
+                                   (insert-char 51 arg)))
+(define-key paredit-mode-map ";" (lambda (&optional arg) (interactive "p")
+                                   (insert-char ?\: arg)))
+(define-key paredit-mode-map ":" (lambda (&optional arg) (interactive "p")
+                                   (insert-char ?\; arg)))
+(define-key paredit-mode-map "&" (lambda (&optional arg) (interactive "p")
+                                   (insert-char 55 arg)))
+(define-key paredit-mode-map "7" (lambda (&optional arg) (interactive "p")
+                                   (insert-char ?\& arg)))
+
+
+
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
