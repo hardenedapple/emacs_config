@@ -98,7 +98,11 @@ stops the current python process using `delete-process' rather than
       (python-shell-get-or-create-process
        (mapconcat 'identity (process-command python-process) " ")))))
 
-(define-key emacs-lisp-mode-map (kbd "<C-return>") 'upsexp-newline-and-parentheses)
+;;; Python doesn't use semicolons very much, so make them all colons
+(add-hook 'python-mode-hook
+          (lambda ()
+            (define-key python-mode-map ";" (insert-this-char ?:))
+            (define-key python-mode-map ":" (insert-this-char ?\;))))
 
 ;;;; Scheme Settings
 ;;;;
