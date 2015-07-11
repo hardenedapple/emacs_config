@@ -417,3 +417,34 @@ called automatically on save."
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
+
+
+;;;; Programming shifted number keys
+;;;;
+(defmacro insert-this-char (character)
+  `(lambda (&optional arg)
+     (interactive "p")
+     (insert-char ,character arg)))
+
+(define-key prog-mode-map "1" (insert-this-char ?!))
+(define-key prog-mode-map "!" (insert-this-char 49))
+(define-key prog-mode-map "2" (insert-this-char ?@))
+(define-key prog-mode-map "@" (insert-this-char 50))
+(define-key prog-mode-map "3" (insert-this-char ?#))
+(define-key prog-mode-map "#" (insert-this-char 51))
+(define-key prog-mode-map "4" (insert-this-char ?$))
+(define-key prog-mode-map "$" (insert-this-char 52))
+(define-key prog-mode-map "5" (insert-this-char ?%))
+(define-key prog-mode-map "%" (insert-this-char 53))
+(define-key prog-mode-map "6" (insert-this-char ?^))
+(define-key prog-mode-map "^" (insert-this-char 54))
+(define-key prog-mode-map "7" (insert-this-char ?&))
+(define-key prog-mode-map "&" (insert-this-char 55))
+(define-key prog-mode-map "8" (insert-this-char ?*))
+(define-key prog-mode-map "*" (insert-this-char 56))
+(define-key prog-mode-map "9" (insert-this-char ?\())
+(define-key prog-mode-map "(" (insert-this-char 57))
+(define-key prog-mode-map "0" (insert-this-char ?\)))
+(define-key prog-mode-map ")" (insert-this-char 48))
+(define-key prog-mode-map "_" (insert-this-char ?-))
+(define-key prog-mode-map "-" (insert-this-char ?_))

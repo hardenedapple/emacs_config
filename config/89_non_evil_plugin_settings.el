@@ -317,24 +317,9 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;; When writing lisp I use the braces very often, hence I don't want to have to
 ;; press shift each time I want them.
 (define-key paredit-mode-map "9" 'paredit-open-round)
-(define-key paredit-mode-map "(" (lambda (&optional arg) (interactive "p")
-                                   (insert-char 57 arg)))
 (define-key paredit-mode-map "0" 'paredit-close-round)
-(define-key paredit-mode-map ")" (lambda (&optional arg) (interactive "p")
-                                   (insert-char 48 arg)))
-(define-key paredit-mode-map "3" (lambda (&optional arg) (interactive "p")
-                                   (insert-char ?\# arg)))
-(define-key paredit-mode-map "#" (lambda (&optional arg) (interactive "p")
-                                   (insert-char 51 arg)))
-(define-key paredit-mode-map ";" (lambda (&optional arg) (interactive "p")
-                                   (insert-char ?\: arg)))
-(define-key paredit-mode-map ":" (lambda (&optional arg) (interactive "p")
-                                   (insert-char ?\; arg)))
-(define-key paredit-mode-map "&" (lambda (&optional arg) (interactive "p")
-                                   (insert-char 55 arg)))
-(define-key paredit-mode-map "7" (lambda (&optional arg) (interactive "p")
-                                   (insert-char ?\& arg)))
-
+(define-key paredit-mode-map "-" 'self-insert-command)
+(define-key paredit-mode-map "_" 'self-insert-command)
 
 
 
