@@ -318,6 +318,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;; press shift each time I want them.
 (define-key paredit-mode-map "9" 'paredit-open-round)
 (define-key paredit-mode-map "0" 'paredit-close-round)
+(define-key paredit-mode-map "(" (insert-this-char 57))
+(define-key paredit-mode-map ")" (insert-this-char 48))
 (define-key paredit-mode-map "-" 'self-insert-command)
 (define-key paredit-mode-map "_" 'self-insert-command)
 
@@ -499,8 +501,8 @@ and run a command given by the user in that window.
             (lambda () (setq find-definition-function 'slime-edit-definition))))
 
 (with-eval-after-load 'slime-repl
-  (define-key slime-repl-mode-map "(" 'self-insert-command)
-  (define-key slime-repl-mode-map ")" 'self-insert-command))
+  (define-key slime-repl-mode-map "9" (insert-this-char ?\())
+  (define-key slime-repl-mode-map "0" (insert-this-char ?\))))
 
 (setq slime-autodoc-use-multiline-p t)
 
