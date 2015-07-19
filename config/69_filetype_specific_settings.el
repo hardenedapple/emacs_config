@@ -61,6 +61,9 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 (define-key lisp-mode-shared-map (kbd "<C-return>") 'upsexp-newline-and-parentheses)
 (define-key lisp-mode-shared-map (kbd "M-r") 'kill-backward-up-list)
 (define-key lisp-mode-shared-map (kbd "M-s M-s") 'delete-pair)
+;; Override the prog-mode remappings between - and _ in lisp mode
+(define-key lisp-mode-shared-map "-" 'self-insert-command)
+(define-key lisp-mode-shared-map "_" 'self-insert-command)
 
 ;; Elisp specifically
 (with-eval-after-load 'lisp-mode
