@@ -423,6 +423,7 @@ called automatically on save."
 ;;;;
 (defmacro insert-this-char (character)
   `(lambda (&optional arg)
+     "MY INSERT-CHAR WRAPPER"
      (interactive "p")
      (insert-char ,character arg)))
 
@@ -446,7 +447,8 @@ and returns `self-insert-command' to represent this."
     (cond ((eq current-binding 'self-insert-command)
            (lexical-let ((this-char (aref key 0)))
              (insert-this-char this-char)))
-          ((and (listp current-binding) (eq 'lambda (car current-binding)))
+          ((and (listp current-binding)
+                (equal "MY INSERT-CHAR WRAPPER" (documentation current-binding)))
            'self-insert-command)
           (t current-binding))))
 
