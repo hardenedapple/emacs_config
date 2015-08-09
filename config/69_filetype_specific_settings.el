@@ -41,30 +41,11 @@ that buffer, and follows it."
             (set-fill-column 125)))  ; usually only write latex on large screens
 
 (with-eval-after-load 'tex-mode
-    (define-key latex-mode-map "1" (insert-this-char ?!))
-    (define-key latex-mode-map "!" (insert-this-char 49))
-    (define-key latex-mode-map "2" (insert-this-char ?@))
-    (define-key latex-mode-map "@" (insert-this-char 50))
-    (define-key latex-mode-map "3" (insert-this-char ?#))
-    (define-key latex-mode-map "#" (insert-this-char 51))
-    (define-key latex-mode-map "4" (insert-this-char ?$))
-    (define-key latex-mode-map "$" (insert-this-char 52))
-    (define-key latex-mode-map "5" (insert-this-char ?%))
-    (define-key latex-mode-map "%" (insert-this-char 53))
-    (define-key latex-mode-map "6" (insert-this-char ?^))
-    (define-key latex-mode-map "^" (insert-this-char 54))
-    (define-key latex-mode-map "7" (insert-this-char ?&))
-    (define-key latex-mode-map "&" (insert-this-char 55))
-    (define-key latex-mode-map "8" (insert-this-char ?*))
-    (define-key latex-mode-map "*" (insert-this-char 56))
-    (define-key latex-mode-map "9" (insert-this-char ?\())
-    (define-key latex-mode-map "(" (insert-this-char 57))
-    (define-key latex-mode-map "0" (insert-this-char ?\)))
-    (define-key latex-mode-map ")" (insert-this-char 48))
-    (define-key latex-mode-map "{" (insert-this-char ?\[))
-    (define-key latex-mode-map "[" (insert-this-char ?\{))
-    (define-key latex-mode-map "}" (insert-this-char ?\]))
-    (define-key latex-mode-map "]" (insert-this-char ?\})))
+  (add-hook 'latex-mode-hook
+            (lambda ()
+              (setq-local keyswap-pairs
+                          (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\}))))
+              (toggle-shifted-keys))))
 
 
 ;;;; Lisp Settings
@@ -87,15 +68,23 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 (define-key lisp-mode-shared-map (kbd "<C-return>") 'upsexp-newline-and-parentheses)
 (define-key lisp-mode-shared-map (kbd "M-r") 'kill-backward-up-list)
 (define-key lisp-mode-shared-map (kbd "M-s M-s") 'delete-pair)
-;; Override the prog-mode remappings between - and _ in lisp mode
-(define-key lisp-mode-shared-map "-" 'self-insert-command)
-(define-key lisp-mode-shared-map "_" 'self-insert-command)
 
-;; Elisp specifically
+
+(defun keyswap-lisp-mode-exception ()
+  "Hook so `toggle-shifted-keys' ignores - and _"
+  (message "My hook is being run")
+  (define-key (current-local-map) "-" 'self-insert-command)
+  (define-key (current-local-map) "_" 'self-insert-command)
+  (setq-local keyswap-pairs
+              (remove '(?- . ?_) keyswap-pairs)))
+
 (with-eval-after-load 'lisp-mode
   (define-key emacs-lisp-mode-map [mouse-3]
     (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
-                              (pop-tag-mark))))
+                              (pop-tag-mark)))
+  (add-hook 'lisp-interaction-mode-hook 'keyswap-lisp-mode-exception)
+  (add-hook 'emacs-lisp-mode-hook 'keyswap-lisp-mode-exception)
+  (add-hook 'lisp-mode-hook 'keyswap-lisp-mode-exception))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
@@ -130,8 +119,10 @@ stops the current python process using `delete-process' rather than
 ;;; Python doesn't use semicolons very much, so make them all colons
 (add-hook 'python-mode-hook
           (lambda ()
-            (define-key python-mode-map ";" (insert-this-char ?:))
-            (define-key python-mode-map ":" (insert-this-char ?\;))))
+            (define-key (current-local-map) ";" (insert-this-char ?:))
+            (define-key (current-local-map) ":" (insert-this-char ?\;))
+            (setq-local keyswap-pairs
+                        (append keyswap-pairs '((?: . ?\;))))))
 
 ;;;; Scheme Settings
 ;;;;

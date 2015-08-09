@@ -272,11 +272,11 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Wrap Region Settings
 ;;;;
-;;; Have to be before paredit so the exception works
-;;; wrap-region and paredit-mode don't play nicely together, so I have their
-;;; settings next to each other.
-(add-hook 'python-mode-hook 'wrap-region-mode)
-(add-hook 'c-mode-hook 'wrap-region-mode)
+;; `wrap-region' and my functions for toggling shifted keys don't play nicely
+;; together, hence I can't have `wrap-region' in programming modes.
+;; However, having it in modes for XML and HTML is still useful.
+(add-hook 'sgml-mode-hook 'wrap-region-mode)
+(add-hook 'nxml-mode-hook 'wrap-region-mode)
 
 ;;;; Paredit Settings
 ;;;;

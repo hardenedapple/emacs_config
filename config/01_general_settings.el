@@ -426,25 +426,92 @@ called automatically on save."
      (interactive "p")
      (insert-char ,character arg)))
 
-(define-key prog-mode-map "1" (insert-this-char ?!))
-(define-key prog-mode-map "!" (insert-this-char 49))
-(define-key prog-mode-map "2" (insert-this-char ?@))
-(define-key prog-mode-map "@" (insert-this-char 50))
-(define-key prog-mode-map "3" (insert-this-char ?#))
-(define-key prog-mode-map "#" (insert-this-char 51))
-(define-key prog-mode-map "4" (insert-this-char ?$))
-(define-key prog-mode-map "$" (insert-this-char 52))
-(define-key prog-mode-map "5" (insert-this-char ?%))
-(define-key prog-mode-map "%" (insert-this-char 53))
-(define-key prog-mode-map "6" (insert-this-char ?^))
-(define-key prog-mode-map "^" (insert-this-char 54))
-(define-key prog-mode-map "7" (insert-this-char ?&))
-(define-key prog-mode-map "&" (insert-this-char 55))
-(define-key prog-mode-map "8" (insert-this-char ?*))
-(define-key prog-mode-map "*" (insert-this-char 56))
-(define-key prog-mode-map "9" (insert-this-char ?\())
-(define-key prog-mode-map "(" (insert-this-char 57))
-(define-key prog-mode-map "0" (insert-this-char ?\)))
-(define-key prog-mode-map ")" (insert-this-char 48))
-(define-key prog-mode-map "_" (insert-this-char ?-))
-(define-key prog-mode-map "-" (insert-this-char ?_))
+(defun equivalent-current-binding (key)
+  "NOTE -- this function is broken but useful.
+At the moment I can't find a way to fix it, but I'm using it with all its bugs
+anyway.
+
+Finds the command that is run when `key' is pressed.
+
+If that command is `self-insert-command', then returns a `lambda' function
+inserting the equivalent key.
+
+If the  command is some function that calls `self-insert-command' internally
+then this function does not behave as expected. (This is a bug, that I don't
+know how to fix as yet.)
+
+If the command is a lambda list, assumes it is a closure inserting a character,
+and returns `self-insert-command' to represent this."
+  (let ((current-binding (key-binding key)))
+    (cond ((eq current-binding 'self-insert-command)
+           (lexical-let ((this-char (aref key 0)))
+             (insert-this-char this-char)))
+          ((and (listp current-binding) (eq 'lambda (car current-binding)))
+           'self-insert-command)
+          (t current-binding))))
+
+(defmacro anaphoric-get-bindings (left-key right-key keymap &rest body)
+  (declare (indent 3))
+  `(let ((left-function (equivalent-current-binding ,left-key))
+         (right-function (equivalent-current-binding ,right-key))
+         (keymap (or ,keymap (current-local-map))))
+     ,@body))
+
+(defun swap-these-keys (left-key right-key &optional keymap)
+  "Swaps the active bindings of LEFT-KEY and RIGHT-KEY.
+
+LEFT-KEY and RIGHT-KEY should be two objects valid in a call to `key-binding'.
+Makes a new map in the local keymap, as used by `local-set-key'.
+
+If either mapping is bound to `self-insert-command', binds the other to a `lambda'
+function using `insert-char', and assumes the first is a vector of a single
+character to insert.
+
+If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
+  (anaphoric-get-bindings left-key right-key keymap
+    ;; By defaulting to `current-local-map' I can use a buffer local map by
+    ;; default instead of making everything set up
+    (define-key keymap left-key right-function)
+    (define-key keymap right-key left-function)))
+
+(defvar-local keyswap-pairs
+  (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
+        '(?6 . ?^) '(?7 . ?&) '(?8 . ?*) '(?9 . ?\() '(?0 . ?\))
+        '(?- . ?_))
+  "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
+
+(defvar-local keyswap-currently-shifted nil
+  "Flag variable determining whether keys are default or not.")
+
+(defun dumb-swapping-method (&optional arg)
+  "The easiest way to "
+  (dolist (key-pair keyswap-pairs)
+    (swap-these-keys (vector (car key-pair)) (vector (cdr key-pair)))))
+
+(defvar-local keyswap-function 'dumb-swapping-method
+  "Function that should be called to toggle the meaning of the keys in
+`keyswap-pairs'.")
+
+(defun keyswap-reset (left-key right-key)
+  "Attempts to put the local mapping for LEFT-KEY and RIGHT-KEY back to before
+they were when swapped.
+
+Has the same deficiencies as `equivalent-current-binding'."
+  (anaphoric-get-bindings left-key right-key nil
+    (define-key keymap right-key
+      (and (not (eq left-function 'self-insert-command)) left-function))
+    (define-key keymap left-key
+      (and (not (eq right-function 'self-insert-command)) right-function))))
+
+(defun toggle-shifted-keys (&optional arg)
+  "Swaps the bindings between each key pair in `keyswap-pairs'.
+
+Does this by calling `keyswap-function', which has the default
+value of `dumb-swapping-method'."
+  (interactive)
+  (funcall keyswap-function arg)
+  (setq keyswap-currently-shifted (not keyswap-currently-shifted)))
+
+;; Binding things in `prog-mode-map', which have to be overridden by minor modes
+;; for special bindings.
+(add-hook 'prog-mode-hook 'toggle-shifted-keys)
