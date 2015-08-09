@@ -371,7 +371,7 @@ don't have the package installed."
         (goto-char (point-min)))
       (while (re-search-forward (concat "\\_<" oldsymbol "\\_>")
               (if arg (save-excursion (end-of-defun) (point)) nil) t nil)
-        (replace-match newsymbol nil t) (cl-incf counter 1))
+        (replace-match newsymbol t) (cl-incf counter 1))
       (message "Have replaced %d matches" counter))))
 
 (global-set-key (kbd "M-'") 'symbol-replace-this)
