@@ -325,10 +325,11 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
             (define-key paredit-mode-map ")" nil)
             (let ((open-mapping (if keyswap-currently-shifted "9" "("))
                   (close-mapping (if keyswap-currently-shifted "0" ")")))
-              (define-key (current-local-map) open-mapping 'paredit-open-round)
-              (define-key (current-local-map) close-mapping 'paredit-close-round))))
-
-
+              ;; Sometimes there isn't even a buffer local map defined yet,
+              ;; leave that to the mode-specific maps.
+              (when (keymapp (current-local-map))
+                (define-key (current-local-map) open-mapping 'paredit-open-round)
+                (define-key (current-local-map) close-mapping 'paredit-close-round)))))
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
@@ -505,9 +506,19 @@ and run a command given by the user in that window.
   (add-hook 'slime-mode-hook
             (lambda () (setq find-definition-function 'slime-edit-definition))))
 
+(defun keyswap-hook-for-slime-repl ()
+  "Hook to handle swapping keys in the slime repl."
+  (unless (keymapp (current-local-map))
+    (use-local-map (make-sparse-keymap))))
+
 (with-eval-after-load 'slime-repl
-  (define-key slime-repl-mode-map "9" (insert-this-char ?\())
-  (define-key slime-repl-mode-map "0" (insert-this-char ?\))))
+  ;; These hooks have to be added in a certain order.
+  ;; The buffer local map has to be created first, then the exception created,
+  ;; then the keys toggled.
+  ;; I use the APPEND argument to put them after one another so the order is clear
+  (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
+  (add-hook 'slime-repl-mode-hook 'keyswap-lisp-mode-exception t)
+  (add-hook 'slime-repl-mode-hook 'toggle-shifted-keys t))
 
 (setq slime-autodoc-use-multiline-p t)
 
