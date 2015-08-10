@@ -33,7 +33,10 @@
         evil-previous-line
         evil-visual-char
         exchange-point-and-mark-keep-activation
+        indent-new-comment-line
+        insert-pair
         jump-char-backward
+        jump-char-forward
         jump-char-process-char
         kill-sexp
         open-line-below
@@ -51,6 +54,7 @@
         paredit-forward-kill-word
         paredit-join-sexps
         paredit-kill
+        paredit-open-round
         paredit-raise-sexp
         paredit-reindent-defun
         paredit-splice-sexp
@@ -58,6 +62,7 @@
         paredit-wrap-round
         slime-autodoc-space
         slime-space
+        smart-tab
         toggle-current-mark-activation
         transpose-sexps
         ))
