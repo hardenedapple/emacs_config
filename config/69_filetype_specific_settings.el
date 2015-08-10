@@ -82,9 +82,11 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   (define-key emacs-lisp-mode-map [mouse-3]
     (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
                               (pop-tag-mark)))
-  (add-hook 'lisp-interaction-mode-hook 'keyswap-lisp-mode-exception)
   (add-hook 'emacs-lisp-mode-hook 'keyswap-lisp-mode-exception)
   (add-hook 'lisp-mode-hook 'keyswap-lisp-mode-exception))
+(with-eval-after-load 'ielm
+    (add-hook 'ielm-mode-hook 'keyswap-lisp-mode-exception)
+    (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
