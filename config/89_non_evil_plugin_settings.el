@@ -314,21 +314,27 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "<escape>") nil)
-;; When writing lisp I use the braces very often, hence I don't want to have to
-;; press shift each time I want them.
-(define-key paredit-mode-map "9" 'paredit-open-round)
-(define-key paredit-mode-map "0" 'paredit-close-round)
-(define-key paredit-mode-map "(" (insert-this-char 57))
-(define-key paredit-mode-map ")" (insert-this-char 48))
-(define-key paredit-mode-map "-" 'self-insert-command)
-(define-key paredit-mode-map "_" 'self-insert-command)
+
+(add-hook 'paredit-mode-hook
+          (lambda ()
+            ;; Once this hook is being run, sometimes the keys have already been
+            ;; swapped.
+            ;; However, the swapping keys function completely ignores
+            ;; `paredit-mode-map', so we have to put those mappings in
+            ;; `current-local-map'.
+            (define-key paredit-mode-map "(" nil)
+            (define-key paredit-mode-map ")" nil)
+            (let ((open-mapping (if keyswap-currently-shifted "9" "("))
+                  (close-mapping (if keyswap-currently-shifted "0" ")")))
+              (define-key (current-local-map) open-mapping 'paredit-open-round)
+              (define-key (current-local-map) close-mapping 'paredit-close-round))))
 
 
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
 (with-eval-after-load 'ielm
-    (define-key ielm-map (kbd "C-q") 'comint-history-isearch-backward-regexp))
+  (define-key ielm-map (kbd "C-q") 'comint-history-isearch-backward-regexp))
 
 ;;; paredit with eldoc
 (eldoc-add-command
