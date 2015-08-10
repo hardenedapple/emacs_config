@@ -119,8 +119,7 @@ stops the current python process using `delete-process' rather than
 ;;; Python doesn't use semicolons very much, so make them all colons
 (add-hook 'python-mode-hook
           (lambda ()
-            (define-key (current-local-map) ";" (insert-this-char ?:))
-            (define-key (current-local-map) ":" (insert-this-char ?\;))
+            (swap-these-keys [?\;] [?:])
             (setq-local keyswap-pairs
                         (append keyswap-pairs '((?: . ?\;))))))
 
