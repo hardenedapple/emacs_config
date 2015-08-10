@@ -72,7 +72,6 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 
 (defun keyswap-lisp-mode-exception ()
   "Hook so `toggle-shifted-keys' ignores - and _"
-  (message "My hook is being run")
   (define-key (current-local-map) "-" 'self-insert-command)
   (define-key (current-local-map) "_" 'self-insert-command)
   (setq-local keyswap-pairs

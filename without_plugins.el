@@ -1,5 +1,6 @@
 (require 'help-mode)
 (require 'ibuffer)
+(require 'cl)
 ;;;; Load Dvorak keybindings
 (dolist (conf-file (list
                     "~/.emacs.d/config/01_general_settings.el"
