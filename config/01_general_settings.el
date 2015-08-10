@@ -421,12 +421,6 @@ called automatically on save."
 
 ;;;; Programming shifted number keys
 ;;;;
-(defmacro insert-this-char (character)
-  `(lambda (&optional arg)
-     "MY INSERT-CHAR WRAPPER"
-     (interactive "p")
-     (insert-char ,character arg)))
-
 (defmacro run-with-specified-command (new-event command)
   "Returns a `lambda' function that runs command with
 `last-command-event' set to `new-event'"
