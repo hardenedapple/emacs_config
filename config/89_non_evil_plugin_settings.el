@@ -282,8 +282,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
                 emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
-                lisp-interaction-mode-hook scheme-mode-hook
-                slime-repl-mode-hook))
+                scheme-mode-hook slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
 (defun paredit--is-at-end-of-list ()
