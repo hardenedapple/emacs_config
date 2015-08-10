@@ -497,17 +497,6 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
   "Function that should be called to toggle the meaning of the keys in
 `keyswap-pairs'.")
 
-(defun keyswap-reset (left-key right-key)
-  "Attempts to put the local mapping for LEFT-KEY and RIGHT-KEY back to before
-they were when swapped.
-
-Has the same deficiencies as `equivalent-current-binding'."
-  (anaphoric-get-bindings left-key right-key nil
-    (define-key keymap right-key
-      (and (not (eq left-function 'self-insert-command)) left-function))
-    (define-key keymap left-key
-      (and (not (eq right-function 'self-insert-command)) right-function))))
-
 (defun toggle-shifted-keys (&optional arg)
   "Swaps the bindings between each key pair in `keyswap-pairs'.
 
