@@ -526,3 +526,18 @@ value of `dumb-swapping-method'."
 ;; Binding things in `prog-mode-map', which have to be overridden by minor modes
 ;; for special bindings.
 (add-hook 'prog-mode-hook 'toggle-shifted-keys)
+
+;; Some handy functions to wrap a currently highlighted region `wrap-region'
+;; when it doesn't play nicely with my `toggle-shifted-keys' function
+;;
+;; TODO -- make commands that checks if the region is currently active, and if
+;; so run `insert-pair', else insert the character.  Then could bind these in
+;; the swapping functions.
+;;
+;; (could also have `move-past-close-and-reindent' for the closing character of
+;; each, and always insert a pair (instead of a single character) but I don't
+;; think I want that).
+(global-set-key (kbd "M-[") 'insert-pair)
+(global-set-key (kbd "M-{") 'insert-pair)
+(global-set-key (kbd "M-\"") 'insert-pair)
+(global-set-key (kbd "M-]") 'delete-pair)
