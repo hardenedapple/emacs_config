@@ -427,30 +427,39 @@ called automatically on save."
      (interactive "p")
      (insert-char ,character arg)))
 
+(defmacro run-with-specified-command (new-event command)
+  "Returns a `lambda' function that runs command with
+`last-command-event' set to `new-event'"
+  `(lambda (&optional arg return-command)
+     "MY CHAR COMMAND WRAPPER"
+     (interactive "p")
+     (if return-command
+         ,command
+       (let ((last-command-event ,new-event))
+         (call-interactively ,command)))))
+
 (defun equivalent-current-binding (key)
   "NOTE -- this function is broken but useful.
-At the moment I can't find a way to fix it, but I'm using it with all its bugs
-anyway.
+
+At the moment I can't find a way to fix it, but I'm using it with
+all its kludges anyway.
 
 Finds the command that is run when `key' is pressed.
 
-If that command is `self-insert-command', then returns a `lambda' function
-inserting the equivalent key.
+If it's a function with the `documentation' \"MY CHAR COMMAND
+WRAPPER\" assumes it's a wrapper created with
+`run-with-specified-command' and returns the result of (command
+nil t).
 
-If the  command is some function that calls `self-insert-command' internally
-then this function does not behave as expected. (This is a bug, that I don't
-know how to fix as yet.)
-
-If the command is a lambda list, assumes it is a closure inserting a character,
-and returns `self-insert-command' to represent this."
+Otherwise creates a `lambda' function using
+`run-with-specified-command' that runs the command bound under
+the false environment where `last-command-event' is KEY"
   (let ((current-binding (key-binding key)))
-    (cond ((eq current-binding 'self-insert-command)
-           (lexical-let ((this-char (aref key 0)))
-             (insert-this-char this-char)))
-          ((and (listp current-binding)
-                (equal "MY INSERT-CHAR WRAPPER" (documentation current-binding)))
-           'self-insert-command)
-          (t current-binding))))
+    (if (and (listp current-binding)
+             (string-equal "MY CHAR COMMAND WRAPPER" (documentation current-binding)))
+        (funcall current-binding nil t)
+      (lexical-let ((current-key (aref key 0)) (old-binding current-binding))
+        (run-with-specified-command current-key old-binding)))))
 
 (defmacro anaphoric-get-bindings (left-key right-key keymap &rest body)
   (declare (indent 3))
