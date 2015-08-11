@@ -83,6 +83,10 @@ https://github.com/Malabarba/speed-of-thought-lisp"
                               (pop-tag-mark)))
   (add-hook 'emacs-lisp-mode-hook 'keyswap-lisp-mode-exception)
   (add-hook 'lisp-mode-hook 'keyswap-lisp-mode-exception))
+
+(add-hook 'eval-expression-minibuffer-setup-hook 'toggle-shifted-keys)
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-lisp-mode-exception)
+
 (with-eval-after-load 'ielm
     (add-hook 'ielm-mode-hook 'keyswap-lisp-mode-exception)
     (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
