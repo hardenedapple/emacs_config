@@ -506,6 +506,20 @@ value of `dumb-swapping-method'."
   (funcall keyswap-function arg)
   (setq keyswap-currently-shifted (not keyswap-currently-shifted)))
 
+(defun keyswap-include-braces ()
+  "Hook so `toggle-shifted-keys' includes {,[, and },]"
+  (swap-these-keys [?\[] [?\{])
+  (swap-these-keys [?\]] [?\}])
+  (setq-local keyswap-pairs
+              (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\})))))
+
+(defun keyswap-tac-underscore-exception ()
+  "Hook so `toggle-shifted-keys' ignores - and _"
+  (define-key (current-local-map) "-" 'self-insert-command)
+  (define-key (current-local-map) "_" 'self-insert-command)
+  (setq-local keyswap-pairs
+              (remove '(?- . ?_) keyswap-pairs)))
+
 ;; Binding things in `prog-mode-map', which have to be overridden by minor modes
 ;; for special bindings.
 (add-hook 'prog-mode-hook 'toggle-shifted-keys)
@@ -513,14 +527,10 @@ value of `dumb-swapping-method'."
 ;; Some handy functions to wrap a currently highlighted region `wrap-region'
 ;; when it doesn't play nicely with my `toggle-shifted-keys' function
 ;;
-;; TODO -- make commands that checks if the region is currently active, and if
-;; so run `insert-pair', else insert the character.  Then could bind these in
-;; the swapping functions.
-;;
 ;; (could also have `move-past-close-and-reindent' for the closing character of
 ;; each, and always insert a pair (instead of a single character) but I don't
 ;; think I want that).
 (global-set-key (kbd "M-[") 'insert-pair)
+(global-set-key (kbd "M-]") 'delete-pair)
 (global-set-key (kbd "M-{") 'insert-pair)
 (global-set-key (kbd "M-\"") 'insert-pair)
-(global-set-key (kbd "M-]") 'delete-pair)

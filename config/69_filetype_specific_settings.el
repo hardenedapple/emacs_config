@@ -41,11 +41,9 @@ that buffer, and follows it."
             (set-fill-column 125)))  ; usually only write latex on large screens
 
 (with-eval-after-load 'tex-mode
-  (add-hook 'latex-mode-hook
-            (lambda ()
-              (setq-local keyswap-pairs
-                          (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\}))))
-              (toggle-shifted-keys))))
+  ;; Note -- order here is important
+  (add-hook 'latex-mode-hook 'toggle-shifted-keys t)
+  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
 
 
 ;;;; Lisp Settings
@@ -70,25 +68,18 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 (define-key lisp-mode-shared-map (kbd "M-s M-s") 'delete-pair)
 
 
-(defun keyswap-lisp-mode-exception ()
-  "Hook so `toggle-shifted-keys' ignores - and _"
-  (define-key (current-local-map) "-" 'self-insert-command)
-  (define-key (current-local-map) "_" 'self-insert-command)
-  (setq-local keyswap-pairs
-              (remove '(?- . ?_) keyswap-pairs)))
-
 (with-eval-after-load 'lisp-mode
   (define-key emacs-lisp-mode-map [mouse-3]
     (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
                               (pop-tag-mark)))
-  (add-hook 'emacs-lisp-mode-hook 'keyswap-lisp-mode-exception)
-  (add-hook 'lisp-mode-hook 'keyswap-lisp-mode-exception))
+  (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 
 (add-hook 'eval-expression-minibuffer-setup-hook 'toggle-shifted-keys)
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-lisp-mode-exception)
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
 
 (with-eval-after-load 'ielm
-    (add-hook 'ielm-mode-hook 'keyswap-lisp-mode-exception)
+    (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
     (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
@@ -132,3 +123,10 @@ stops the current python process using `delete-process' rather than
 ;;;;
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")
+
+;
+;;;; Javascript Settings
+;;;;
+(with-eval-after-load 'js
+  (add-hook 'js-mode-hook 'keyswap-include-braces)
+  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
