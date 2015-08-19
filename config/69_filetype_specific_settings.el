@@ -72,6 +72,10 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   (define-key emacs-lisp-mode-map [mouse-3]
     (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
                               (pop-tag-mark)))
+  ;; Really don't know why emacs makes this a local key binding when there's
+  ;; already a key-binding for it in the global map.
+  (define-key emacs-lisp-mode-map (kbd "M-C-i") nil)
+  (define-key lisp-interaction-mode-map (kbd "M-C-i") nil)
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 
