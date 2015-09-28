@@ -15,7 +15,7 @@
   (package-refresh-contents))
 
 (let ((download-only '(monokai-theme tangotango-theme))
-      (elpa-packages '(ace-jump-mode arduino-mode buffer-move elisp-slime-nav
+      (elpa-packages '(avy arduino-mode buffer-move elisp-slime-nav
                                      expand-region goto-chg ido-ubiquitous
                                      ido-at-point ido-vertical-mode jump-char
                                      list-register magit monky multiple-cursors

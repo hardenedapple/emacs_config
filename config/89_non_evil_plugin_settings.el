@@ -35,7 +35,7 @@
          (cons "o" 'snappy-isearch-symbol-at-point-backwards)
          (cons "p" 'mark-defun)
          (cons "r" 'indent-region)
-         (cons "s" 'ace-jump-word-mode)
+         (cons "s" 'avy-goto-word-1)
          (cons "t" 'first-error)
          (cons "v" 'View-scroll-half-page-forward)
          (cons "w" 'kill-region)
@@ -96,9 +96,9 @@ Exit this mode with 'q' or '<delete>'"
 
 ;;;; Ace jump Mode Settings
 ;;;;
-(global-set-key (kbd "M-g M-s") 'ace-jump-word-mode)
-(global-set-key (kbd "M-g s") 'ace-jump-word-mode)
-(setq ace-jump-mode-scope 'window)
+(global-set-key (kbd "M-g M-s") 'avy-goto-word-1)
+(global-set-key (kbd "M-g s") 'avy-goto-word-1)
+(setq avy-all-windows 'nil)
 
 
 ;;;; Buffer Move Settings
