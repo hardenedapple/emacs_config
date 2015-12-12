@@ -13,6 +13,10 @@
       auto-save-interval 500)
 
 
+;;;; Disable the bell
+;;;;
+(setq ring-bell-function (lambda () nil))
+
 ;;;; Word motion
 ;;;;
 (global-subword-mode 1)
