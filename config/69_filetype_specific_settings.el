@@ -4,6 +4,10 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
+;;; Use double quotes by default in awk, C, C++ and some others.
+(with-eval-after-load 'cc-vars
+  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
+
 
 ;;;; Comint Mode
 ;;;;

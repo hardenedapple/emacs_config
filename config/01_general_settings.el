@@ -517,6 +517,12 @@ value of `dumb-swapping-method'."
   (setq-local keyswap-pairs
               (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\})))))
 
+(defun keyswap-include-quotes ()
+  "Hook so `toggle-shifted-keys' includes \" and '"
+  (swap-these-keys [?\'] [?\"])
+  (setq-local keyswap-pairs
+              (append keyswap-pairs '((?\' . ?\")))))
+
 (defun keyswap-tac-underscore-exception ()
   "Hook so `toggle-shifted-keys' ignores - and _"
   (define-key (current-local-map) "-" 'self-insert-command)
