@@ -40,9 +40,6 @@ that buffer, and follows it."
 ;;;; Latex Settings
 ;;;;
 (setq latex-run-command "pdflatex")
-(add-hook 'latex-mode-hook
-          (lambda ()
-            (set-fill-column 125)))  ; usually only write latex on large screens
 
 (with-eval-after-load 'tex-mode
   ;; Note -- order here is important
