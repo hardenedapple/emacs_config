@@ -486,7 +486,7 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
 (defvar-local keyswap-pairs
   (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
         '(?6 . ?^) '(?7 . ?&) '(?8 . ?*) '(?9 . ?\() '(?0 . ?\))
-        '(?- . ?_))
+        '(?- . ?_) '(?\~ . ?\~))
   "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
 
 (defvar-local keyswap-currently-shifted nil
