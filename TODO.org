@@ -9,6 +9,13 @@ Slime -- when stepping through functions, buffers move around.
 
 * Things to Do
 ** Monky kill hunk
+** TODO Minibuffer eval and toggle-shifted-keys
+Because the minibuffer eval hook is run every time the minibuffer is opened, but
+the keymap is kept the same between instances, toggling the keybindings in the
+minibuffer hook means each time the minibuffer is used the keybindings are
+different.
+I either need to change the keybindings directly in the minibuffer keymap, or
+find a different hook that's only used on the initial startup.
 There are many things in magit missing in monky, one of the more useful things
 is the ability to kill a single hunk in the diff.
 

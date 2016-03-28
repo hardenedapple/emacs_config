@@ -80,8 +80,17 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 
-(add-hook 'eval-expression-minibuffer-setup-hook 'toggle-shifted-keys)
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
+;;; Turns out that the expression minibuffer runs its setup hook every time it
+;;; starts, but keeps the same keymap from previous -- we hence can't have the
+;;; `toggle-shifted-keys' function in the hook, as it alternates keymaps each
+;;; time the minibuffer is used.
+;;; TODO -- Can I find some hook that is only run once per session?
+;;;         Is there a minibuffer keymap that I can hard-code in here.
+;;;           Watch out for the expression-minibuffer, and other minibuffers
+;;;           having the same keymap
+;;;         Could I un-toggle the keymap every time I leave the minibuffer?
+;; (add-hook 'eval-expression-minibuffer-setup-hook 'toggle-shifted-keys)
+;; (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
 
 (with-eval-after-load 'ielm
     (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
