@@ -1,14 +1,16 @@
+#+TODO: TODO | DONE PUTOFF
 * To Document:
 Make a note of all the keybindings I've set up.
 Write down all the customisation I might have to change depending on machine
     (e.g. python shell type)
 
 * To Fix:
+slime -- keybinding swapping -- sometimes gets back the paredit bindings after
+         switching buffers
 Figure out why python-mode's inbuilt flymake settings aren't working.
 Slime -- when stepping through functions, buffers move around.
-
+gdb   -- thinks it's being clever when selecting windows, but it's being very annoying
 * Things to Do
-** Monky kill hunk
 ** TODO Minibuffer eval and toggle-shifted-keys
 Because the minibuffer eval hook is run every time the minibuffer is opened, but
 the keymap is kept the same between instances, toggling the keybindings in the
@@ -16,19 +18,47 @@ minibuffer hook means each time the minibuffer is used the keybindings are
 different.
 I either need to change the keybindings directly in the minibuffer keymap, or
 find a different hook that's only used on the initial startup.
+** TODO Add a property to bind a buffer to a window
+I find emacs' choices about which windows should show which buffers very
+annoying.
+This is especially a problem with things like Slime and gdb.
+
+I'm thinking about adding a property to some windows saying "if you're looking
+for a window to display something, but you haven't explicitly chosen this one,
+then look somewhere else".
+
+If I include a check for this property in my manual window choice functions,
+then I may be able to force gdb to do what I want.
+
+The idea being that when gdb is looking for a window to display the source code,
+it could see that I've set certain windows to "fixed", and skip those.
+Hence I could manually choose which windows gdb should choose to display the
+next thing it's going to display.
+** TODO Monky kill hunk
 There are many things in magit missing in monky, one of the more useful things
 is the ability to kill a single hunk in the diff.
 
 It might be as simple as calling "patch -R" ith the selected hunk, then
 reverting the buffer to add this functionality.
-** Org mode templates
-Add org-capture template for work things
-** repeat-last-command blacklist
+** TODO repeat-last-command blacklist
 I like the `repeat-last-command' keybindings, but there's just too many commands
 in emacs, so the last command is generally a useless one, usually a motion
 command bound to just as conventiant a keybinding.
 
 There may be something with last-repeatable-command that I can do.
+** TODO Org mode templates
+Add org-capture template for work things
+
+** PUTOFF Use wrap-region when required
+Have to account for the problems with `toggle-shifted-keys', but I at least know
+how to do that now.
+(done by incorporating the original command into a closure)
+
+Not 100% sure this is necessary.
+Have bindings for `insert-pair' on the M-<brace> keys, which do the wrapping of
+the current region that I need.
+The only need for something outside default emacs is in HTML/XML tags, which
+wrap-region does nicely, but I will very rarely use.
 * Things to learn:
 IBuffer
 Dired
@@ -48,21 +78,6 @@ Learn all about navigating info files.
    + temporarily set same-window-regexps?
 3) Search google/youtube/github for thing under point
 
-* Check out:
-** Stephs emacs config
-*** cjp-library
-+ [[file:stephs_emacs/lisp/cjp-library.el::228][Find double words]]
-+ [[file:stephs_emacs/lisp/cjp-library.el::305][wc (count number of words in region)]]
-+ [[file:stephs_emacs/lisp/cjp-library.el::351][Capitalize title.]]
-*** Packages to check out
-**** flymake cursor
-Puts the error message in the minibuffer when point is on an error
-Apparently usually have to mouse over.
-Must check if that's built in by now.
-**** pydoc info
-Browse python documentation in info buffers
-**** Sunrise Commander
-Midnight commander clone inside emacs.
 * Plugins:
 ** Plugins to check out:
 + hydra          :: Equivalent to submode in vim
