@@ -21,7 +21,8 @@
 (unless (with-temp-buffer
           (call-process "nslookup" nil t nil "host.does.not.exist")
           (goto-char (point-min))
-          (search-forward-regexp "No answer" nil t))
+          (or (search-forward-regexp "can't find" nil t)
+              (search-forward-regexp "No answer" nil t)))
   (defvar tramp-ssh-controlmaster-options " -o ControlPath='tramp.%%r@%%h:%%p'"))
 
 ;;; I keep single file packages in this directory
