@@ -528,10 +528,10 @@ If it has, the start of the string returned from
               (substring current-prompt (length keyswap-shifted-prefix-mark))
             (concat keyswap-shifted-prefix-mark current-prompt))))
     (if current-prompt
-        (loop for item in keymap-used
-              for position = 0 then (1+ position)
+        (loop for rest-of-list on keymap-used
+              for item = (car rest-of-list)
               when (and (stringp item) (string-equal current-prompt item))
-              do (setf (nth position keymap-used) new-prompt))
+              do (setf (car rest-of-list) new-prompt))
       (setf (cdr keymap-used) (cons new-prompt (cdr keymap-used))))))
 
 (defun toggle-shifted-keys (&optional arg)
