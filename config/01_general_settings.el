@@ -489,8 +489,19 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
         '(?- . ?_) '(?\~ . ?\~))
   "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
 
-(defvar-local keyswap-currently-shifted nil
-  "Flag variable determining whether keys are default or not.")
+(defvar keyswap-shifted-prefix-mark "Swapped-"
+  "Prefix of string returned by `keymap-prompt' thet detones
+  whether the keymap has been swapped or not.")
+
+;;; I initially attempted to store this information in a buffer-local variable.
+;;; This turned out unreliable -- I believe because keymaps are shared between
+;;; buffers, but the buffer-local variables are not.
+;;; Instead I now store whether the current map is shifted or not inside the map.
+;;; This is more reliable, but again relies on abusing names for information.
+(defun keyswap-currently-shifted (&optional arg)
+  "Returns whether the current keymap is shifted."
+  (let ((prompt (keymap-prompt (or arg (current-local-map)))))
+    (and prompt (string-prefix-p keyswap-shifted-prefix-mark prompt))))
 
 (defun dumb-swapping-method (&optional arg)
   "The easiest way to "
@@ -501,6 +512,28 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
   "Function that should be called to toggle the meaning of the keys in
 `keyswap-pairs'.")
 
+(defun toggle-shifted-state-mark (&optional arg)
+  "Stores whether shifted or not in `arg' or `current-local-map'.
+
+We abuse storing strings in a keymap to allow for menus in order
+to store information about whether this keymap has had its keys
+swapped or not.
+If it has, the start of the string returned from
+`keymap-prompt' is \"Swapped-\", and vice versa."
+  (let* ((keymap-used (or arg (current-local-map)))
+         (current-prompt (keymap-prompt keymap-used))
+         (new-prompt
+          (if (and current-prompt
+                   (string-prefix-p keyswap-shifted-prefix-mark current-prompt))
+              (substring current-prompt (length keyswap-shifted-prefix-mark))
+            (concat keyswap-shifted-prefix-mark current-prompt))))
+    (if current-prompt
+        (loop for item in keymap-used
+              for position = 0 then (1+ position)
+              when (and (stringp item) (string-equal current-prompt item))
+              do (setf (nth position keymap-used) new-prompt))
+      (setf (cdr keymap-used) (cons new-prompt (cdr keymap-used))))))
+
 (defun toggle-shifted-keys (&optional arg)
   "Swaps the bindings between each key pair in `keyswap-pairs'.
 
@@ -508,18 +541,29 @@ Does this by calling `keyswap-function', which has the default
 value of `dumb-swapping-method'."
   (interactive)
   (funcall keyswap-function arg)
-  (setq keyswap-currently-shifted (not keyswap-currently-shifted)))
+  (toggle-shifted-state-mark arg))
+
+(defun turn-on-shifted-keys (&optional arg)
+  "Turns shifted-keys on.
+
+Does this by first checking whether shifted-keys is already on,
+and if so does nothing.  If shifted-keys is not already on, calls
+`toggle-shifted-keys' with argument provided."
+  (unless (keyswap-currently-shifted)
+    (toggle-shifted-keys arg)))
 
 (defun keyswap-include-braces ()
   "Hook so `toggle-shifted-keys' includes {,[, and },]"
-  (swap-these-keys [?\[] [?\{])
-  (swap-these-keys [?\]] [?\}])
+  (when (keyswap-currently-shifted)
+    (swap-these-keys [?\[] [?\{])
+    (swap-these-keys [?\]] [?\}]))
   (setq-local keyswap-pairs
               (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\})))))
 
 (defun keyswap-include-quotes ()
   "Hook so `toggle-shifted-keys' includes \" and '"
-  (swap-these-keys [?\'] [?\"])
+  (when (keyswap-currently-shifted)
+    (swap-these-keys [?\'] [?\"]))
   (setq-local keyswap-pairs
               (append keyswap-pairs '((?\' . ?\")))))
 
@@ -532,7 +576,7 @@ value of `dumb-swapping-method'."
 
 ;; Binding things in `prog-mode-map', which have to be overridden by minor modes
 ;; for special bindings.
-(add-hook 'prog-mode-hook 'toggle-shifted-keys)
+(add-hook 'prog-mode-hook 'turn-on-shifted-keys)
 
 ;; Some handy functions to wrap a currently highlighted region `wrap-region'
 ;; when it doesn't play nicely with my `toggle-shifted-keys' function

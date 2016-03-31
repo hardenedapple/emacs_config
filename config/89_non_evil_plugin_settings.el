@@ -314,22 +314,23 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "<escape>") nil)
 
-(add-hook 'paredit-mode-hook
-          (lambda ()
-            ;; Once this hook is being run, sometimes the keys have already been
-            ;; swapped.
-            ;; However, the swapping keys function completely ignores
-            ;; `paredit-mode-map', so we have to put those mappings in
-            ;; `current-local-map'.
-            (define-key paredit-mode-map "(" nil)
-            (define-key paredit-mode-map ")" nil)
-            (let ((open-mapping (if keyswap-currently-shifted "9" "("))
-                  (close-mapping (if keyswap-currently-shifted "0" ")")))
-              ;; Sometimes there isn't even a buffer local map defined yet,
-              ;; leave that to the mode-specific maps.
-              (when (keymapp (current-local-map))
-                (define-key (current-local-map) open-mapping 'paredit-open-round)
-                (define-key (current-local-map) close-mapping 'paredit-close-round)))))
+(defun paredit-hook-toggle-function ()
+  ;; Once this hook is being run, sometimes the keys have already been
+  ;; swapped.
+  ;; However, the swapping keys function completely ignores
+  ;; `paredit-mode-map', so we have to put those mappings in
+  ;; `current-local-map'.
+  (define-key paredit-mode-map "(" nil)
+  (define-key paredit-mode-map ")" nil)
+  (when (keymapp (current-local-map))
+    (if (keyswap-currently-shifted)
+        (progn (define-key (current-local-map) "9"
+                 (run-with-specified-command ?9 'paredit-open-round))
+               (define-key (current-local-map) "0"
+                 (run-with-specified-command ?0 'paredit-close-round)))
+      (define-key (current-local-map) "(" 'paredit-open-round)
+      (define-key (current-local-map) ")" 'paredit-close-round))))
+(add-hook 'paredit-mode-hook 'paredit-hook-toggle-function)
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
