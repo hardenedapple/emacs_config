@@ -1,5 +1,5 @@
 ;; Use ggrep for grep-command when using Solaris
-(when (string-equal system-type "usg-unix-x")
+(when (string-equal system-type "usg-unix-v")
   (grep-apply-setting 'grep-command "ggrep -Hn ")
   (grep-apply-setting 'grep-template "ggrep <X> <C> -Hn <R> <F>")
   (grep-apply-setting 'grep-find-command
