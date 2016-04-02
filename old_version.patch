@@ -1,14 +1,25 @@
 diff --git a/config/69_filetype_specific_settings.el b/config/69_filetype_specific_settings.el
-index 488fcfe..0cb4840 100644
+index 29bce20..9206091 100644
 --- a/config/69_filetype_specific_settings.el
 +++ b/config/69_filetype_specific_settings.el
-@@ -40,10 +40,10 @@ that buffer, and follows it."
-           (lambda ()
-             (set-fill-column 125)))  ; usually only write latex on large screens
+@@ -5,8 +5,8 @@
+ (c-set-offset 'case-label '+)
+ 
+ ;;; Use double quotes by default in awk, C, C++ and some others.
+-(with-eval-after-load 'cc-vars
+-  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
++(eval-after-load 'cc-vars
++  '(progn (add-hook 'c-mode-common-hook 'keyswap-include-quotes)))
+ 
+ 
+ ;;;; Comint Mode
+@@ -41,10 +41,10 @@ that buffer, and follows it."
+ ;;;;
+ (setq latex-run-command "pdflatex")
  
 -(with-eval-after-load 'tex-mode
 -  ;; Note -- order here is important
--  (add-hook 'latex-mode-hook 'toggle-shifted-keys t)
+-  (add-hook 'latex-mode-hook 'turn-on-shifted-keys t)
 -  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
 +(eval-after-load 'tex-mode
 + '(progn ;; Note -- order here is important
@@ -17,48 +28,37 @@ index 488fcfe..0cb4840 100644
  
  
  ;;;; Lisp Settings
-@@ -68,23 +68,23 @@ https://github.com/Malabarba/speed-of-thought-lisp"
+@@ -69,8 +69,8 @@ https://github.com/Malabarba/speed-of-thought-lisp"
  (define-key lisp-mode-shared-map (kbd "M-s M-s") 'delete-pair)
  
  
 -(with-eval-after-load 'lisp-mode
 -  (define-key emacs-lisp-mode-map [mouse-3]
--    (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
--                              (pop-tag-mark)))
 +(eval-after-load 'lisp-mode
-+ '(progn (define-key emacs-lisp-mode-map [mouse-3]
-+               (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
-+                                         (pop-tag-mark)))
++  '(progn (define-key emacs-lisp-mode-map [mouse-3]
+     (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
+                               (pop-tag-mark)))
    ;; Really don't know why emacs makes this a local key binding when there's
-   ;; already a key-binding for it in the global map.
+@@ -78,14 +78,14 @@ https://github.com/Malabarba/speed-of-thought-lisp"
    (define-key emacs-lisp-mode-map (kbd "M-C-i") nil)
    (define-key lisp-interaction-mode-map (kbd "M-C-i") nil)
    (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
 -  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 +  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception)))
  
- ;;; Turns out that the expression minibuffer runs its setup hook every time it
- ;;; starts, but keeps the same keymap from previous -- we hence can't have the
- ;;; `toggle-shifted-keys' function in the hook, as it alternates keymaps each
- ;;; time the minibuffer is used.
- ;;; TODO -- Can I find some hook that is only run once per session?
- ;;;         Is there a minibuffer keymap that I can hard-code in here.
- ;;;           Watch out for the expression-minibuffer, and other minibuffers
- ;;;           having the same keymap
- ;;;         Could I un-toggle the keymap every time I leave the minibuffer?
- ;; (add-hook 'eval-expression-minibuffer-setup-hook 'toggle-shifted-keys)
- ;; (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
+ (add-hook 'eval-expression-minibuffer-setup-hook 'turn-on-shifted-keys)
+ (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
  
 -(with-eval-after-load 'ielm
 -    (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
 -    (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
 +(eval-after-load 'ielm
-+ '(progn   (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
-+  (add-hook 'ielm-mode-hook 'toggle-shifted-keys)))
++    '(progn (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
++            (add-hook 'ielm-mode-hook 'toggle-shifted-keys)))
  
  (setq inferior-lisp-program "/usr/bin/sbcl")
  
-@@ -131,6 +131,6 @@ stops the current python process using `delete-process' rather than
+@@ -132,6 +132,6 @@ stops the current python process using `delete-process' rather than
  ;
  ;;;; Javascript Settings
  ;;;;
@@ -69,10 +69,39 @@ index 488fcfe..0cb4840 100644
 + '(progn (add-hook 'js-mode-hook 'keyswap-include-braces)
 +  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception)))
 diff --git a/config/79_built_in_packages.el b/config/79_built_in_packages.el
-index 670797b..2e50559 100644
+index 670797b..7ec0bb4 100644
 --- a/config/79_built_in_packages.el
 +++ b/config/79_built_in_packages.el
-@@ -430,11 +430,11 @@ don't have the package installed."
+@@ -319,6 +319,28 @@ as yet."
+ 
+ ;;;; ISearch Settings
+ ;;;;
++;; Taken from a later version of emacs
++(defun find-tag-default-bounds ()
++  "Determine the boundaries of the default tag, based on text at point.
++Return a cons cell with the beginning and end of the found tag.
++If there is no plausible default, return nil."
++  (let (from to bound)
++    (when (or (progn
++                ;; Look at text around `point'.
++                (save-excursion
++                  (skip-syntax-backward "w_") (setq from (point)))
++                (save-excursion
++                  (skip-syntax-forward "w_") (setq to (point)))
++                (> to from))
++              ;; Look between `line-beginning-position' and `point'.
++              (save-excursion
++                (and (setq bound (line-beginning-position))
++                     (skip-syntax-forward "^w_" bound)
++                     (< (setq from (point)) bound)
++                     (skip-syntax-forward "w_")
++                     (setq to (point)))))
++      (cons from to))))
++
+ (defun snappy-isearch-symbol-at-point (forwards)
+   "Do the same as `isearch-forward-symbol-at-point', but snappier.
+ 
+@@ -430,11 +452,11 @@ don't have the package installed."
                               "~/TODO/Soon.org"
                               "~/TODO/Someday.org"))
  
@@ -89,13 +118,23 @@ index 670797b..2e50559 100644
  
  
  ;;;; Process Menu Settings
-@@ -470,9 +470,9 @@ don't have the package installed."
-  python-shell-completion-string-code
-  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
- 
+@@ -462,17 +484,11 @@ don't have the package installed."
+  python-shell-interpreter "ipython"
+  python-shell-interpreter-args ""
+  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+- python-shell-completion-setup-code
+- "from IPython.core.completerlib import module_completion"
+- python-shell-completion-module-string-code
+- "';'.join(module_completion('''%s'''))\n"
+- python-shell-completion-string-code
+- "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+-
 -(with-eval-after-load 'python
 -    (define-key inferior-python-mode-map (kbd "TAB")
 -      'python-shell-completion-complete-or-indent))
++ python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: ")
++
 +(eval-after-load 'python
 + '(progn   (define-key inferior-python-mode-map (kbd "TAB")
 +                 'python-shell-completion-complete-or-indent)))
@@ -103,10 +142,10 @@ index 670797b..2e50559 100644
  
  ;;;; Regexp Builder
 diff --git a/config/89_non_evil_plugin_settings.el b/config/89_non_evil_plugin_settings.el
-index 6302fae..bd44912 100644
+index 672f7c7..448beb2 100644
 --- a/config/89_non_evil_plugin_settings.el
 +++ b/config/89_non_evil_plugin_settings.el
-@@ -333,8 +333,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
+@@ -334,8 +334,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
  
  ;; Paredit M-r overrides M-r in comint
  ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
@@ -117,7 +156,7 @@ index 6302fae..bd44912 100644
  
  ;;; paredit with eldoc
  (eldoc-add-command
-@@ -487,38 +487,38 @@ and run a command given by the user in that window.
+@@ -488,38 +488,38 @@ and run a command given by the user in that window.
  (setq slime-complete-symbol*-fancy t)
  ;; note with this set up of info, also need to go inte the directory and run
  ;; install-info --dir=dir slime.info
@@ -178,43 +217,17 @@ index 6302fae..bd44912 100644
 +   (add-hook 'slime-repl-mode-hook 'toggle-shifted-keys t)))
  
  (setq slime-autodoc-use-multiline-p t)
-
-commit 53d941707e29fec1c53bfa727c5a058838131a41
-Author: hardenedapple <hardenedapple@server.fake>
-Date:   Sun Sep 27 10:24:43 2015 +0000
-
-    Add `find-tag-default-bounds' function from emacs 24.4
-
-diff --git a/config/79_built_in_packages.el b/config/79_built_in_packages.el
-index 488fcfe..0cb4840 100644
---- a/config/79_built_in_packages.el
-+++ b/config/79_built_in_packages.el
-@@ -319,6 +319,28 @@ as yet."
  
- ;;;; ISearch Settings
- ;;;;
-+;; Taken from a later version of emacs
-+(defun find-tag-default-bounds ()
-+  "Determine the boundaries of the default tag, based on text at point.
-+Return a cons cell with the beginning and end of the found tag.
-+If there is no plausible default, return nil."
-+  (let (from to bound)
-+    (when (or (progn
-+                ;; Look at text around `point'.
-+                (save-excursion
-+                  (skip-syntax-backward "w_") (setq from (point)))
-+                (save-excursion
-+                  (skip-syntax-forward "w_") (setq to (point)))
-+                (> to from))
-+              ;; Look between `line-beginning-position' and `point'.
-+              (save-excursion
-+                (and (setq bound (line-beginning-position))
-+                     (skip-syntax-forward "^w_" bound)
-+                     (< (setq from (point)) bound)
-+                     (skip-syntax-forward "w_")
-+                     (setq to (point)))))
-+      (cons from to))))
-+
- (defun snappy-isearch-symbol-at-point (forwards)
-   "Do the same as `isearch-forward-symbol-at-point', but snappier.
- 
+diff --git a/init.el b/init.el
+index c7dc02f..a997ec6 100644
+--- a/init.el
++++ b/init.el
+@@ -35,7 +35,7 @@
+       (elpa-packages '(avy arduino-mode buffer-move c-eldoc elisp-slime-nav
+                                      expand-region goto-chg ido-ubiquitous
+                                      ido-at-point ido-vertical-mode jump-char
+-                                     list-register magit monky multiple-cursors
++                                     list-register monky multiple-cursors
+                                      paredit projectile python-pylint quack
+                                      smart-tab smart-window smex undo-tree
+                                      vimrc-mode window-number wrap-region
