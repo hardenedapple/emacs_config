@@ -425,11 +425,13 @@ called automatically on save."
 
 ;;;; Programming shifted number keys
 ;;;;
+(defconst command-event-wrapper-marker "MY CHAR COMMAND WRAPPER")
+
 (defmacro run-with-specified-command (new-event command)
   "Returns a `lambda' function that runs command with
 `last-command-event' set to `new-event'"
   `(lambda (&optional arg return-command)
-     "MY CHAR COMMAND WRAPPER"
+     ,command-event-wrapper-marker
      (interactive "p")
      (if return-command
          ,command
@@ -444,17 +446,18 @@ all its kludges anyway.
 
 Finds the command that is run when `key' is pressed.
 
-If it's a function with the `documentation' \"MY CHAR COMMAND
-WRAPPER\" assumes it's a wrapper created with
-`run-with-specified-command' and returns the result of (command
-nil t).
+If it's a function with the `documentation'
+`command-event-wrapper-marker' assumes it's a wrapper created
+with `run-with-specified-command' and returns the result
+of (command nil t).
 
 Otherwise creates a `lambda' function using
 `run-with-specified-command' that runs the command bound under
 the false environment where `last-command-event' is KEY"
   (let ((current-binding (key-binding key)))
     (if (and (listp current-binding)
-             (string-equal "MY CHAR COMMAND WRAPPER" (documentation current-binding)))
+             (string-equal command-event-wrapper-marker
+                           (documentation current-binding)))
         (funcall current-binding nil t)
       (lexical-let ((current-key (aref key 0)) (old-binding current-binding))
         (run-with-specified-command current-key old-binding)))))
@@ -469,14 +472,21 @@ the false environment where `last-command-event' is KEY"
 (defun swap-these-keys (left-key right-key &optional keymap)
   "Swaps the active bindings of LEFT-KEY and RIGHT-KEY.
 
-LEFT-KEY and RIGHT-KEY should be two objects valid in a call to `key-binding'.
-Makes a new map in the local keymap, as used by `local-set-key'.
+LEFT-KEY and RIGHT-KEY should be two objects valid in a call to
+`key-binding'.  Makes a new binding in KEYMAP or the local
+keymap, as used by `local-set-key'.
 
-If either mapping is bound to `self-insert-command', binds the other to a `lambda'
-function using `insert-char', and assumes the first is a vector of a single
-character to insert.
+If a mapping has a normal function, we bind the other key to a
+`lambda' function that calls the original with a masked
+`last-command-event' pretending to be the first key.
 
-If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
+These `lambda' functions are marked by their documentation
+string (*very* hacky -- I know), and if this documentation string
+is noticed, they are called with arguments so they return their
+wrapped function.
+
+If KEYMAP is defined, binds keys in that map, else uses
+`current-local-map'"
   (anaphoric-get-bindings left-key right-key keymap
     ;; By defaulting to `current-local-map' I can use a buffer local map by
     ;; default instead of making everything set up
@@ -489,7 +499,7 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
         '(?- . ?_) '(?\~ . ?\~))
   "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
 
-(defvar keyswap-shifted-prefix-mark "Swapped-"
+(defconst keyswap-shifted-prefix-mark "Swapped-"
   "Prefix of string returned by `keymap-prompt' thet detones
   whether the keymap has been swapped or not.")
 
@@ -518,6 +528,7 @@ If KEYMAP is defined, binds keys in that map, else uses `current-local-map'"
 We abuse storing strings in a keymap to allow for menus in order
 to store information about whether this keymap has had its keys
 swapped or not.
+
 If it has, the start of the string returned from
 `keymap-prompt' is \"Swapped-\", and vice versa."
   (let* ((keymap-used (or arg (current-local-map)))
