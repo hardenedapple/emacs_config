@@ -11,13 +11,22 @@ Figure out why python-mode's inbuilt flymake settings aren't working.
 Slime -- when stepping through functions, buffers move around.
 gdb   -- thinks it's being clever when selecting windows, but it's being very annoying
 * Things to Do
-** TODO Minibuffer eval and toggle-shifted-keys
+** DONE Minibuffer eval and toggle-shifted-keys
 Because the minibuffer eval hook is run every time the minibuffer is opened, but
 the keymap is kept the same between instances, toggling the keybindings in the
 minibuffer hook means each time the minibuffer is used the keybindings are
 different.
 I either need to change the keybindings directly in the minibuffer keymap, or
 find a different hook that's only used on the initial startup.
+** TODO `toggle-shifted-keys' alternate implementation
+I could just add a minor-mode map onto every buffer.
+In this map, I could have my lambda functions, but instead of checking whether
+the current function is a wrapper by looking into the docstrings, I could just
+see if a certain key has a binding in my minor-mode keymap.
+
+If there is a binding, then I've overridden the key, otherwise I haven't.
+If I want to toggle, I should remove the binding if there is one in the keymap,
+if there isn't a binding in the keymap, I create one and put it in there.
 ** TODO Add a property to bind a buffer to a window
 I find emacs' choices about which windows should show which buffers very
 annoying.
