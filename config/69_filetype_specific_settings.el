@@ -85,7 +85,7 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 
 (with-eval-after-load 'ielm
     (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
-    (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
+    (add-hook 'ielm-mode-hook 'turn-on-shifted-keys))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 

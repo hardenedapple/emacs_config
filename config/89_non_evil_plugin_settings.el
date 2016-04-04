@@ -519,7 +519,7 @@ and run a command given by the user in that window.
   ;; I use the APPEND argument to put them after one another so the order is clear
   (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
   (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
-  (add-hook 'slime-repl-mode-hook 'toggle-shifted-keys t))
+  (add-hook 'slime-repl-mode-hook 'turn-on-shifted-keys t))
 
 (setq slime-autodoc-use-multiline-p t)
 
