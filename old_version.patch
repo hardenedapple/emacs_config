@@ -1,5 +1,42 @@
+commit 31f983aadaebf8feef0465c1b8a67985a45979d9
+Author: hardenedapple <hardenedapple@server.fake>
+Date:   Wed Mar 30 13:42:32 2016 +0100
+
+    Account for older version
+
+diff --git a/config/01_general_settings.el b/config/01_general_settings.el
+index 1457bdd..d901586 100644
+--- a/config/01_general_settings.el
++++ b/config/01_general_settings.el
+@@ -223,7 +223,7 @@ Think `completion-at-point' functions, but only one function at a time")
+                               (symbol-name find-definition-function)))))
+     (if existing-function
+         (find-this-definition-helper symbol existing-function)
+-      (let ((current-symbol (thing-at-point 'symbol t)))
++      (let ((current-symbol (thing-at-point 'symbol)))
+         (run-function-other-window #'find-this-definition nil
+                                current-symbol)))))
+ 
+@@ -236,7 +236,7 @@ Think `completion-at-point' functions, but only one function at a time")
+ (defun get-clicked-symbol (event)
+   "Move to event point, and find the symbol at point."
+   (mouse-set-point event)
+-  (let ((current-symbol (thing-at-point 'symbol t)))
++  (let ((current-symbol (thing-at-point 'symbol)))
+     current-symbol))
+ 
+ (defmacro mouse-function-on-symbol (&rest body)
+@@ -260,7 +260,7 @@ Think `completion-at-point' functions, but only one function at a time")
+                                 (ignore-errors (previous-line (* numtimes 5)))))
+ (define-key search-map "O"
+   (lambda () (interactive)
+-    (occur (concat "\\_<" (thing-at-point 'symbol t) "\\_>"))))
++    (occur (concat "\\_<" (thing-at-point 'symbol) "\\_>"))))
+ 
+ ;; Taken from http://oremacs.com/2015/01/26/occur-dwim/ -- makes a guess for
+ ;; the default search pattern with occur.
 diff --git a/config/69_filetype_specific_settings.el b/config/69_filetype_specific_settings.el
-index 29bce20..9206091 100644
+index 23b3d6d..088bf54 100644
 --- a/config/69_filetype_specific_settings.el
 +++ b/config/69_filetype_specific_settings.el
 @@ -5,8 +5,8 @@
@@ -23,7 +60,7 @@ index 29bce20..9206091 100644
 -  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
 +(eval-after-load 'tex-mode
 + '(progn ;; Note -- order here is important
-+   (add-hook 'latex-mode-hook 'toggle-shifted-keys t)
++   (add-hook 'latex-mode-hook 'turn-on-shifted-keys t)
 +   (add-hook 'latex-mode-hook 'keyswap-include-braces t)))
  
  
@@ -39,26 +76,26 @@ index 29bce20..9206091 100644
      (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
                                (pop-tag-mark)))
    ;; Really don't know why emacs makes this a local key binding when there's
-@@ -78,14 +78,14 @@ https://github.com/Malabarba/speed-of-thought-lisp"
+@@ -78,14 +78,11 @@ https://github.com/Malabarba/speed-of-thought-lisp"
    (define-key emacs-lisp-mode-map (kbd "M-C-i") nil)
    (define-key lisp-interaction-mode-map (kbd "M-C-i") nil)
    (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
 -  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 +  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception)))
  
- (add-hook 'eval-expression-minibuffer-setup-hook 'turn-on-shifted-keys)
- (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
- 
+-(add-hook 'eval-expression-minibuffer-setup-hook 'turn-on-shifted-keys)
+-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
+-
 -(with-eval-after-load 'ielm
 -    (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
--    (add-hook 'ielm-mode-hook 'toggle-shifted-keys))
+-    (add-hook 'ielm-mode-hook 'turn-on-shifted-keys))
 +(eval-after-load 'ielm
 +    '(progn (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
 +            (add-hook 'ielm-mode-hook 'toggle-shifted-keys)))
  
  (setq inferior-lisp-program "/usr/bin/sbcl")
  
-@@ -132,6 +132,6 @@ stops the current python process using `delete-process' rather than
+@@ -132,6 +129,6 @@ stops the current python process using `delete-process' rather than
  ;
  ;;;; Javascript Settings
  ;;;;
@@ -69,7 +106,7 @@ index 29bce20..9206091 100644
 + '(progn (add-hook 'js-mode-hook 'keyswap-include-braces)
 +  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception)))
 diff --git a/config/79_built_in_packages.el b/config/79_built_in_packages.el
-index 670797b..7ec0bb4 100644
+index c8f404d..b6b68dd 100644
 --- a/config/79_built_in_packages.el
 +++ b/config/79_built_in_packages.el
 @@ -319,6 +319,28 @@ as yet."
@@ -101,9 +138,9 @@ index 670797b..7ec0bb4 100644
  (defun snappy-isearch-symbol-at-point (forwards)
    "Do the same as `isearch-forward-symbol-at-point', but snappier.
  
-@@ -430,11 +452,11 @@ don't have the package installed."
-                              "~/TODO/Soon.org"
-                              "~/TODO/Someday.org"))
+@@ -428,11 +450,11 @@ don't have the package installed."
+       org-default-notes-file (concat org-directory "/notes.org")
+       org-agenda-files (list "~/TODO.org"))
  
 -(with-eval-after-load 'org
 -    ;; Remove the CYCLE-ORG-AGENDA-FILES mapping to leave the
@@ -118,7 +155,7 @@ index 670797b..7ec0bb4 100644
  
  
  ;;;; Process Menu Settings
-@@ -462,17 +484,11 @@ don't have the package installed."
+@@ -460,17 +482,11 @@ don't have the package installed."
   python-shell-interpreter "ipython"
   python-shell-interpreter-args ""
   python-shell-prompt-regexp "In \\[[0-9]+\\]: "
@@ -142,7 +179,7 @@ index 670797b..7ec0bb4 100644
  
  ;;;; Regexp Builder
 diff --git a/config/89_non_evil_plugin_settings.el b/config/89_non_evil_plugin_settings.el
-index 672f7c7..448beb2 100644
+index e7154c2..1fc3bc4 100644
 --- a/config/89_non_evil_plugin_settings.el
 +++ b/config/89_non_evil_plugin_settings.el
 @@ -334,8 +334,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
@@ -156,12 +193,7 @@ index 672f7c7..448beb2 100644
  
  ;;; paredit with eldoc
  (eldoc-add-command
-@@ -488,38 +488,38 @@ and run a command given by the user in that window.
- (setq slime-complete-symbol*-fancy t)
- ;; note with this set up of info, also need to go inte the directory and run
- ;; install-info --dir=dir slime.info
--(add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
-+;; (add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
+@@ -492,34 +492,34 @@ and run a command given by the user in that window.
  
  (global-set-key (kbd "C-c s") 'slime-selector)
  
@@ -206,7 +238,7 @@ index 672f7c7..448beb2 100644
 -  ;; I use the APPEND argument to put them after one another so the order is clear
 -  (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
 -  (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
--  (add-hook 'slime-repl-mode-hook 'toggle-shifted-keys t))
+-  (add-hook 'slime-repl-mode-hook 'turn-on-shifted-keys t))
 +(eval-after-load 'slime-repl
 + '(progn ;; These hooks have to be added in a certain order.
 +   ;; The buffer local map has to be created first, then the exception created,
@@ -214,15 +246,15 @@ index 672f7c7..448beb2 100644
 +   ;; I use the APPEND argument to put them after one another so the order is clear
 +   (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
 +   (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
-+   (add-hook 'slime-repl-mode-hook 'toggle-shifted-keys t)))
++   (add-hook 'slime-repl-mode-hook 'turn-on-shifted-keys t)))
  
  (setq slime-autodoc-use-multiline-p t)
  
 diff --git a/init.el b/init.el
-index c7dc02f..a997ec6 100644
+index 9c17e5a..ef5eac2 100644
 --- a/init.el
 +++ b/init.el
-@@ -35,7 +35,7 @@
+@@ -23,7 +23,7 @@
        (elpa-packages '(avy arduino-mode buffer-move c-eldoc elisp-slime-nav
                                       expand-region goto-chg ido-ubiquitous
                                       ido-at-point ido-vertical-mode jump-char
