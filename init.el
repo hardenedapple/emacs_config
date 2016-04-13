@@ -18,11 +18,16 @@
 ;; if 'nslookup' returns an IP for "host.does.not.exist".
 ;; Otherwise we are on a network set up so that the check will not hang, and the
 ;; initialisation code may as well be run.
-(unless (with-temp-buffer
-          (call-process "nslookup" nil t nil "host.does.not.exist")
-          (goto-char (point-min))
-          (or (search-forward-regexp "can't find" nil t)
-              (search-forward-regexp "No answer" nil t)))
+;; This is a problem somewhere before tramp 2.2.13 and after tramp <insert
+;; version from solaris>.
+;; Infortunately, we can't check for `tramp-version' before loading tramp, so we
+;; check for the `emacs-version' that ship by default with these versions.
+(unless (and (string-prefix-p "24.5" emacs-version)
+             (with-temp-buffer
+               (call-process "nslookup" nil t nil "host.does.not.exist")
+               (goto-char (point-min))
+               (or (search-forward-regexp "can't find" nil t)
+                   (search-forward-regexp "No answer" nil t))))
   (defvar tramp-ssh-controlmaster-options " -o ControlPath='tramp.%%r@%%h:%%p'"))
 
 ;;; I keep single file packages in this directory
