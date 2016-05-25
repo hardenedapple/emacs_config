@@ -280,6 +280,14 @@ Think `completion-at-point' functions, but only one function at a time")
 (define-key search-map "o" 'occur-dwim)
 
 
+;;;; Quoted Insert
+;;;;
+;; I've used the normal mapping for `quoted-insert' for the
+;; `move-to-window-line-top-bottom' function that `paredit' overwrites.
+;; It turns out that I sometimes need the function, so I'll map it somewhere in
+;; the global map.
+(global-set-key (kbd "C-c q") 'quoted-insert)
+
 ;;;; Recursive minibuffers
 ;;;;
 (setq enable-recursive-minibuffers t)
