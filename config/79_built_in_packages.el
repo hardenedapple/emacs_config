@@ -147,6 +147,11 @@ Ignore any files that aren't in the fileset."
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 
+;;;; EPA File Settings
+;;;;
+;; Interface to gnupg
+(epa-file-enable)
+
 ;;;; Eshell Settings
 ;;;;
 ;; Prompt
@@ -434,8 +439,8 @@ don't have the package installed."
     ;; Remove the CYCLE-ORG-AGENDA-FILES mapping to leave the
     ;; GOTO-LAST-CHANGE-REVERSE global mapping
     ;; Don't really use ORG-MODE's agenda functionality anyway
-    (define-key org-mode-map (kbd "C-,") nil))
-
+  (define-key org-mode-map (kbd "C-,") nil)
+  (add-to-list 'org-modules 'org-habit))
 
 ;;;; Process Menu Settings
 ;;;;

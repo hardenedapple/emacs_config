@@ -51,7 +51,7 @@
                                      ;; for deciding on a keybinding.
                                      ;; unbound
                                      ))
-      (require-only '(desktop dired-x eldoc em-smart eshell
+      (require-only '(desktop dired-x eldoc em-smart epa-file eshell
                               le-eval-and-insert-results nameses transpose-frame
                               splice-windows
                               uniquify epa-file)))
