@@ -314,23 +314,14 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
 (define-key paredit-mode-map (kbd "<escape>") nil)
 
-(defun paredit-hook-toggle-function ()
-  ;; Once this hook is being run, sometimes the keys have already been
-  ;; swapped.
-  ;; However, the swapping keys function completely ignores
-  ;; `paredit-mode-map', so we have to put those mappings in
-  ;; `current-local-map'.
-  (define-key paredit-mode-map "(" nil)
-  (define-key paredit-mode-map ")" nil)
-  (when (keymapp (current-local-map))
-    (if (keyswap-currently-shifted)
-        (progn (define-key (current-local-map) "9"
-                 (run-with-specified-command ?9 'paredit-open-round))
-               (define-key (current-local-map) "0"
-                 (run-with-specified-command ?0 'paredit-close-round)))
-      (define-key (current-local-map) "(" 'paredit-open-round)
-      (define-key (current-local-map) ")" 'paredit-close-round))))
-(add-hook 'paredit-mode-hook 'paredit-hook-toggle-function)
+;; When this hook is being run, sometimes the keys have already been
+;; swapped.
+;; This would mean that the `keyswap-map' created when `keyswap-minor-mode' was
+;; created does not contain mappings to swap the keys that `paredit-mode' has
+;; defined.
+;; To counter this, whenever `paredit-mode' is turned on, we refresh the
+;; `keyswap-mode' keymap.
+(add-hook 'paredit-mode-hook 'keyswap-update-keys)
 
 ;; Paredit M-r overrides M-r in comint
 ;; Want comint-history-isearch-backward-regexp, so remap it to C-q
@@ -519,7 +510,7 @@ and run a command given by the user in that window.
   ;; I use the APPEND argument to put them after one another so the order is clear
   (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
   (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
-  (add-hook 'slime-repl-mode-hook 'turn-on-shifted-keys t))
+  (add-hook 'slime-repl-mode-hook 'keyswap-mode t))
 
 (setq slime-autodoc-use-multiline-p t)
 

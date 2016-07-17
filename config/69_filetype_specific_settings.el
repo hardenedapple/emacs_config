@@ -43,7 +43,7 @@ that buffer, and follows it."
 
 (with-eval-after-load 'tex-mode
   ;; Note -- order here is important
-  (add-hook 'latex-mode-hook 'turn-on-shifted-keys t)
+  (add-hook 'latex-mode-hook 'keyswap-mode t)
   (add-hook 'latex-mode-hook 'keyswap-include-braces t))
 
 
@@ -80,12 +80,12 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
 
-(add-hook 'eval-expression-minibuffer-setup-hook 'turn-on-shifted-keys)
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
 (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
 
 (with-eval-after-load 'ielm
-    (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
-    (add-hook 'ielm-mode-hook 'turn-on-shifted-keys))
+  (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'ielm-mode-hook 'keyswap-mode))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 

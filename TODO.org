@@ -18,7 +18,7 @@ minibuffer hook means each time the minibuffer is used the keybindings are
 different.
 I either need to change the keybindings directly in the minibuffer keymap, or
 find a different hook that's only used on the initial startup.
-** TODO `toggle-shifted-keys' alternate implementation
+** DONE `toggle-shifted-keys' alternate implementation
 I could just add a minor-mode map onto every buffer.
 In this map, I could have my lambda functions, but instead of checking whether
 the current function is a wrapper by looking into the docstrings, I could just

@@ -470,15 +470,8 @@ the false environment where `last-command-event' is KEY"
       (lexical-let ((current-key (aref key 0)) (old-binding current-binding))
         (run-with-specified-command current-key old-binding)))))
 
-(defmacro anaphoric-get-bindings (left-key right-key keymap &rest body)
-  (declare (indent 3))
-  `(let ((left-function (equivalent-current-binding ,left-key))
-         (right-function (equivalent-current-binding ,right-key))
-         (keymap (or ,keymap (current-local-map))))
-     ,@body))
-
-(defun swap-these-keys (left-key right-key &optional keymap)
-  "Swaps the active bindings of LEFT-KEY and RIGHT-KEY.
+(defun swap-these-keys (left-key right-key keymap)
+  "Puts alternate bindings of LEFT-KEY and RIGHT-KEY into KEYMAP.
 
 LEFT-KEY and RIGHT-KEY should be two objects valid in a call to
 `key-binding'.  Makes a new binding in KEYMAP or the local
@@ -495,11 +488,22 @@ wrapped function.
 
 If KEYMAP is defined, binds keys in that map, else uses
 `current-local-map'"
-  (anaphoric-get-bindings left-key right-key keymap
-    ;; By defaulting to `current-local-map' I can use a buffer local map by
-    ;; default instead of making everything set up
+  (let ((left-function (equivalent-current-binding left-key))
+        (right-function (equivalent-current-binding right-key)))
     (define-key keymap left-key right-function)
     (define-key keymap right-key left-function)))
+
+(defun swapped-keymap ()
+  "Create a swapped keymap for this buffer.
+Take the keys currently active, and create a keymap that takes
+inverts the bindings of those key pairs in `keyswap-pairs'.
+Returns the resulting keymap with these bindings, but doesn't do
+anything other than create and return the keymap."
+  (let ((return-map (make-sparse-keymap)))
+    (dolist (key-pair keyswap-pairs return-map)
+      (swap-these-keys (vector (car key-pair))
+                       (vector (cdr key-pair))
+                       return-map))))
 
 (defvar-local keyswap-pairs
   (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
@@ -507,95 +511,73 @@ If KEYMAP is defined, binds keys in that map, else uses
         '(?- . ?_) '(?\~ . ?\~))
   "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
 
-(defconst keyswap-shifted-prefix-mark "Swapped-"
-  "Prefix of string returned by `keymap-prompt' thet detones
-  whether the keymap has been swapped or not.")
+(defun keyswap-update-keys ()
+  "Update the buffer-local keymap currently used for `keyswap-mode'"
+  (when (assoc 'keyswap-mode minor-mode-overriding-map-alist)
+    (let ((currently-on keyswap-mode))
+      (when currently-on (keyswap-mode 0))
+      (setf (cdr (assoc 'keyswap-mode minor-mode-overriding-map-alist))
+            (swapped-keymap))
+      (when currently-on (keyswap-mode t)))))
 
-;;; I initially attempted to store this information in a buffer-local variable.
-;;; This turned out unreliable -- I believe because keymaps are shared between
-;;; buffers, but the buffer-local variables are not.
-;;; Instead I now store whether the current map is shifted or not inside the map.
-;;; This is more reliable, but again relies on abusing names for information.
-(defun keyswap-currently-shifted (&optional arg)
-  "Returns whether the current keymap is shifted."
-  (let ((prompt (keymap-prompt (or arg (current-local-map)))))
-    (and prompt (string-prefix-p keyswap-shifted-prefix-mark prompt))))
+(define-minor-mode keyswap-mode
+  "Minor mode for programming where number keys are swapped with their shifted
+counterparts.
 
-(defun dumb-swapping-method (&optional arg)
-  "The easiest way to "
-  (dolist (key-pair keyswap-pairs)
-    (swap-these-keys (vector (car key-pair)) (vector (cdr key-pair)))))
+This effectively makes the keyboard a \"programmers\" version of the keyboard.
 
-(defvar-local keyswap-function 'dumb-swapping-method
-  "Function that should be called to toggle the meaning of the keys in
-`keyswap-pairs'.")
+In order to to have a different set of keys swapped for each
+buffer, I abuse `minor-mode-overriding-map-alist' and never
+actually have a minor mode map in the main `minor-mode-map-alist'
+variable.
 
-(defun toggle-shifted-state-mark (&optional arg)
-  "Stores whether shifted or not in `arg' or `current-local-map'.
+When this mode is activated, it first checks whether the current
+buffer already has a local overriding keymap in
+`minor-mode-overriding-map-alist', and if so does nothing but
+activate that keymap.
 
-We abuse storing strings in a keymap to allow for menus in order
-to store information about whether this keymap has had its keys
-swapped or not.
+If there is no relevant keymap in
+`minor-mode-overriding-map-alist' it finds the mappings in the
+`current-buffer' that relate to the keys to be swapped in
+`keyswap-pairs', creates a keymap that has functionaly swapped
+these keys, and stores that as the keymap in `minor-mode-overriding-map-alist'
+to be used in all future invocations of this minor-mode.
 
-If it has, the start of the string returned from
-`keymap-prompt' is \"Swapped-\", and vice versa."
-  (let* ((keymap-used (or arg (current-local-map)))
-         (current-prompt (keymap-prompt keymap-used))
-         (new-prompt
-          (if (and current-prompt
-                   (string-prefix-p keyswap-shifted-prefix-mark current-prompt))
-              (substring current-prompt (length keyswap-shifted-prefix-mark))
-            (concat keyswap-shifted-prefix-mark current-prompt))))
-    (if current-prompt
-        (loop for rest-of-list on keymap-used
-              for item = (car rest-of-list)
-              when (and (stringp item) (string-equal current-prompt item))
-              do (setf (car rest-of-list) new-prompt))
-      (setf (cdr keymap-used) (cons new-prompt (cdr keymap-used))))))
-
-(defun toggle-shifted-keys (&optional arg)
-  "Swaps the bindings between each key pair in `keyswap-pairs'.
-
-Does this by calling `keyswap-function', which has the default
-value of `dumb-swapping-method'."
-  (interactive)
-  (funcall keyswap-function arg)
-  (toggle-shifted-state-mark arg))
-
-(defun turn-on-shifted-keys (&optional arg)
-  "Turns shifted-keys on.
-
-Does this by first checking whether shifted-keys is already on,
-and if so does nothing.  If shifted-keys is not already on, calls
-`toggle-shifted-keys' with argument provided."
-  (unless (keyswap-currently-shifted)
-    (toggle-shifted-keys arg)))
+When using this minor-mode along with others there are a few things to watch out
+for.
+First off, if this minor mode is activated before others that change the current
+"
+  nil
+  " keyswap"
+  nil
+  ;; Body is executed every time the mode is toggled
+  ;; If keyswap-mode is not in the `minor-mode-overriding-map-alist' variable,
+  ;; then create a new map with `swapped-keymap', and add that to the list of
+  ;; `minor-mode-overriding-map-alist'.
+  (unless (assoc 'keyswap-mode minor-mode-overriding-map-alist)
+    (push (cons 'keyswap-mode (swapped-keymap)) minor-mode-overriding-map-alist)))
 
 (defun keyswap-include-braces ()
   "Hook so `toggle-shifted-keys' includes {,[, and },]"
-  (when (keyswap-currently-shifted)
-    (swap-these-keys [?\[] [?\{])
-    (swap-these-keys [?\]] [?\}]))
   (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\})))))
+              (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\}))))
+  (keyswap-update-keys))
 
 (defun keyswap-include-quotes ()
   "Hook so `toggle-shifted-keys' includes \" and '"
-  (when (keyswap-currently-shifted)
-    (swap-these-keys [?\'] [?\"]))
   (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\' . ?\")))))
+              (append keyswap-pairs '((?\' . ?\"))))
+  (keyswap-update-keys))
 
 (defun keyswap-tac-underscore-exception ()
   "Hook so `toggle-shifted-keys' ignores - and _"
-  (define-key (current-local-map) "-" 'self-insert-command)
-  (define-key (current-local-map) "_" 'self-insert-command)
   (setq-local keyswap-pairs
-              (remove '(?- . ?_) keyswap-pairs)))
+              (remove '(?- . ?_) keyswap-pairs))
+  (keyswap-update-keys))
 
 ;; Binding things in `prog-mode-map', which have to be overridden by minor modes
 ;; for special bindings.
-(add-hook 'prog-mode-hook 'turn-on-shifted-keys)
+(add-hook 'prog-mode-hook 'keyswap-mode)
 
 ;; Some handy functions to wrap a currently highlighted region `wrap-region'
 ;; when it doesn't play nicely with my `toggle-shifted-keys' function

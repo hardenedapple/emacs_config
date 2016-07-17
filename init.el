@@ -82,6 +82,7 @@
    'projectile-mode
    'undo-tree-visualizer-selection-mode
    'window-number-mode
+   'keyswap-mode
    )
   "List of minor-modes to show in modeline")
 (setq minor-mode-alist
