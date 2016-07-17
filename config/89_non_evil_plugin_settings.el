@@ -498,17 +498,7 @@ and run a command given by the user in that window.
   (add-hook 'slime-mode-hook
             (lambda () (setq find-definition-function 'slime-edit-definition))))
 
-(defun keyswap-hook-for-slime-repl ()
-  "Hook to handle swapping keys in the slime repl."
-  (unless (keymapp (current-local-map))
-    (use-local-map (make-sparse-keymap))))
-
 (with-eval-after-load 'slime-repl
-  ;; These hooks have to be added in a certain order.
-  ;; The buffer local map has to be created first, then the exception created,
-  ;; then the keys toggled.
-  ;; I use the APPEND argument to put them after one another so the order is clear
-  (add-hook 'slime-repl-mode-hook 'keyswap-hook-for-slime-repl t)
   (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
   (add-hook 'slime-repl-mode-hook 'keyswap-mode t))
 
