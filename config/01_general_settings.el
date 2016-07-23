@@ -431,156 +431,24 @@ called automatically on save."
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
 
-;;;; Programming shifted number keys
+;;;; Keyswap Mode Settings
 ;;;;
-(defconst command-event-wrapper-marker "MY CHAR COMMAND WRAPPER")
-
-(defmacro run-with-specified-command (new-event command)
-  "Returns a `lambda' function that runs command with
-`last-command-event' set to `new-event'"
-  `(lambda (&optional arg return-command)
-     ,command-event-wrapper-marker
-     (interactive "p")
-     (if return-command
-         ,command
-       (let ((last-command-event ,new-event))
-         (call-interactively ,command)))))
-
-(defun equivalent-current-binding (key)
-  "NOTE -- this function is broken but useful.
-
-At the moment I can't find a way to fix it, but I'm using it with
-all its kludges anyway.
-
-Finds the command that is run when `key' is pressed.
-
-If it's a function with the `documentation'
-`command-event-wrapper-marker' assumes it's a wrapper created
-with `run-with-specified-command' and returns the result
-of (command nil t).
-
-Otherwise creates a `lambda' function using
-`run-with-specified-command' that runs the command bound under
-the false environment where `last-command-event' is KEY"
-  (let ((current-binding (key-binding key)))
-    (if (and (listp current-binding)
-             (string-equal command-event-wrapper-marker
-                           (documentation current-binding)))
-        (funcall current-binding nil t)
-      (lexical-let ((current-key (aref key 0)) (old-binding current-binding))
-        (run-with-specified-command current-key old-binding)))))
-
-(defun swap-these-keys (left-key right-key keymap)
-  "Puts alternate bindings of LEFT-KEY and RIGHT-KEY into KEYMAP.
-
-LEFT-KEY and RIGHT-KEY should be two objects valid in a call to
-`key-binding'.  Makes a new binding in KEYMAP or the local
-keymap, as used by `local-set-key'.
-
-If a mapping has a normal function, we bind the other key to a
-`lambda' function that calls the original with a masked
-`last-command-event' pretending to be the first key.
-
-These `lambda' functions are marked by their documentation
-string (*very* hacky -- I know), and if this documentation string
-is noticed, they are called with arguments so they return their
-wrapped function.
-
-If KEYMAP is defined, binds keys in that map, else uses
-`current-local-map'"
-  (let ((left-function (equivalent-current-binding left-key))
-        (right-function (equivalent-current-binding right-key)))
-    (define-key keymap left-key right-function)
-    (define-key keymap right-key left-function)))
-
-(defun swapped-keymap ()
-  "Create a swapped keymap for this buffer.
-Take the keys currently active, and create a keymap that takes
-inverts the bindings of those key pairs in `keyswap-pairs'.
-Returns the resulting keymap with these bindings, but doesn't do
-anything other than create and return the keymap."
-  (let ((return-map (make-sparse-keymap)))
-    (dolist (key-pair keyswap-pairs return-map)
-      (swap-these-keys (vector (car key-pair))
-                       (vector (cdr key-pair))
-                       return-map))))
-
-(defvar-local keyswap-pairs
-  (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
-        '(?6 . ?^) '(?7 . ?&) '(?8 . ?*) '(?9 . ?\() '(?0 . ?\))
-        '(?- . ?_) '(?\~ . ?\~))
-  "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
-
-(defun keyswap-update-keys ()
-  "Update the buffer-local keymap currently used for `keyswap-mode'"
-  (when (assoc 'keyswap-mode minor-mode-overriding-map-alist)
-    (let ((currently-on keyswap-mode))
-      (when currently-on (keyswap-mode 0))
-      (setf (cdr (assoc 'keyswap-mode minor-mode-overriding-map-alist))
-            (swapped-keymap))
-      (when currently-on (keyswap-mode t)))))
-
-(define-minor-mode keyswap-mode
-  "Minor mode for programming where number keys are swapped with their shifted
-counterparts.
-
-This effectively makes the keyboard a \"programmers\" version of the keyboard.
-
-In order to to have a different set of keys swapped for each
-buffer, I abuse `minor-mode-overriding-map-alist' and never
-actually have a minor mode map in the main `minor-mode-map-alist'
-variable.
-
-When this mode is activated, it first checks whether the current
-buffer already has a local overriding keymap in
-`minor-mode-overriding-map-alist', and if so does nothing but
-activate that keymap.
-
-If there is no relevant keymap in
-`minor-mode-overriding-map-alist' it finds the mappings in the
-`current-buffer' that relate to the keys to be swapped in
-`keyswap-pairs', creates a keymap that has functionaly swapped
-these keys, and stores that as the keymap in `minor-mode-overriding-map-alist'
-to be used in all future invocations of this minor-mode.
-
-When using this minor-mode along with others there are a few things to watch out
-for.
-First off, if this minor mode is activated before others that change the current
-"
-  nil
-  " keyswap"
-  nil
-  ;; Body is executed every time the mode is toggled
-  ;; If keyswap-mode is not in the `minor-mode-overriding-map-alist' variable,
-  ;; then create a new map with `swapped-keymap', and add that to the list of
-  ;; `minor-mode-overriding-map-alist'.
-  (unless (assoc 'keyswap-mode minor-mode-overriding-map-alist)
-    (push (cons 'keyswap-mode (swapped-keymap)) minor-mode-overriding-map-alist)))
-
-(defun keyswap-include-braces ()
-  "Hook so `toggle-shifted-keys' includes {,[, and },]"
-  (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\}))))
-  (keyswap-update-keys))
-
-(defun keyswap-include-quotes ()
-  "Hook so `toggle-shifted-keys' includes \" and '"
-  (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\' . ?\"))))
-  (keyswap-update-keys))
-
-(defun keyswap-tac-underscore-exception ()
-  "Hook so `toggle-shifted-keys' ignores - and _"
-  (setq-local keyswap-pairs
-              (remove '(?- . ?_) keyswap-pairs))
-  (keyswap-update-keys))
 
 ;; Binding things in `prog-mode-map', which have to be overridden by minor modes
 ;; for special bindings.
 (add-hook 'prog-mode-hook 'keyswap-mode)
 
 ;; Some handy functions to wrap a currently highlighted region `wrap-region'
-;; when it doesn't play nicely with my `toggle-shifted-keys' function
+;; when it doesn't play nicely with my `keyswap-mode' stuff.
+;;
+;; The problem with `wrap-region' is that it hard-codes the key that it calls
+;; the keybinding of.
+;; i.e. the `wrap-region' lambda function originally on the '(' key will call
+;; the function that is bound to the '(' key no matter what key it is bound to.
+;; Hence when I put the '(' lambda function onto the '9' key, it calls the
+;; function that is bound to the '(' key, which is to insert '9'.
+;; TODO I think I can fix this by making the `wrap-region-trigger' function
+;; inspect `last-command-event', and run the command bound to that key.
 ;;
 ;; (could also have `move-past-close-and-reindent' for the closing character of
 ;; each, and always insert a pair (instead of a single character) but I don't
