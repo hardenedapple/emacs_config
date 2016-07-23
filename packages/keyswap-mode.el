@@ -1,4 +1,4 @@
-;;; keyswap-mode.el --- swap bindings between two keys
+;;; keyswap-mode.el --- swap bindings between pairs of keys
 
 ;; Copyright (C) 2016 Matthew Malcomson
 
@@ -29,7 +29,7 @@
 ;; Version: 0.1.0
 ;; Package-Version: 20160722.2100
 ;; URL: http://github.com/hardenedapple/keyswap-mode
-;; Package-Requires: ()
+;; Package-Requires: ((emacs "24.3"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -38,6 +38,8 @@
 ;; keyswap-mode is a minor mode that allows swapping the commands of two keys.
 ;; It comes with a default set of keys to swap of the number keys and their
 ;; shifted counterparts along with the '-' and '_' key.
+;; This is different to the function `keyboard-translate' as swaps may be done
+;; on a per-major-mode basis.
 ;; This is generally useful in programming languages where symbols are more
 ;; often used than numbers.
 ;;
@@ -102,10 +104,10 @@
 (defconst keyswap-command-docstring "CHAR COMMAND WRAPPER ")
 
 (defun keyswap-equivalent-binding (key)
-  "NOTE -- this function is broken but useful.
+  "NOTE -- this function is hacky but useful.
 
-At the moment I can't find a way to fix it, but I'm using it with
-all its kludges anyway.
+I use the docstring of a function to recognise it, this docstring
+should begin with `keyswap-command-docstring'.
 
 Finds the command that is run when `key' is pressed.
 
@@ -185,16 +187,6 @@ anything other than create and return the keymap."
     (dolist (key-pair keyswap-pairs return-map)
       (keyswap-swap-these (car key-pair) (cdr key-pair) return-map))))
 
-(defun keyswap-update-keys ()
-  "Update the buffer-local keymap currently used for `keyswap-mode'"
-  (interactive)
-  (when (assoc 'keyswap-mode minor-mode-overriding-map-alist)
-    (let ((currently-on keyswap-mode))
-      (when currently-on (keyswap-mode 0))
-      (setf (cdr (assoc 'keyswap-mode minor-mode-overriding-map-alist))
-            (keyswap-swapped-keymap))
-      (when currently-on (keyswap-mode t)))))
-
 ;;;###autoload
 (define-minor-mode keyswap-mode
   "Minor mode for programming where number keys are swapped with their shifted
@@ -234,6 +226,15 @@ First off, if this minor mode is activated before others that change the current
     (push (cons 'keyswap-mode (keyswap-swapped-keymap))
           minor-mode-overriding-map-alist)))
 
+(defun keyswap-update-keys ()
+  "Update the buffer-local keymap currently used for function `keyswap-mode'."
+  (interactive)
+  (when (assoc 'keyswap-mode minor-mode-overriding-map-alist)
+    (let ((currently-on keyswap-mode))
+      (when currently-on (keyswap-mode 0))
+      (setf (cdr (assoc 'keyswap-mode minor-mode-overriding-map-alist))
+            (keyswap-swapped-keymap))
+      (when currently-on (keyswap-mode t)))))
 
 (defun keyswap-act-on-pairs (action-fn keyswaps)
   "Call ACTION-FN on successive pairs of KEYSWAPS."
@@ -266,22 +267,22 @@ First off, if this minor mode is activated before others that change the current
    keyswaps))
 
 (defun keyswap-include-braces ()
-  "Hook to make `keyswap-mode' include {,[, and },]."
+  "Hook to make function `keyswap-mode' swap {,[, and },]."
   (keyswap-add-pairs ?\[ ?\{   ?\] ?\} )
   (keyswap-update-keys))
 
 (defun keyswap-include-quotes ()
-  "Hook to make `keyswap-mode' include \" and '."
+  "Hook to make function `keyswap-mode' swap \" and '."
   (keyswap-add-pairs ?\' ?\")
   (keyswap-update-keys))
 
 (defun keyswap-tac-underscore-exception ()
-  "Hook to make `keyswap-mode' ignore - and _."
+  "Hook to make function `keyswap-mode' ignore - and _."
   (keyswap-remove-pairs ?- ?_)
   (keyswap-update-keys))
 
 (defun keyswap-colon-semicolon ()
-  "Hook to make `keyswap-mode' swap : and ;."
+  "Hook to make function `keyswap-mode' swap : and ;."
   (keyswap-add-pairs ?: ?\;)
   (keyswap-update-keys))
 
