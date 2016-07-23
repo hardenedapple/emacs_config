@@ -598,6 +598,18 @@ and run a command given by the user in that window.
     (window-number-select-call (1+ winnum))))
 
 
+;;;; Wrap Region Settings
+;;;;
+(wrap-region-global-mode t)
+
+(defadvice wrap-region-fallback (around keyswap-negate protect activate)
+  "Ensure that `keyswap-mode' is not active when `wrap-region-fallback' is
+  getting called."
+  (keyswap-mode 0)
+  ad-do-it
+  (keyswap-mode 1))
+
+
 ;;;; Xcscope Settings
 ;;;;
 (add-hook 'c-mode-hook 'cscope-setup)

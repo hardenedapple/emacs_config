@@ -430,21 +430,13 @@ called automatically on save."
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
-
-;;;; Keyswap Mode Settings
-;;;;
-
-;; Some handy functions to wrap a currently highlighted region `wrap-region'
-;; when it doesn't play nicely with my `keyswap-mode' stuff.
+;; Some handy functions to wrap a currently highlighted region.
 ;;
-;; The problem with `wrap-region' is that it hard-codes the key that it calls
-;; the keybinding of.
-;; i.e. the `wrap-region' lambda function originally on the '(' key will call
-;; the function that is bound to the '(' key no matter what key it is bound to.
-;; Hence when I put the '(' lambda function onto the '9' key, it calls the
-;; function that is bound to the '(' key, which is to insert '9'.
-;; TODO I think I can fix this by making the `wrap-region-trigger' function
-;; inspect `last-command-event', and run the command bound to that key.
+;; These are almost superfluous given the `wrap-region' package, but I've gotten
+;; used to them during the time that I couldn't get `wrap-region' and
+;; `keyswap-mode' to work nicely with each other.
+;; I also like to use them when I haven't loaded any plugins, hence they stick
+;; around.
 ;;
 ;; (could also have `move-past-close-and-reindent' for the closing character of
 ;; each, and always insert a pair (instead of a single character) but I don't
