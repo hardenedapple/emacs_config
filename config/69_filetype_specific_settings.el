@@ -118,11 +118,7 @@ stops the current python process using `delete-process' rather than
        (mapconcat 'identity (process-command python-process) " ")))))
 
 ;;; Python doesn't use semicolons very much, so make them all colons
-(add-hook 'python-mode-hook
-          (lambda ()
-            (setq-local keyswap-pairs
-                        (append keyswap-pairs '((?: . ?\;))))
-            (keyswap-update-keys)))
+(add-hook 'python-mode-hook 'keyswap-colon-semicolon)
 
 ;;;; Scheme Settings
 ;;;;

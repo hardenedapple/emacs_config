@@ -5,9 +5,10 @@
 
 ;; Author: Matthew Malcomson <hardenedapple@gmail.com>
 ;; Maintainer: Matthew Malcomson <hardenedapple@gmail.com>
+;; Created: 23 Jul 2016
+;; Keywords: convenience
 ;; Version: 0.1.0
 ;; Package-Version: 20160722.2100
-;; Keywords: speed, convenience
 ;; URL: http://github.com/hardenedapple/keyswap-mode
 ;; TODO -- Add 'cl as a package requirement -- not sure about the syntax at the
 ;; moment
@@ -49,31 +50,28 @@
 ;;   (require 'keyswap-mode)
 
 ;; To toggle between swapped and not-swapped sets of keys, use the command
-;; (keyswap-mode) or M-x keyswap-mode'
+;; (keyswap-mode) or M-x keyswap-mode
+;;
+;; Keys are swapped on a major-mode basis.
+;; If you change the swapped keys in one buffer these changes are propagated to
+;; all other major modes.
+;;
+;; The set of keys to swap is stored in the buffer local `keyswap-pairs'
+;; variable.
+;; This variable is an alist of keys that should be swapped ## TODO -- should
+;; this be an alist of vectors
+;; In order to change the current swapped keys one must change the pai
+;;
 
 
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
-(defconst command-event-wrapper-marker "CHAR COMMAND WRAPPER ")
+(defconst keyswap-command-docstring "CHAR COMMAND WRAPPER ")
 
-;; `lexical-let' my current understanding of it:
-;;   It creates a symbol that is not interned in the global scope.
-;;   It assigns the value of this symbol to the value of the symbol that we are
-;;   lexically capturing.
-;;   It modifies any lambda function it is given to take an extra number of
-;;   arguments for each of the captured lexical variables.
-;;   It returns an enclosing lambda fnuction that takes arguments for the
-;;   original function into a &rest list, and runs `apply' on the modified
-;;   lambda function above.
-;;   The arguments passed with this `apply' call are the unbound symbol and the
-;;   &rest parameter.
-;;   This unbound symbol cannot be overrided from outside because we have no way
-;;   of accessing it.
-;;   It is hence called a hidden symbol.
-(defun equivalent-current-binding (key)
+(defun keyswap-equivalent-binding (key)
   "NOTE -- this function is broken but useful.
 
 At the moment I can't find a way to fix it, but I'm using it with
@@ -82,7 +80,7 @@ all its kludges anyway.
 Finds the command that is run when `key' is pressed.
 
 If this commands `documentation' starts with
-`command-event-wrapper-marker' assume it is a wrapper previously
+`keyswap-command-docstring' assume it is a wrapper previously
 created by this function.
 Then return the result of (command nil t).
 
@@ -90,7 +88,7 @@ Otherwise create a `lambda' function that runs that command under
 the false environment where `last-command-event' is KEY"
   (let ((current-binding (key-binding key)))
     (if (and (listp current-binding)
-             (string-prefix-p command-event-wrapper-marker
+             (string-prefix-p keyswap-command-docstring
                               (documentation current-binding)))
         (funcall current-binding nil t)
       ;; `lexical-let' uses `cl--function-convert' which wraps any lambda functions
@@ -104,7 +102,7 @@ the false environment where `last-command-event' is KEY"
       ;; so that I can create the form with a string literal for
       ;; `cl--function-convert' to recognise.
       ;; That's the reason for the `eval' layer of indirection.
-      (let ((docstring (format (concat command-event-wrapper-marker "\"%c\"")
+      (let ((docstring (format (concat keyswap-command-docstring "\"%c\"")
                                (aref key 0))))
         (eval
          `(lexical-let ((current-key (aref key 0)) (old-binding current-binding))
@@ -116,7 +114,7 @@ the false environment where `last-command-event' is KEY"
                 (let ((last-command-event current-key))
                   (call-interactively old-binding))))))))))
 
-(defun swap-these-keys (left-key right-key keymap)
+(defun keyswap-swap-these (left-key right-key keymap)
   "Puts alternate bindings of LEFT-KEY and RIGHT-KEY into KEYMAP.
 
 LEFT-KEY and RIGHT-KEY should be two objects valid in a call to
@@ -134,12 +132,19 @@ wrapped function.
 
 If KEYMAP is defined, binds keys in that map, else uses
 `current-local-map'"
-  (let ((left-function (equivalent-current-binding left-key))
-        (right-function (equivalent-current-binding right-key)))
+  (let ((left-function (keyswap-equivalent-binding left-key))
+        (right-function (keyswap-equivalent-binding right-key)))
     (define-key keymap left-key right-function)
     (define-key keymap right-key left-function)))
 
-(defun swapped-keymap ()
+(defvar-local keyswap-pairs
+  (mapcar (lambda (pair) (cons (vector (car pair)) (vector (cdr pair))))
+          (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
+                '(?6 . ?^) '(?7 . ?&) '(?8 . ?*) '(?9 . ?\() '(?0 . ?\))
+                '(?- . ?_)))
+  "Pairs of characters to swap in `keyswap-mode'.")
+
+(defun keyswap-swapped-keymap ()
   "Create a swapped keymap for this buffer.
 Take the keys currently active, and create a keymap that takes
 inverts the bindings of those key pairs in `keyswap-pairs'.
@@ -147,23 +152,16 @@ Returns the resulting keymap with these bindings, but doesn't do
 anything other than create and return the keymap."
   (let ((return-map (make-sparse-keymap)))
     (dolist (key-pair keyswap-pairs return-map)
-      (swap-these-keys (vector (car key-pair))
-                       (vector (cdr key-pair))
-                       return-map))))
-
-(defvar-local keyswap-pairs
-  (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
-        '(?6 . ?^) '(?7 . ?&) '(?8 . ?*) '(?9 . ?\() '(?0 . ?\))
-        '(?- . ?_))
-  "Pairs of characters to swap when calling the `toggle-shifted-keys' function.")
+      (keyswap-swap-these (car key-pair) (cdr key-pair) return-map))))
 
 (defun keyswap-update-keys ()
   "Update the buffer-local keymap currently used for `keyswap-mode'"
+  (interactive)
   (when (assoc 'keyswap-mode minor-mode-overriding-map-alist)
     (let ((currently-on keyswap-mode))
       (when currently-on (keyswap-mode 0))
       (setf (cdr (assoc 'keyswap-mode minor-mode-overriding-map-alist))
-            (swapped-keymap))
+            (keyswap-swapped-keymap))
       (when currently-on (keyswap-mode t)))))
 
 (define-minor-mode keyswap-mode
@@ -198,27 +196,63 @@ First off, if this minor mode is activated before others that change the current
   nil
   ;; Body is executed every time the mode is toggled
   ;; If keyswap-mode is not in the `minor-mode-overriding-map-alist' variable,
-  ;; then create a new map with `swapped-keymap', and add that to the list of
+  ;; then create a new map with `keyswap-swapped-keymap', and add that to the list of
   ;; `minor-mode-overriding-map-alist'.
   (unless (assoc 'keyswap-mode minor-mode-overriding-map-alist)
-    (push (cons 'keyswap-mode (swapped-keymap)) minor-mode-overriding-map-alist)))
+    (push (cons 'keyswap-mode (keyswap-swapped-keymap))
+          minor-mode-overriding-map-alist)))
+
+
+(defun keyswap-act-on-pairs (action-fn keyswaps)
+  "Call ACTION-FN on successive pairs of remaining arguments."
+  (loop for remaining-keyswaps on keyswaps by #'cddr
+        do (let ((left-key (first remaining-keyswaps))
+                 (right-key (second remaining-keyswaps)))
+             (if (and left-key right-key)
+                 (funcall action-fn (cons (vector left-key)
+                                          (vector right-key)))))))
+
+(defun keyswap-add-pairs (&rest keyswaps)
+  "Add keys into `keyswap-pairs'"
+  (keyswap-act-on-pairs
+   (lambda (pair)
+     (setq-local
+      keyswap-pairs
+      (cl-adjoin pair keyswap-pairs
+                 :test #'(lambda (left right)
+                           (or (equal left right)
+                               (equal (cons (cdr left) (car left)) right))))))
+   keyswaps))
+
+(defun keyswap-remove-pairs (&rest keyswaps)
+  "Remove pairs from `keyswap-pairs'"
+  (keyswap-act-on-pairs
+   (lambda (pair)
+     (setq-local keyswap-pairs
+                 (remove (cons (cdr pair) (car pair))
+                         (remove pair keyswap-pairs))))
+   keyswaps))
 
 (defun keyswap-include-braces ()
-  "Hook so `toggle-shifted-keys' includes {,[, and },]"
-  (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\[ . ?\{) (?\] . ?\}))))
+  "Hook so `keyswap-mode' includes {,[, and },]"
+  (keyswap-add-pairs ?\[ ?\{   ?\] ?\} )
   (keyswap-update-keys))
 
 (defun keyswap-include-quotes ()
-  "Hook so `toggle-shifted-keys' includes \" and '"
-  (setq-local keyswap-pairs
-              (append keyswap-pairs '((?\' . ?\"))))
+  "Hook so `keyswap-mode' includes \" and '"
+  (keyswap-add-pairs ?\' ?\")
   (keyswap-update-keys))
 
 (defun keyswap-tac-underscore-exception ()
-  "Hook so `toggle-shifted-keys' ignores - and _"
-  (setq-local keyswap-pairs
-              (remove '(?- . ?_) keyswap-pairs))
+  "Hook so `keyswap-mode' ignores - and _"
+  (keyswap-remove-pairs ?- ?_)
+  (keyswap-update-keys))
+
+(defun keyswap-colon-semicolon ()
+  "Hook so `keyswap-mode' swaps : and ;"
+  (keyswap-add-pairs ?: ?\;)
   (keyswap-update-keys))
 
 (provide 'keyswap-mode)
+
+;;; keyswap-mode.el ends here
