@@ -1,7 +1,26 @@
-;;; keyswap-mode.el -- swap key bindings (toggle programmers keyboard version)
+;;; keyswap-mode.el --- swap bindings between two keys
 
 ;; Copyright (C) 2016 Matthew Malcomson
 
+;;; Licence:
+
+;; Permission is hereby granted, free of charge, to any person obtaining a copy
+;; of this software and associated documentation files (the "Software"), to deal
+;; in the Software without restriction, including without limitation the rights
+;; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;; copies of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice shall be included in
+;; all copies or substantial portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
 
 ;; Author: Matthew Malcomson <hardenedapple@gmail.com>
 ;; Maintainer: Matthew Malcomson <hardenedapple@gmail.com>
@@ -10,30 +29,9 @@
 ;; Version: 0.1.0
 ;; Package-Version: 20160722.2100
 ;; URL: http://github.com/hardenedapple/keyswap-mode
-;; TODO -- Add 'cl as a package requirement -- not sure about the syntax at the
-;; moment
 ;; Package-Requires: ()
 
 ;; This file is NOT part of GNU Emacs.
-
-
-;;; License:
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
-
 
 ;;; Commentary:
 
@@ -58,9 +56,19 @@
 ;;
 ;; The set of keys to swap is stored in the buffer local `keyswap-pairs'
 ;; variable.
-;; This variable is an alist of keys that should be swapped ## TODO -- should
-;; this be an alist of vectors
-;; In order to change the current swapped keys one must change the pai
+;; This variable is an alist of vectors ready for passing to `define-key' that
+;; should be swapped when `keyswap-mode' is turned on.
+;; In order to change the current swapped keys one should modify this list with
+;; `keyswap-add-pairs' or `keyswap-remove-pairs', and then run
+;; `keyswap-update-keys' like so
+;; (keyswap-add-pairs ?\: ?\;)
+;; (keyswap-remove-pairs ?\- ?\_)
+;; (keyswap-update-keys)
+;;
+;; Without running `keyswap-update-keys' the changes in `keyswap-pairs' will not
+;; be propagated into the action of `keyswap-mode'.
+;;
+;; There are some provided hooks for common modifications of `keyswap-pairs'.
 ;;
 
 
@@ -137,6 +145,7 @@ If KEYMAP is defined, binds keys in that map, else uses
     (define-key keymap left-key right-function)
     (define-key keymap right-key left-function)))
 
+;;;###autoload
 (defvar-local keyswap-pairs
   (mapcar (lambda (pair) (cons (vector (car pair)) (vector (cdr pair))))
           (list '(?1 . ?!) '(?2 . ?@) '(?3 . ?#) '(?4 . ?$) '(?5 . ?%)
@@ -164,6 +173,7 @@ anything other than create and return the keymap."
             (keyswap-swapped-keymap))
       (when currently-on (keyswap-mode t)))))
 
+;;;###autoload
 (define-minor-mode keyswap-mode
   "Minor mode for programming where number keys are swapped with their shifted
 counterparts.
@@ -204,16 +214,16 @@ First off, if this minor mode is activated before others that change the current
 
 
 (defun keyswap-act-on-pairs (action-fn keyswaps)
-  "Call ACTION-FN on successive pairs of remaining arguments."
-  (loop for remaining-keyswaps on keyswaps by #'cddr
-        do (let ((left-key (first remaining-keyswaps))
-                 (right-key (second remaining-keyswaps)))
+  "Call ACTION-FN on successive pairs of KEYSWAPS."
+  (cl-loop for remaining-keyswaps on keyswaps by #'cddr
+        do (let ((left-key (car remaining-keyswaps))
+                 (right-key (cadr remaining-keyswaps)))
              (if (and left-key right-key)
                  (funcall action-fn (cons (vector left-key)
                                           (vector right-key)))))))
 
 (defun keyswap-add-pairs (&rest keyswaps)
-  "Add keys into `keyswap-pairs'"
+  "Add KEYSWAPS into `keyswap-pairs'."
   (keyswap-act-on-pairs
    (lambda (pair)
      (setq-local
@@ -225,7 +235,7 @@ First off, if this minor mode is activated before others that change the current
    keyswaps))
 
 (defun keyswap-remove-pairs (&rest keyswaps)
-  "Remove pairs from `keyswap-pairs'"
+  "Remove KEYSWAPS from `keyswap-pairs'."
   (keyswap-act-on-pairs
    (lambda (pair)
      (setq-local keyswap-pairs
@@ -234,22 +244,22 @@ First off, if this minor mode is activated before others that change the current
    keyswaps))
 
 (defun keyswap-include-braces ()
-  "Hook so `keyswap-mode' includes {,[, and },]"
+  "Hook to make `keyswap-mode' include {,[, and },]."
   (keyswap-add-pairs ?\[ ?\{   ?\] ?\} )
   (keyswap-update-keys))
 
 (defun keyswap-include-quotes ()
-  "Hook so `keyswap-mode' includes \" and '"
+  "Hook to make `keyswap-mode' include \" and '."
   (keyswap-add-pairs ?\' ?\")
   (keyswap-update-keys))
 
 (defun keyswap-tac-underscore-exception ()
-  "Hook so `keyswap-mode' ignores - and _"
+  "Hook to make `keyswap-mode' ignore - and _."
   (keyswap-remove-pairs ?- ?_)
   (keyswap-update-keys))
 
 (defun keyswap-colon-semicolon ()
-  "Hook so `keyswap-mode' swaps : and ;"
+  "Hook to make `keyswap-mode' swap : and ;."
   (keyswap-add-pairs ?: ?\;)
   (keyswap-update-keys))
 
