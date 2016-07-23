@@ -1,7 +1,42 @@
 ;;;; My non-standard-stuff
 ;;;;
+
+;;;; Splice Window Settings
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
+;;;; Keyswap Mode Settings
+;; Binding things in `prog-mode-map', which have to be overridden by minor modes
+;; for special bindings.
+(add-hook 'prog-mode-hook 'keyswap-mode)
+
+;;; Use double quotes by default in awk, C, C++ and some others.
+(with-eval-after-load 'cc-vars
+  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
+
+(with-eval-after-load 'tex-mode
+  ;; Note -- order here is important
+  (add-hook 'latex-mode-hook 'keyswap-mode t)
+  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
+
+(with-eval-after-load 'lisp-mode
+  (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
+
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
+
+(with-eval-after-load 'ielm
+  (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'ielm-mode-hook 'keyswap-mode))
+
+;; Python doesn't use semicolons very much, so make them all colons
+(add-hook 'python-mode-hook 'keyswap-colon-semicolon)
+
+(with-eval-after-load 'js
+  (add-hook 'js-mode-hook 'keyswap-include-braces)
+  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
+
+;;;; Swift Motion Settings
 (defun next-beginning-of-defun (&optional arg)
   (interactive "p")
   (beginning-of-defun (- arg)))

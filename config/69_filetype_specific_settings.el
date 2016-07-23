@@ -4,10 +4,6 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
-;;; Use double quotes by default in awk, C, C++ and some others.
-(with-eval-after-load 'cc-vars
-  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
-
 
 ;;;; Comint Mode
 ;;;;
@@ -41,11 +37,6 @@ that buffer, and follows it."
 ;;;;
 (setq latex-run-command "pdflatex")
 
-(with-eval-after-load 'tex-mode
-  ;; Note -- order here is important
-  (add-hook 'latex-mode-hook 'keyswap-mode t)
-  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
-
 
 ;;;; Lisp Settings
 ;;;;
@@ -76,16 +67,7 @@ https://github.com/Malabarba/speed-of-thought-lisp"
   ;; Really don't know why emacs makes this a local key binding when there's
   ;; already a key-binding for it in the global map.
   (define-key emacs-lisp-mode-map (kbd "M-C-i") nil)
-  (define-key lisp-interaction-mode-map (kbd "M-C-i") nil)
-  (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
-
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
-
-(with-eval-after-load 'ielm
-  (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'ielm-mode-hook 'keyswap-mode))
+  (define-key lisp-interaction-mode-map (kbd "M-C-i") nil))
 
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
@@ -117,17 +99,8 @@ stops the current python process using `delete-process' rather than
       (python-shell-get-or-create-process
        (mapconcat 'identity (process-command python-process) " ")))))
 
-;;; Python doesn't use semicolons very much, so make them all colons
-(add-hook 'python-mode-hook 'keyswap-colon-semicolon)
 
 ;;;; Scheme Settings
 ;;;;
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")
-
-;
-;;;; Javascript Settings
-;;;;
-(with-eval-after-load 'js
-  (add-hook 'js-mode-hook 'keyswap-include-braces)
-  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))

@@ -58,6 +58,9 @@
 ;; variable.
 ;; This variable is an alist of vectors ready for passing to `define-key' that
 ;; should be swapped when `keyswap-mode' is turned on.
+;; Its default is to swap all number keys and their shifted alternatives, along
+;; with the - and _ keys.
+;;
 ;; In order to change the current swapped keys one should modify this list with
 ;; `keyswap-add-pairs' or `keyswap-remove-pairs', and then run
 ;; `keyswap-update-keys' like so
@@ -68,8 +71,27 @@
 ;; Without running `keyswap-update-keys' the changes in `keyswap-pairs' will not
 ;; be propagated into the action of `keyswap-mode'.
 ;;
-;; There are some provided hooks for common modifications of `keyswap-pairs'.
+;; There are some provided hooks for common modifications of `keyswap-pairs'
+;; that modify the pairs to swap and call `keyswap-update-keys' accordingly.
+;; These are `keyswap-include-braces' to swap [ and ] with { and },
+;; `keyswap-include-quotes' to swap ' with ", `keyswap-tac-underscore-exception'
+;; to *not* swap - and _, and finally `keyswap-colon-semicolon' to swap : and ;.
 ;;
+;; It is recommended to turn on `keyswap-mode' by default in programming buffers
+;; with
+;; (add-hook 'prog-mode-hook 'keyswap-mode)
+;;
+;; and then add modifications for each major-mode you desire accordingly, e.g.
+;;
+;; (with-eval-after-load 'cc-vars
+;;   (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
+;;
+;; (with-eval-after-load 'lisp-mode
+;;   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
+;;   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
+;;
+;; To toggle between having keys swapped and not, just turn on and off
+;; `keyswap-mode'.
 
 
 

@@ -434,10 +434,6 @@ called automatically on save."
 ;;;; Keyswap Mode Settings
 ;;;;
 
-;; Binding things in `prog-mode-map', which have to be overridden by minor modes
-;; for special bindings.
-(add-hook 'prog-mode-hook 'keyswap-mode)
-
 ;; Some handy functions to wrap a currently highlighted region `wrap-region'
 ;; when it doesn't play nicely with my `keyswap-mode' stuff.
 ;;
