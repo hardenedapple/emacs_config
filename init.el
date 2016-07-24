@@ -52,7 +52,7 @@
                                      ;; unbound
                                      ))
       (require-only '(desktop dired-x eldoc em-smart epa-file eshell
-                              le-eval-and-insert-results nameses keyswap-mode
+                              le-eval-and-insert-results nameses keyswap
                               transpose-frame splice-windows uniquify)))
   ;; Install packages, require packages
   (dolist (p (append elpa-packages download-only))
