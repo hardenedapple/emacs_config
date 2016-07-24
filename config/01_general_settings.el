@@ -130,12 +130,22 @@
   (end-of-line)
   (indent-new-comment-line))
 
+;; Things I've tried that have some problem (for future reference)
+;;
+;; 1. This doesn't leave a comment leader at the beginning of the new line.
+;; (progn
+;;   (beginning-of-line)
+;;   (indent-new-comment-line)
+;;   (forward-line -1)
+;;   (indent-for-tab-command)
+;;   (end-of-line))
+;;
 (defun open-line-above ()
   "Add new line above the current one."
   (interactive)
-  (beginning-of-line)
-  (indent-new-comment-line)
-  (forward-line -1)
+  (open-line-below)
+  (transpose-lines 1)
+  (forward-line -2)
   (indent-for-tab-command)
   (end-of-line))
 
