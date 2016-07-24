@@ -14,7 +14,6 @@
   (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
 
 (with-eval-after-load 'tex-mode
-  ;; Note -- order here is important
   (add-hook 'latex-mode-hook 'keyswap-mode t)
   (add-hook 'latex-mode-hook 'keyswap-include-braces t))
 
@@ -307,11 +306,16 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Wrap Region Settings
 ;;;;
-;; `wrap-region' and my functions for toggling shifted keys don't play nicely
-;; together, hence I can't have `wrap-region' in programming modes.
-;; However, having it in modes for XML and HTML is still useful.
-(add-hook 'sgml-mode-hook 'wrap-region-mode)
-(add-hook 'nxml-mode-hook 'wrap-region-mode)
+(wrap-region-global-mode t)
+(add-hook 'wrap-region-mode-hook 'keyswap-update-keys)
+(defadvice wrap-region-fallback (around keyswap-negate protect activate)
+  "Ensure that `keyswap-mode' is not active when
+  `wrap-region-fallback' is getting called."
+  (let ((currently-on keyswap-mode))
+    (when currently-on (keyswap-mode 0))
+    ad-do-it
+    (when currently-on (keyswap-mode 1))))
+
 
 ;;;; Paredit Settings
 ;;;;
@@ -596,18 +600,6 @@ and run a command given by the user in that window.
   (define-key ctl-x-map
     (format "p%d" (1+ winnum))
     (window-number-select-call (1+ winnum))))
-
-
-;;;; Wrap Region Settings
-;;;;
-(wrap-region-global-mode t)
-
-(defadvice wrap-region-fallback (around keyswap-negate protect activate)
-  "Ensure that `keyswap-mode' is not active when `wrap-region-fallback' is
-  getting called."
-  (keyswap-mode 0)
-  ad-do-it
-  (keyswap-mode 1))
 
 
 ;;;; Xcscope Settings
