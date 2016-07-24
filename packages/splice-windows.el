@@ -42,6 +42,7 @@ Default direction is next."
       (window-state-put
        conf (split-window base-window nil direction) 'safe))))
 
+;;;###autoload
 (defun splice-window-upwards (&optional window)
   "Splice current level of WINDOW ancestry up one.
 
@@ -108,6 +109,7 @@ in the example."
         (splice-window--add-back-windows cur-win forward-siblings t)
         (splice-window--add-back-windows cur-win backward-siblings nil)))))
 
+;;;###autoload
 (defun merge-windows (window1 &rest windows)
   "Merge all WINDOWS into WINDOW1.
 
@@ -120,6 +122,7 @@ This is the opposite of `splice-window-upwards'."
       (window-state-put add-conf (split-window window1 nil direction)))))
 
 ;;; Swap windows
+;;;###autoload
 (defun swap-windows-properly (window1 &optional window2)
   "Swap WINDOW1 and WINDOW2 respecting any splits
 
