@@ -39,20 +39,20 @@
 (let ((download-only '(monokai-theme tangotango-theme))
       (elpa-packages '(avy arduino-mode buffer-move c-eldoc elisp-slime-nav
                                      expand-region goto-chg ido-ubiquitous
-                                     ido-at-point ido-vertical-mode jump-char
-                                     list-register magit monky multiple-cursors
-                                     paredit projectile python-pylint quack
-                                     smart-tab smart-window smex undo-tree
-                                     vimrc-mode window-number wrap-region
-                                     xcscope yasnippet transpose-mark
-                                     markdown-mode
+                                     ido-at-point ido-vertical-mode keyswap
+                                     jump-char list-register magit monky
+                                     multiple-cursors paredit projectile
+                                     python-pylint quack smart-tab smart-window
+                                     smex undo-tree vimrc-mode window-number
+                                     wrap-region xcscope yasnippet
+                                     transpose-mark markdown-mode
                                      ;; Occasionally use the below to show
                                      ;; currently unbound keys, which is useful
                                      ;; for deciding on a keybinding.
                                      ;; unbound
                                      ))
       (require-only '(desktop dired-x eldoc em-smart epa-file eshell
-                              le-eval-and-insert-results nameses keyswap
+                              le-eval-and-insert-results nameses
                               transpose-frame splice-windows uniquify)))
   ;; Install packages, require packages
   (dolist (p (append elpa-packages download-only))
