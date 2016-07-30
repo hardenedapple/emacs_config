@@ -91,7 +91,7 @@ in the example."
   (interactive)
   (let ((cur-win (or window (selected-window)))
         (original-win (selected-window)))
-    (unless (or (one-window-p)
+    (unless (or (one-window-p t)
                 (frame-root-window-p (window-parent cur-win)))
       (let ((forward-siblings
              (splice-window--get-all-window-siblings 'next cur-win))

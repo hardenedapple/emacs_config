@@ -44,6 +44,7 @@
         org-end-of-line
         org-self-insert-command
         org-yank
+        paredit-backslash
         paredit-backward
         paredit-backward-kill-word
         paredit-backward-up
