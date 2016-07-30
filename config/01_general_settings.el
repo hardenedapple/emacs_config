@@ -415,8 +415,8 @@ Think `completion-at-point' functions, but only one function at a time")
               fill-column 80
               tab-width 4
               truncate-lines t
-              visual-line-mode nil)
-(setq indent-line-function 'insert-tab)
+              visual-line-mode nil
+              indent-line-function 'insert-tab)
 
 (defun cleanup-buffer-safe ()
   "Perform some safe whitespace operations on `current-buffer'.
