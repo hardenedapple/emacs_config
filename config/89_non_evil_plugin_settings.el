@@ -35,6 +35,7 @@
   (add-hook 'js-mode-hook 'keyswap-include-braces)
   (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
 
+(keyswap-isearch-setup)
 
 ;;;; Swift Motion Settings
 ;;;;
