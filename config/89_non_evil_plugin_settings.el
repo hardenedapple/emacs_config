@@ -35,7 +35,18 @@
   (add-hook 'js-mode-hook 'keyswap-include-braces)
   (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
 
+
 ;;;; Swift Motion Settings
+;;;;
+
+;; I thought about defining `swift-motion-mode' by just using the
+;; `set-transient-map' function so I don't need to press <delete> or q to exit
+;; the mode.
+;; I decided against this so that I can still use other bindings without
+;; removing this set of mappings.
+;; That way things are a little bit more under my control -- i.e. I feel like
+;; going to the end of the line so I press C-e, that doesn't change the mappings
+;; of all the other swift-motion things.
 (defun next-beginning-of-defun (&optional arg)
   (interactive "p")
   (beginning-of-defun (- arg)))
@@ -88,7 +99,7 @@
   "Bind a bunch of single key mappings to motion keys.
 
 Exit this mode with 'q' or '<delete>'"
-  :lighter "swift-motion"
+  :lighter " swift-motion"
   :keymap swift-motion-mode-map
   :global t)
 
@@ -116,7 +127,7 @@ Exit this mode with 'q' or '<delete>'"
 
 (define-minor-mode lisp-motion-mode
   "Bind a bunch of single key mappings to lisp s-expression commands."
-  :lighter "lisp-motion"
+  :lighter " lisp-motion"
   :keymap lisp-motion-mode-map
   :require 'lisp)
 
@@ -412,7 +423,7 @@ paredit functions on the assumption they'll be more robust."
 
 (define-minor-mode paredit-motion-mode
   "Bind a bunch of single key mappings to lisp s-expression commands."
-  :lighter "paredit-motion"
+  :lighter " paredit-motion"
   :keymap paredit-motion-mode-map
   :require 'paredit)
 

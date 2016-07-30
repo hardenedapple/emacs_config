@@ -82,6 +82,9 @@
    'undo-tree-visualizer-selection-mode
    'window-number-mode
    'keyswap-mode
+   'swift-motion-mode
+   'lisp-motion-mode
+   'paredit-motion-mode
    )
   "List of minor-modes to show in modeline")
 (setq minor-mode-alist
