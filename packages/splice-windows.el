@@ -137,4 +137,31 @@ on them."
       (window-state-put state1 window2 'safe)
       (window-state-put state2 window1 'safe))))
 
+;;; Move the current window to one edge
+(defun move-window-to-edge--internal (direction &optional window)
+  "Moves WINDOW or `selected-window' DIRECTION edge of frame."
+  (let* ((move-win (or window (selected-window)))
+         (window-move-state (window-state-get move-win t)))
+    (delete-window move-win)
+    (if (one-window-p t)
+        (window-state-put window-move-state
+                          (split-window (frame-root-window) nil direction))
+      (let* ((forwards (member direction '(below right)))
+             (main-window
+              (funcall (if forwards #'window-last-child #'window-child)
+                       (frame-root-window)))
+             (root-window-split-direction
+              (splice-window--get-split-type main-window forwards)))
+        (window-state-put
+         window-move-state
+         (if (eq direction root-window-split-direction)
+             (split-window main-window nil direction)
+           (split-window (frame-root-window) nil direction)))))))
+
+(defun move-window-to-edge ()
+  "Move `selected-window' to an edge of the frame."
+  (interactive)
+  (move-window-to-edge--internal
+   (intern (completing-read "Direction: " '(left right below above)))))
+
 (provide 'splice-windows)
