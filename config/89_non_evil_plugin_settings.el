@@ -35,7 +35,11 @@
   (add-hook 'js-mode-hook 'keyswap-include-braces)
   (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
 
-(keyswap-isearch-setup)
+(add-hook 'isearch-mode-hook 'keyswap-isearch-start-hook)
+
+(with-eval-after-load 'python
+  (add-hook 'inferior-python-mode-hook 'keyswap-colon-semicolon)
+  (add-hook 'inferior-python-mode-hook 'keyswap-mode))
 
 ;;;; Swift Motion Settings
 ;;;;
@@ -202,6 +206,9 @@ Exit this mode with 'q' or '<delete>'"
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
 (global-set-key (kbd "M-M") 'jump-char-backward)
+
+;; Strange things about jump-char
+;; C-c C-c  comes out as C-j C-c
 
 
 ;;;; List Registers Settings
