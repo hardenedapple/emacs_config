@@ -30,8 +30,8 @@ that buffer, and follows it."
           (let ((this-command 'push-button))
             (button-activate first-button))))))
 
-(define-key help-mode-map (kbd "M-g M-f") 'help-follow-source-link)
-
+(with-eval-after-load 'help-mode
+    (define-key help-mode-map (kbd "M-g M-f") 'help-follow-source-link))
 
 ;;;; Latex Settings
 ;;;;

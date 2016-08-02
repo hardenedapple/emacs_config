@@ -279,8 +279,8 @@ as yet."
 
 ;;;; Ibuffer Settings
 ;;;;
-(define-key ibuffer-mode-map (kbd "M-g") nil)
-
+(with-eval-after-load 'ibuffer
+    (define-key ibuffer-mode-map (kbd "M-g") nil))
 
 ;;;; Ido Settings
 ;;;;
@@ -407,12 +407,13 @@ don't have the package installed."
       (ibuffer-forward-line 1 t))
     (goto-char old-point)))
 
-(define-key ibuffer-mode-map "m"
-  (lambda ()
-    (interactive)
-    (if mark-active
-        (call-interactively 'ibuffer-mark-by-region)
-      (call-interactively 'ibuffer-mark-forward))))
+(with-eval-after-load 'ibuffer
+  (define-key ibuffer-mode-map "m"
+    (lambda ()
+      (interactive)
+      (if mark-active
+          (call-interactively 'ibuffer-mark-by-region)
+        (call-interactively 'ibuffer-mark-forward)))))
 
 
 ;;;; Org Mode Settings
