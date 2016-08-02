@@ -4,7 +4,6 @@
 ;;; Set up packages and load configurations.
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
@@ -42,7 +41,7 @@
                                      ido-at-point ido-vertical-mode keyswap
                                      jump-char list-register magit monky
                                      multiple-cursors paredit projectile
-                                     python-pylint quack smart-tab smart-window
+                                     quack smart-tab smart-window
                                      smex undo-tree vimrc-mode window-number
                                      wrap-region xcscope yasnippet
                                      transpose-mark markdown-mode
