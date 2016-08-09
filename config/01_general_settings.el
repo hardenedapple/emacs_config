@@ -140,13 +140,40 @@
 ;;   (indent-for-tab-command)
 ;;   (end-of-line))
 ;;
+;; 2. This doubly indents the line compared to `open-line-below'
+;;    Usually this doesn't matter, but that depends on the value of
+;;    `indent-line-function', which depends on mode
+;; (defun open-line-above ()
+;;   "Add new line above the current one."
+;;   (interactive)
+;;   (open-line-below)
+;;   (transpose-lines 1)
+;;   (forward-line -2)
+;;   (indent-for-tab-command)
+;;   (end-of-line))
+;; 3. This means that the line above is aligned so that it will fit below the
+;;current one. This is usually more annoying than the above.
+;; (defun open-line-above ()
+;;   "Add new line above the current one."
+;;   (interactive)
+;;   (open-line-below)
+;;   (transpose-lines 1)
+;;   (forward-line -2)
+;;   (end-of-line))
 (defun open-line-above ()
   "Add new line above the current one."
   (interactive)
   (open-line-below)
   (transpose-lines 1)
   (forward-line -2)
-  (indent-for-tab-command)
+  ;; To avoid double indenting in certain modes, we manually exclude them.
+  ;; What I want, is to create a new line, comment depending on the same
+  ;; settings that `indent-new-comment-line' uses, then determine the
+  ;; indentation once after the lines have been swapped.
+  ;; Not sure that this would actually make anything better in the cases where I
+  ;; have problems at the moment.
+  (when (not (member indent-line-function '(indent-relative insert-tab)))
+    (indent-for-tab-command))
   (end-of-line))
 
 (global-set-key (kbd "C-o") 'open-line-below)
