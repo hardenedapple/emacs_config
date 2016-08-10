@@ -41,6 +41,8 @@
   (add-hook 'inferior-python-mode-hook 'keyswap-colon-semicolon)
   (add-hook 'inferior-python-mode-hook 'keyswap-mode))
 
+(with-eval-after-load 'avy (keyswap-avy-integrate))
+
 ;;;; Swift Motion Settings
 ;;;;
 
