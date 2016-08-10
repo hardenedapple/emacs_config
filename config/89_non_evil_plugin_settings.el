@@ -416,7 +416,7 @@ paredit functions on the assumption they'll be more robust."
 ;; emacs wiki page)
 (defadvice he-substitute-string (after he-paredit-fix activate)
   "Remove extra paren when expanding line in paredit"
-  (if (and paredit-mode (equal (substring str -1) ")"))
+  (if (and paredit-mode (member (substring str -1) '(")" "]" "\"" "}")))
       (backward-delete-char 1)))
 
 ;;;; Motion-mode for paredit
