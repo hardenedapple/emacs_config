@@ -144,11 +144,16 @@ Exit this mode with 'q' or '<delete>'"
 (load-theme 'monokai)
 
 
-;;;; Ace jump Mode Settings
+;;;; Avy Mode Settings
 ;;;;
 (global-set-key (kbd "M-g M-s") 'avy-goto-word-1)
 (global-set-key (kbd "M-g s") 'avy-goto-word-1)
 (setq avy-all-windows 'nil)
+;; Dvorak order, plus allow all keys on the keyboard -- makes it more likely to
+;; give just one value.
+(setq avy-keys '(?d ?h ?t ?n ?s ?a ?o ?e ?u ?i
+                    ?f ?g ?c ?r ?l ?, ?. ?- ?p ?y
+                    ?b ?m ?w ?v ?z ?' ?q ?j ?k ?x))
 
 
 ;;;; Buffer Move Settings
