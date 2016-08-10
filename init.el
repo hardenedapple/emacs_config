@@ -37,7 +37,7 @@
 
 (let ((download-only '(monokai-theme tangotango-theme))
       (elpa-packages '(avy arduino-mode buffer-move c-eldoc elisp-slime-nav
-                                     expand-region goto-chg ido-ubiquitous
+                                     expand-region feature-mode goto-chg ido-ubiquitous
                                      ido-at-point ido-vertical-mode keyswap
                                      jump-char list-register magit monky
                                      multiple-cursors paredit projectile

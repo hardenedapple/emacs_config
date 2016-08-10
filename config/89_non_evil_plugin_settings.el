@@ -187,6 +187,11 @@ Exit this mode with 'q' or '<delete>'"
 (global-set-key (kbd "C-+") 'er/contract-region)
 
 
+;;;; Feature Mode Settings
+;;;;
+(add-to-list 'auto-mode-alist '("\.feature$" . feature-mode))
+
+
 ;;;; Goto chg Settings
 ;;;;
 (global-set-key (kbd "C-.") 'goto-last-change)
