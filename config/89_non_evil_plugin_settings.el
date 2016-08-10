@@ -211,6 +211,9 @@ Exit this mode with 'q' or '<delete>'"
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
 (global-set-key (kbd "M-M") 'jump-char-backward)
+;; To match the relative direction of these keys on my specific keyboard.
+(setq jump-char-forward-key ",")
+(setq jump-char-backward-key ";")
 
 ;; Strange things about jump-char
 ;; C-c C-c  comes out as C-j C-c
