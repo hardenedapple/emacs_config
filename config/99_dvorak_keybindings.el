@@ -13,7 +13,7 @@
 ;;;;          consistency of having them remapped.
 ;;;;
 
-(global-set-key (kbd "M-g h") 'previous-error)
+(define-key goto-map "h" 'previous-error)
 
 (defvar dvorak-keyswaps
   '(("M-p" . "M-h")

@@ -148,8 +148,8 @@ Exit this mode with 'q' or '<delete>'"
 
 ;;;; Avy Mode Settings
 ;;;;
-(global-set-key (kbd "M-g M-s") 'avy-goto-word-1)
-(global-set-key (kbd "M-g s") 'avy-goto-word-1)
+(define-key goto-map (kbd "M-s") 'avy-goto-word-1)
+(define-key goto-map "s" 'avy-goto-word-1)
 (setq avy-all-windows 'nil)
 ;; Dvorak order, plus allow all keys on the keyboard -- makes it more likely to
 ;; give just one value.
