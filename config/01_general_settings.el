@@ -17,6 +17,20 @@
 ;;;;
 (setq ring-bell-function (lambda () nil))
 
+
+;;;; Fill Sentence
+;;;;
+(defun fill-sentence (&optional arg)
+  (interactive "P")
+  (save-excursion
+    (backward-sentence arg)
+    (set-mark-command arg)
+    (forward-sentence arg)
+    (call-interactively #'fill-region)))
+
+(global-set-key (kbd "C-M-q") 'fill-sentence)
+
+
 ;;;; Word motion
 ;;;;
 (global-subword-mode 1)
