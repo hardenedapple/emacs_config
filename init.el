@@ -50,8 +50,13 @@
                                      ;; for deciding on a keybinding.
                                      ;; unbound
                                      ))
-      (require-only '(desktop dired-x eldoc em-smart epa-file eshell
-                              le-eval-and-insert-results nameses
+      ;; Need to require 'cl so that 'arduino-mode doesn't have problems.
+      ;; I believe arduino-mode has problems because it only calls (require 'cl)
+      ;; in an `eval-when-compile' block, which means when the code is getting
+      ;; executed it hasn't loaded the functions.
+      ;; I'll have a further look in to this later.
+      (require-only '(cl desktop dired-x eldoc em-smart epa-file eshell
+                              nameses
                               transpose-frame splice-windows uniquify)))
   ;; Install packages, require packages
   (dolist (p (append elpa-packages download-only))
