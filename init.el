@@ -1,12 +1,6 @@
 ;;;; Plugins and everything not enabled by default
 ;;;;
 
-;;; Set up packages and load configurations.
-(require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
-(package-initialize)
-
 ;; The usual definition for this variable relies on the hostname
 ;; "host.does.not.exist" not getting found via DNS.
 ;; Unfortunately, on some networks (those that are stupid), any host that does
@@ -32,39 +26,17 @@
 ;;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
+(require 'cask "~/.emacs.d/cask/cask.el")
+(cask-initialize)
 
-(let ((download-only '(monokai-theme tangotango-theme))
-      (elpa-packages '(avy arduino-mode buffer-move c-eldoc elisp-slime-nav
-                                     expand-region feature-mode goto-chg ido-ubiquitous
-                                     ido-at-point ido-vertical-mode keyswap
-                                     jump-char list-register magit monky
-                                     multiple-cursors paredit projectile
-                                     quack smart-tab smart-window
-                                     smex undo-tree vimrc-mode window-number
-                                     wrap-region xcscope yasnippet
-                                     transpose-mark markdown-mode
-                                     ;; Occasionally use the below to show
-                                     ;; currently unbound keys, which is useful
-                                     ;; for deciding on a keybinding.
-                                     ;; unbound
-                                     ))
-      ;; Need to require 'cl so that 'arduino-mode doesn't have problems.
-      ;; I believe arduino-mode has problems because it only calls (require 'cl)
-      ;; in an `eval-when-compile' block, which means when the code is getting
-      ;; executed it hasn't loaded the functions.
-      ;; I'll have a further look in to this later.
-      (require-only '(cl desktop dired-x eldoc em-smart epa-file eshell
-                              nameses
-                              transpose-frame splice-windows uniquify)))
-  ;; Install packages, require packages
-  (dolist (p (append elpa-packages download-only))
-    (unless (package-installed-p p)
-      (package-install p)))
-
-  (dolist (p (append require-only elpa-packages))
-    (require p)))
+(dolist (p '(
+             cl
+             eldoc
+             paredit
+             transpose-frame
+             window-number
+             ))
+  (require p))
 
 ;;; Load all files in the directory config
 ;;; Name of file denotes order it's loaded in.
