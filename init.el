@@ -33,6 +33,9 @@
              cl
              eldoc
              paredit
+             desktop
+             nameses
+             splice-window
              transpose-frame
              window-number
              ))

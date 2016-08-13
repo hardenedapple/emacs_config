@@ -164,4 +164,4 @@ on them."
   (move-window-to-edge--internal
    (intern (completing-read "Direction: " '(left right below above)))))
 
-(provide 'splice-windows)
+(provide 'splice-window)
