@@ -180,15 +180,18 @@
   (open-line-below)
   (transpose-lines 1)
   (forward-line -2)
-  ;; To avoid double indenting in certain modes, we manually exclude them.
-  ;; What I want, is to create a new line, comment depending on the same
-  ;; settings that `indent-new-comment-line' uses, then determine the
-  ;; indentation once after the lines have been swapped.
-  ;; Not sure that this would actually make anything better in the cases where I
-  ;; have problems at the moment.
-  (when (not (member indent-line-function '(indent-relative insert-tab)))
-    (indent-for-tab-command))
-  (end-of-line))
+  ;; If `indent-line-function' is something that actually determines the
+  ;; indentation to be used, we use that function.
+  ;; If it just inserts a tab we remove that tab under tha assumption that most
+  ;; lines will not have indentation.
+  ;; If `indent-line-function' is to indent based on the line above, we remove
+  ;; the indentation that has already been inserted in order to indent based on
+  ;; the line above.
+  (end-of-line)
+  (when (member indent-line-function '(insert-tab indent-relative))
+    (delete-horizontal-space t))
+  (unless (eq indent-line-function 'insert-tab)
+    (indent-for-tab-command)))
 
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
@@ -457,7 +460,7 @@ Think `completion-at-point' functions, but only one function at a time")
               tab-width 4
               truncate-lines t
               visual-line-mode nil
-              indent-line-function 'insert-tab)
+              indent-line-function 'indent-relative)
 
 (defun cleanup-buffer-safe ()
   "Perform some safe whitespace operations on `current-buffer'.
