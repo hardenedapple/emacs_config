@@ -171,6 +171,20 @@ Exit this mode with 'q' or '<delete>'"
 (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
 
+;;;; Dot Mode Settings
+;;;;
+(add-to-list 'load-path "~/.emacs.d/packages/dot-mode/")
+(require 'dot-mode)
+(define-key dot-mode-map (kbd "C-.") nil)
+(define-key dot-mode-map (kbd "C-M-.") nil)
+(define-key dot-mode-map (kbd "C-M-.") nil)
+(define-key dot-mode-map (kbd "C-z") 'dot-mode-execute)
+(define-key dot-mode-map (kbd "C-M-z") 'dot-mode-override)
+(define-key dot-mode-map (kbd "C-c z") 'dot-mode-copy-to-last-kbd-macro)
+(global-dot-mode t)
+(setq dot-mode-verbose nil)
+
+
 ;;;; Elisp Slime Nav Settings
 ;;;;
 (add-hook 'emacs-lisp-mode-hook

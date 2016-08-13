@@ -62,6 +62,7 @@
    'swift-motion-mode
    'lisp-motion-mode
    'paredit-motion-mode
+   'dot-mode
    )
   "List of minor-modes to show in modeline")
 (setq minor-mode-alist
