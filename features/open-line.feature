@@ -19,8 +19,6 @@ Feature: Open line above and below.
 
     """
 
-  # I know this fails, it's here to make sure I will eventually get round to
-  # fixing it.
   Scenario: Create new line above
     Given I am in "fundamental" mode
     And I clear the buffer

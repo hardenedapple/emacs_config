@@ -33,11 +33,13 @@
         evil-previous-line
         evil-visual-char
         exchange-point-and-mark-keep-activation
+        forward-to-whitespace
         indent-new-comment-line
         insert-pair
         jump-char-backward
         jump-char-forward
         jump-char-process-char
+        kill-region
         kill-sexp
         open-line-below
         org-delete-char
