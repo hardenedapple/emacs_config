@@ -20,6 +20,8 @@
 (depends-on "paredit")
 (depends-on "projectile")
 (depends-on "quack")
+(depends-on "rust-mode")
+(depends-on "rustfmt")
 (depends-on "smart-tab")
 (depends-on "smart-window")
 (depends-on "smex")

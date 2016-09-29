@@ -352,6 +352,12 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (setq nameses-ido-mode t)
 
 
+;;;; Rust Mode Settings
+;;;;
+;; Remove the mapping that shadows my `fill-sentence' command.
+(with-eval-after-load 'rust-mode
+  (define-key rust-mode-map (kbd "C-M-q") nil))
+
 ;;;; Wrap Region Settings
 ;;;;
 (wrap-region-global-mode t)
