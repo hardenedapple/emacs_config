@@ -197,47 +197,6 @@
 (global-set-key (kbd "C-S-o") 'open-line-above)
 
 ;;; Moving lines
-;; Taken from the old version of http://www.emacswiki.org/emacs/move-text.el
-;; as the change in TRANSPOSE-LINES in 24.3 is negated by my advice on
-;; TRANSPOSE-SUBR
-(defun move-text-internal (arg)
-  (cond
-   ((and mark-active transient-mark-mode)
-    (if (> (point) (mark))
-        (exchange-point-and-mark))
-    (let ((column (current-column))
-          (text (delete-and-extract-region (point) (mark))))
-      (forward-line arg)
-      (move-to-column column t)
-      (set-mark (point))
-      (insert text)
-      (exchange-point-and-mark)
-      (setq deactivate-mark nil)))
-   (t
-    (let ((column (current-column)))
-      (beginning-of-line)
-      (when (or (> arg 0) (not (bobp)))
-        (forward-line)
-        (when (or (< arg 0) (not (eobp)))
-          (transpose-lines arg))
-        (forward-line -1))
-      (move-to-column column t)))))
-
-(defun move-text-down (arg)
-  "Move region (transient-mark-mode active) or current line
-  arg lines down."
-  (interactive "*p")
-  (move-text-internal arg))
-
-(defun move-text-up (arg)
-  "Move region (transient-mark-mode active) or current line
-  arg lines up."
-  (interactive "*p")
-  (move-text-internal (- arg)))
-
-(global-set-key (kbd "C-s-<up>") 'move-text-up)
-(global-set-key (kbd "C-s-<down>") 'move-text-down)
-
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "RET") 'indent-new-comment-line)
 
@@ -411,18 +370,6 @@ Think `completion-at-point' functions, but only one function at a time")
       backup-by-copying-when-linked t
       auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/" t)))
 (load custom-file)
-
-
-;;;; Transpose things (negative)
-;;;;
-;; I want negative arguments in transpose-* to "drag" the current object back
-;; with repeated calls. To do this I need the point to end up at the end of the
-;; same object it was called at the end of.
-(defadvice transpose-subr (after bubble-back activate)
-  (when (< arg 0)
-    (if special
-        (goto-char (car (funcall mover arg)))
-      (funcall mover arg))))
 
 
 ;;;; User Interface

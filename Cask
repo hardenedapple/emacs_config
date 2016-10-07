@@ -16,6 +16,7 @@
 (depends-on "list-register")
 (depends-on "magit")
 (depends-on "monky")
+(depends-on "move-text")
 (depends-on "multiple-cursors")
 (depends-on "paredit")
 (depends-on "projectile")

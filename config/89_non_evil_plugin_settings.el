@@ -328,6 +328,12 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
       (eshell/cd git-root))))
 
 
+;;;; Move Text
+;;;;
+(global-set-key (kbd "C-s-<up>") 'move-text-up)
+(global-set-key (kbd "C-s-<down>") 'move-text-down)
+
+
 ;;;; Monky Settings
 (global-set-key (kbd "C-c h") 'monky-status)
 
