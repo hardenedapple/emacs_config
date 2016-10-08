@@ -5,6 +5,7 @@
 (depends-on "arduino-mode")
 (depends-on "buffer-move")
 (depends-on "c-eldoc")
+(depends-on "dot-mode")
 (depends-on "elisp-slime-nav")
 (depends-on "expand-region")
 (depends-on "feature-mode")

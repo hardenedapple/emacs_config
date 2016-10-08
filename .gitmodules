@@ -4,6 +4,3 @@
 [submodule "cask"]
 	path = cask
 	url = git://github.com/cask/cask.git
-[submodule "packages/dot-mode"]
-	path = packages/dot-mode
-	url = git://github.com/hardenedapple/dot-mode

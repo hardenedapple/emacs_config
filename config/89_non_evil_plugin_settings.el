@@ -173,7 +173,6 @@ Exit this mode with 'q' or '<delete>'"
 
 ;;;; Dot Mode Settings
 ;;;;
-(add-to-list 'load-path "~/.emacs.d/packages/dot-mode/")
 (require 'dot-mode)
 (define-key dot-mode-map (kbd "C-.") nil)
 (define-key dot-mode-map (kbd "C-M-.") nil)
