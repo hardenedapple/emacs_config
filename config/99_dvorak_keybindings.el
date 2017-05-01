@@ -22,7 +22,10 @@
     ("C-M-h" . "C-M-p")
     ("C-S-p" . "C-S-h")
     ("C-S-h" . "C-S-p")
-    ("C-'" . "C-x")))
+    ("C-'" . "C-x")
+    ;; Just to be able to still use the C-j key
+    ;; It's not available because I map it away below.
+    ("C-c j" . "C-j")))
 
 (defvar dvorak-key-translations
   '((?\C-x . ?\C-z)
