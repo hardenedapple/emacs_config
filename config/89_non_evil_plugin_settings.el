@@ -20,9 +20,18 @@
 (with-eval-after-load 'lisp-mode
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
+(with-eval-after-load 'inf-lisp
+  (add-hook 'inferior-lisp-mode-hook 'keyswap-mode)
+  (add-hook 'inferior-lisp-mode-hook 'keyswap-tac-underscore-exception))
 
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
+(with-eval-after-load 'scheme
+  (add-hook 'scheme-mode-hook 'keyswap-tac-underscore-exception))
+(with-eval-after-load 'cmuscheme
+  (add-hook 'inferior-scheme-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'inferior-scheme-mode-hook 'keyswap-mode))
+
 (add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
+(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
 
 (with-eval-after-load 'ielm
   (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
@@ -380,7 +389,8 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;;
 (dolist (hook '(eval-expression-minibuffer-setup-hook
                 emacs-lisp-mode-hook ielm-mode-hook lisp-mode-hook
-                scheme-mode-hook slime-repl-mode-hook))
+                scheme-mode-hook
+                inferior-scheme-mode-hook slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
 (defun paredit--is-at-end-of-list ()
