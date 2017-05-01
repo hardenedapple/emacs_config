@@ -182,13 +182,15 @@ Exit this mode with 'q' or '<delete>'"
 
 ;;;; Dot Mode Settings
 ;;;;
+;; Have to remap everything because C-. is `goto-last-change' for me.
 (require 'dot-mode)
 (define-key dot-mode-map (kbd "C-.") nil)
 (define-key dot-mode-map (kbd "C-M-.") nil)
 (define-key dot-mode-map (kbd "C-M-.") nil)
+(define-key dot-mode-map (kbd "C-c .") nil)
 (define-key dot-mode-map (kbd "C-z") 'dot-mode-execute)
 (define-key dot-mode-map (kbd "C-M-z") 'dot-mode-override)
-(define-key dot-mode-map (kbd "C-c z") 'dot-mode-copy-to-last-kbd-macro)
+(define-key dot-mode-map (kbd "C-c x") 'dot-mode-copy-to-last-kbd-macro)
 (global-dot-mode t)
 (setq dot-mode-verbose nil)
 
