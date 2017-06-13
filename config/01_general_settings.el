@@ -114,6 +114,9 @@
 (global-set-key (kbd "C-x f") 'find-file)
 (global-set-key (kbd "C-x C-f") 'dired)
 
+;;;; Get rid of Goal Column
+;;;;
+(define-key ctl-x-map (kbd "C-n") nil)
 
 ;;;; Help settings
 ;;;;
