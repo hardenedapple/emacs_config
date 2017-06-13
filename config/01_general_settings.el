@@ -295,6 +295,49 @@ Think `completion-at-point' functions, but only one function at a time")
 
 (define-key search-map "o" 'occur-dwim)
 
+;;;; Multiple search-and-replace at once (like :S/{a,b}/{b,c} with vim-abolish.
+;;;;
+(defun query-search-and-replace-multi (pairs)
+  "Replace multiple pairs of find/replace strings in region or entire buffer.
+
+PAIRS is a sequence of pairs listed literally.
+
+e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
+"
+  (interactive "x")
+  (let ((full-regexp
+         (concat
+          (store-substring
+           (apply 'concat (map 'list (lambda (x) (concat "\\|" (car x))) pairs))
+           1 ?\()
+          "\\)")))
+    (query-replace-regexp
+     full-regexp
+     (quote
+      (replace-eval-replacement
+       replace-quote
+       (second
+        (car
+         (member-if (lambda (x) (string-match-p (car x) (match-string 0)))
+                    pairs)))))
+     nil
+     (if (use-region-p) (region-beginning))
+     (if (use-region-p) (region-end))
+     nil
+     nil)
+
+    ;; ;; If want to do the same but without querying, can use the below.
+    ;; (while (search-forward-regexp full-regexp (point-max) t)
+    ;;   ;; n.b. help on match-string mentions need to be in the same buffer as the
+    ;;   ;; search was made in. Don't think that's going to cause any problem, but
+    ;;   ;; it might, and I'm mentioning it just in case.
+    ;;   (let ((curmatch
+    ;;          (member-if (lambda (x) (string-match-p (match-string 0) (car x)))
+    ;;                     pairs)))
+    ;;     (when curmatch
+    ;;       (replace-match (second (car curmatch))))))
+    ))
+
 
 ;;;; Quoted Insert
 ;;;;
