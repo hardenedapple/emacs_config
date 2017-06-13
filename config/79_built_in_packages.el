@@ -250,9 +250,7 @@ as yet."
         try-expand-dabbrev-all-buffers
         try-expand-dabbrev-from-kill
         try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-line
-        try-expand-list))
+        try-complete-file-name))
 
 (fset 'hippie-complete-file (make-hippie-expand-function
                              '(try-complete-file-name-partially
