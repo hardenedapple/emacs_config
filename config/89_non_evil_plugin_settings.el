@@ -237,6 +237,15 @@ Exit this mode with 'q' or '<delete>'"
 (ido-vertical-mode 1)
 (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
 
+;;;; Ido completing read +
+;;;;
+;; Want to have completing read in Info menu entries
+(with-eval-after-load 'info
+  (defun ido-info-menu ()
+    (interactive)
+    (let ((ido-cr+-force-on-functional-collection t))
+      (call-interactively 'Info-menu)))
+  (define-key Info-mode-map "m" 'ido-info-menu))
 
 ;;;; Jump Char Settings
 ;;;;

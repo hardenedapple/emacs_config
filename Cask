@@ -11,6 +11,7 @@
 (depends-on "feature-mode")
 (depends-on "goto-chg")
 (depends-on "ido-ubiquitous")
+(depends-on "ido-completing-read+")
 (depends-on "ido-at-point")
 (depends-on "ido-vertical-mode")
 (depends-on "jump-char")
