@@ -372,7 +372,8 @@ don't have the package installed."
         ;; go to the beginning of the buffer as it's assumed you want to
         ;; apply it from there onwards. beginning
         (goto-char (point-min)))
-      (while (re-search-forward (concat "\\_<" oldsymbol "\\_>")
+      (while (re-search-forward
+              (isearch-symbol-regexp oldsymbol)
               (if arg (save-excursion (end-of-defun) (point)) nil) t nil)
         (replace-match newsymbol t) (cl-incf counter 1))
       (message "Have replaced %d matches" counter))))
