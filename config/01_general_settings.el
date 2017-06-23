@@ -13,6 +13,10 @@
       auto-save-interval 500)
 
 
+;;;; No blinking cursor
+;;;;
+(blink-cursor-mode -1)
+
 ;;;; Disable the bell
 ;;;;
 (setq ring-bell-function (lambda () nil))
