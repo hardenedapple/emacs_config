@@ -245,7 +245,12 @@ Exit this mode with 'q' or '<delete>'"
     (interactive)
     (let ((ido-cr+-force-on-functional-collection t))
       (call-interactively 'Info-menu)))
-  (define-key Info-mode-map "m" 'ido-info-menu))
+  (defun ido-info-index ()
+    (interactive)
+    (let ((ido-cr+-force-on-functional-collection t))
+      (call-interactively 'Info-index)))
+  (define-key Info-mode-map "m" 'ido-info-menu)
+  (define-key Info-mode-map "i" 'ido-info-index))
 
 ;;;; Jump Char Settings
 ;;;;
