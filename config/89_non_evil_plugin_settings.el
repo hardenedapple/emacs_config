@@ -533,6 +533,15 @@ that window."
      (select-window (split-window (selected-window) nil ',direction))
      (call-interactively command)))
 
+;; n.b. `smart-window' must be loaded before its bindings take affect.
+;; Moreover, when loading the file, it unconditionally sets global key bindings.
+;; This means that without the `require' below, my functions could be run once
+;; without a prefix argument before `smart-window' would override them with
+;; `sw-below' and `sw-right'.
+;; Similarly, any call to `smart-window-move', `smart-window-buffer-split',
+;; `smart-window-file-split', `sw-above', or `sw-left' would also override my
+;; functions with `sw-below' and `sw-right'.
+(require 'smart-window)
 (define-key ctl-x-map "2"
   (lambda (arg) (interactive "P")
     "
