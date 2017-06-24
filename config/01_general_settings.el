@@ -432,6 +432,15 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
 (set-frame-font "Tamsyn-10")
 (mouse-avoidance-mode 'none)
 (global-linum-mode t)
+(defun linum-on ()
+  "Override of the default `linum-on' function.
+
+This doesn't enable `linum-mode' if in `org-mode' or in the
+`minibuffer'"
+  (unless (or (minibufferp)
+              (member major-mode '(org-mode)))
+    (linum-mode 1)))
+
 (show-paren-mode 1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
