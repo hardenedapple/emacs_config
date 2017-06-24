@@ -465,7 +465,8 @@ don't have the package installed."
 ;;;;
 (with-eval-after-load 'python
     (define-key inferior-python-mode-map (kbd "TAB")
-      'python-shell-completion-complete-or-indent))
+      'python-shell-completion-complete-or-indent)
+    (setq python-shell-process-environment (list "PAGER=")))
 
 
 ;;;; Regexp Builder
