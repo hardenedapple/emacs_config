@@ -101,6 +101,36 @@ stops the current python process using `delete-process' rather than
       (python-shell-get-or-create-process
        (mapconcat 'identity (process-command python-process) " ")))))
 
+;; This pretty much works, just have to make sure that I load a profile with
+;; c.TerminalInteractiveShell.simple_prompt = True
+;; in the ipython_config.py file.
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --profile=emacs")
+
+;; Things to remember and/or fix in the future:
+;;
+;;    Fancy prompt not handled by emacs
+;;       Use
+;;       c.TerminalInteractiveShell.simple_prompt = True
+;;       in the ipython configuration file
+;;
+;;    Completion hangs
+;;       First off, python.el sends the wrong string to ipython if there's an
+;;       open bracket in the command.
+;;          e.g.  >>>  get_ipython().Completer.all_
+;;          results in  .Completer.all_  getting sent to the underlying
+;;          process.
+;;
+;;          Though sending the entire string to IPython actually works, simply
+;;          pressing <TAB> in the terminal IPython prompt doesn't.
+;;          I guess that means there may be some reason for it.
+;;       python-shell-send-string-no-output hangs
+;;          This was because I had ran a non-simple prompt before changing the
+;;          ipython config to run a simple_prompt.
+;;          This had set the `ansi-color-context' to something that meant I
+;;          always got the empty string back.
+;;          Killing the buffer and creating a new one worked.
+;;
 
 ;;;; Scheme Settings
 ;;;;
