@@ -273,10 +273,22 @@ Think `completion-at-point' functions, but only one function at a time")
        (if current-symbol
            ,@body))))
 
-(define-key prog-mode-map [mouse-1] (mouse-function-on-symbol (find-this-definition current-symbol)))
-(define-key prog-mode-map [mouse-2] (mouse-function-on-symbol
-                                     (occur (concat "\\_<" current-symbol "\\_>"))))
-(define-key prog-mode-map [mouse-3] (lambda (event) (interactive "e") (pop-tag-mark)))
+(defconst mouse-follow-definition-key [mouse-3])
+(defconst mouse-go-back-key [M-mouse-3])
+(defconst mouse-get-help-key [C-mouse-3])
+
+;; The default down-mouse event opens up a menu, which makes triggering the
+;; up-mouse event a pain.
+(global-set-key [C-down-mouse-3] nil)
+
+(define-key prog-mode-map [mouse-2]
+  (mouse-function-on-symbol (occur (concat "\\_<" current-symbol "\\_>"))))
+(define-key prog-mode-map mouse-follow-definition-key
+  (mouse-function-on-symbol (find-this-definition current-symbol)))
+(define-key prog-mode-map mouse-go-back-key
+  (lambda (event) (interactive "e") (pop-tag-mark)))
+(define-key prog-mode-map mouse-get-help-key
+  (mouse-function-on-symbol (man (symbol-name current-symbol))))
 
 
 ;;;; Move more quickly

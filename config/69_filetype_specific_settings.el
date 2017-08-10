@@ -61,9 +61,8 @@ https://github.com/Malabarba/speed-of-thought-lisp"
 
 
 (with-eval-after-load 'lisp-mode
-  (define-key emacs-lisp-mode-map [mouse-3]
-    (mouse-function-on-symbol (help-xref-interned (intern current-symbol))
-                              (pop-tag-mark)))
+  (define-key emacs-lisp-mode-map mouse-get-help-key
+    (mouse-function-on-symbol (help-xref-interned (intern current-symbol))))
   (define-key emacs-lisp-mode-map (kbd "C-M-q") nil)
   (define-key lisp-interaction-mode-map (kbd "C-M-q") nil)
   ;; Really don't know why emacs makes this a local key binding when there's

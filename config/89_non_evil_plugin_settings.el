@@ -620,7 +620,7 @@ and run a command given by the user in that window.
   ;; Remove the M-? mapping for `slime-edit-uses', can still use M-_,
   ;; but `paredit-convolute-sexp' is now unshadowed.
   (define-key slime-mode-map (kbd "M-?") nil)
-  (define-key slime-mode-map [mouse-3]
+  (define-key slime-mode-map mouse-go-back-key
     (lambda (event) (interactive "e") (slime-pop-find-definition-stack)))
   (add-hook 'slime-mode-hook
             (lambda () (setq find-definition-function 'slime-edit-definition))))
