@@ -617,12 +617,6 @@ and run a command given by the user in that window.
 (global-set-key (kbd "C-c s") 'slime-selector)
 
 (with-eval-after-load 'slime
-  ;; Make TAB do my completion, and since I don't have any way to
-  ;; press C-j, remap `slime-eval-last-expression-in-repl' to C-c C-i
-  ;; (C-i for "interpreter") instead of `slime-complete-symbol', which
-  ;; I'll now use TAB for.
-  (define-key slime-mode-map (kbd "TAB") 'slime-indent-and-complete-symbol)
-  (define-key slime-mode-map (kbd "C-c C-i") 'slime-eval-last-expression-in-repl)
   ;; Remove the M-? mapping for `slime-edit-uses', can still use M-_,
   ;; but `paredit-convolute-sexp' is now unshadowed.
   (define-key slime-mode-map (kbd "M-?") nil)
@@ -633,7 +627,9 @@ and run a command given by the user in that window.
 
 (with-eval-after-load 'slime-repl
   (add-hook 'slime-repl-mode-hook 'keyswap-tac-underscore-exception t)
-  (add-hook 'slime-repl-mode-hook 'keyswap-mode t))
+  (add-hook 'slime-repl-mode-hook 'keyswap-mode t)
+  (define-key slime-repl-mode-map (kbd "DEL") nil)
+  (define-key slime-repl-mode-map (kbd "M-r") nil))
 
 (setq slime-autodoc-use-multiline-p t)
 

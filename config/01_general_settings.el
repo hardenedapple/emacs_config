@@ -129,6 +129,10 @@
 (define-key help-map "A" 'apropos)
 
 
+;;;; Tab completion
+;;;;
+(setq tab-always-indent 'complete)
+
 ;;;; Indentation Motion
 ;;;;
 (defun beginning-of-line-or-indentation ()
@@ -198,7 +202,10 @@
   (when (member indent-line-function '(insert-tab indent-relative))
     (delete-horizontal-space t))
   (unless (eq indent-line-function 'insert-tab)
-    (indent-for-tab-command)))
+    ;; Don't call `indent-for-tab-command' because the setting of
+    ;; `tab-always-indent' can make it start completion instead of just
+    ;; indenting.
+    (funcall indent-line-function)))
 
 (global-set-key (kbd "C-o") 'open-line-below)
 (global-set-key (kbd "C-S-o") 'open-line-above)
