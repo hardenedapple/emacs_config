@@ -524,3 +524,14 @@ called automatically on save."
 (global-set-key (kbd "M-]") 'delete-pair)
 (global-set-key (kbd "M-{") 'insert-pair)
 (global-set-key (kbd "M-\"") 'insert-pair)
+
+
+;;;; Case-sensitive zap-to-char
+;;;;
+;; I like `case-fold-search' with `isearch' and the like, but for `zap-to-char'
+;; I find it annoying.
+(global-set-key (kbd "M-z")
+                (lambda () (interactive)
+                  "Run `zap-to-char' case-sensitively."
+                  (let ((case-fold-search nil))
+                    (call-interactively 'zap-to-char))))
