@@ -260,35 +260,144 @@ Think `completion-at-point' functions, but only one function at a time")
 
 ;;;; Mouse navigation
 ;;;;
-(defun get-clicked-symbol (event)
-  "Move to event point, and find the symbol at point."
-  (mouse-set-point event)
-  (let ((current-symbol (thing-at-point 'symbol t)))
-    current-symbol))
-
 (defmacro mouse-function-on-symbol (&rest body)
   "Put EVENT and CURRENT-SYMBOL in lexical environment for BODY."
   `(lambda (event) (interactive "e")
-     (let ((current-symbol (get-clicked-symbol event)))
+     (mouse-set-point event)
+     (let ((current-symbol (thing-at-point 'symbol t)))
        (if current-symbol
            ,@body))))
+(defun symbol->regexp (given-symbol) (concat "\\_<" given-symbol "\\_>"))
 
+;; The default commands for these mappings is just strange when used to the
+;; new commands, remove them so I don't come across them by accident.
+(global-set-key [M-mouse-3] nil)
+
+;; Down mouse events tend to open menus, and are hence a right pain when mapping
+;; things.
+;; TODO Search int the global map for any and all 'down mouse events and remove
+;; without having to manually come across them and add them here.
+(global-set-key [S-down-mouse-1] nil)
+(global-set-key [C-down-mouse-1] nil)
+(global-set-key [M-down-mouse-1] nil)
+(global-set-key [S-down-mouse-2] nil)
+(global-set-key [C-down-mouse-2] nil)
+(global-set-key [M-down-mouse-2] nil)
+(global-set-key [S-down-mouse-3] nil)
+(global-set-key [C-down-mouse-3] nil)
+(global-set-key [M-down-mouse-3] nil)
+
+
+
+;; Unmodified mouse-1 does the basic "click here" stuff
+(defconst mouse-get-help-key [C-mouse-1])
+(defconst mouse-run-macro-here [M-mouse-1])
+(defconst mouse-run-user-action [S-mouse-1]
+  "This marks what key is kept available for the user to temporarily change
+depending on current needs.
+
+e.g. if you want to remove words from a file that don't match a regex but can
+easily be seen by eye, you might want to run
+  (global-set-key mouse-run-user-action 'delete-current-symbol)")
+
+(global-set-key mouse-get-help-key
+  (mouse-function-on-symbol (man (symbol-name current-symbol))))
+(global-set-key mouse-run-macro-here 'kmacro-end-call-mouse)
+;; Remove any default mapping on mouse-run-user-action
+(global-set-key mouse-run-user-action nil)
+
+;; SEARCH-FOR mouse buttons
+(defconst mouse-occur-key [mouse-2])
+(defconst mouse-lgrep-key [C-mouse-2])
+(defconst mouse-rgrep-key [M-mouse-2])
+(global-set-key mouse-occur-key
+  (mouse-function-on-symbol (occur (symbol->regexp current-symbol))))
+
+;; Make some functions that
+(defun dummy-completing-read-function
+    (prompt collection
+            &optional predicate require-match initial-input hist default
+            inherit-input-method)
+  ;; Just return the default
+  (cond ((listp default) (car default))
+        (default default)
+        (t "")))
+
+(defun run-grep-on-symbol (symbol function)
+  (grep-compute-defaults)
+  (funcall function
+           symbol
+           (let ((completing-read-function 'dummy-completing-read-function)
+                 ;; Ensure that we're looking for whole words.
+                 ;; n.b. I'm assuming a `grep-template' geared towards GNU grep
+                 ;; here, hence the choice of flags directly.
+                 ;; I don't plan on accounting for anything else.
+                 (grep-template (replace-regexp-in-string "-e" "-w -e" grep-template)))
+             (grep-read-files ""))
+           default-directory))
+(global-set-key
+ mouse-lgrep-key
+ (mouse-function-on-symbol (run-grep-on-symbol current-symbol 'lgrep)))
+(global-set-key
+ mouse-rgrep-key
+ (mouse-function-on-symbol (run-grep-on-symbol current-symbol 'rgrep)))
+
+;; GOTO mouse buttons
 (defconst mouse-follow-definition-key [mouse-3])
 (defconst mouse-go-back-key [M-mouse-3])
-(defconst mouse-get-help-key [C-mouse-3])
+(defconst mouse-go-to-next [S-mouse-3])
+(defconst mouse-go-to-prev [C-mouse-3])
+(defconst mouse-buffer-menu-button [M-C-mouse-3])
 
-;; The default down-mouse event opens up a menu, which makes triggering the
-;; up-mouse event a pain.
-(global-set-key [C-down-mouse-3] nil)
-
-(define-key prog-mode-map [mouse-2]
-  (mouse-function-on-symbol (occur (concat "\\_<" current-symbol "\\_>"))))
 (define-key prog-mode-map mouse-follow-definition-key
   (mouse-function-on-symbol (find-this-definition current-symbol)))
 (define-key prog-mode-map mouse-go-back-key
   (lambda (event) (interactive "e") (pop-tag-mark)))
-(define-key prog-mode-map mouse-get-help-key
-  (mouse-function-on-symbol (man (symbol-name current-symbol))))
+
+(defun mouse-go-to-symbol (symbol direction)
+  "Search in `direction' to find the next occurance of `symbol'.
+
+Move `point' according to `re-search-{forward,backward}', and move mouse cursor
+to new point."
+  (let ((search-fn (if (eq direction 'forwards)
+                       're-search-forward
+                     're-search-backward)))
+    (funcall search-fn (symbol->regexp symbol))
+    ;; If the point is not currently visible, call `redisplay' before
+    ;; `set-mouse-absolute-pixel-position'.
+    ;; We need to do this because the scrolling that automatically happens when
+    ;; the point goes off-screen doesn't happen in the middle of a command.
+    ;; For example ...
+    ;; (let ((original-point (point)))
+    ;;    (goto-char (+ 5 (window-end)))
+    ;;    (goto-char original-point))
+    ;; doesn't cause any scrolling to happen.
+    ;; This means that `window-absolute-pixel-position' will return `nil', and
+    ;; we can't move the mouse to where `point' is.
+    ;;
+    ;; We can't limit calling redisplay to when we're off-screen, as sometimes
+    ;; the automatic redisplay that happens after our command will scroll the
+    ;; screen anyway (e.g. we're within `scroll-margin' lines of the bottom).
+    (redisplay)
+    (let ((pos (window-absolute-pixel-position)))
+      (if pos
+          ;; n.b. we move to the top-left of the last character in the match.
+          ;; Would like to move the cursor to the center of the last character
+          ;; in the match, but I haven't found anything letting me do that and
+          ;; this works well enough (i.e. I can just keep clicking without
+          ;; having to move the mouse).
+          ;; (could find the position of characters below and to the right, then
+          ;; go to the position part way between ... but would then need to
+          ;; check for end of buffer etc and would probably have a bunch of
+          ;; other problems too).
+          (set-mouse-absolute-pixel-position (car pos) (cdr pos))
+        (message "mouse-go-to-symbol didn't get a position")))))
+
+(global-set-key mouse-go-to-next
+  (mouse-function-on-symbol (mouse-go-to-symbol current-symbol 'forwards)))
+(global-set-key mouse-go-to-prev
+  (mouse-function-on-symbol (mouse-go-to-symbol current-symbol 'backwards)))
+(global-set-key mouse-buffer-menu-button 'mouse-buffer-menu)
 
 
 ;;;; Move more quickly
