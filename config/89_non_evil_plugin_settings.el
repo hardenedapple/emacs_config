@@ -279,8 +279,10 @@ Exit this mode with 'q' or '<delete>'"
 
 (global-set-key (kbd "C-c g") 'magit-status)
 ;; git commit mode usually starts flyspell
-(setq git-commit-mode-hook '(turn-on-auto-fill))
+(defun fill-at-70 () (setq fill-column 70) (turn-on-auto-fill))
+(with-eval-after-load 'git-commit (add-hook 'git-commit-setup-hook 'fill-at-70))
 (setq magit-last-seen-setup-instructions "1.4.0")
+
 
 ;;; Intercept calling git in Eshell and parse some into Magit
 ;;
@@ -360,6 +362,7 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 
 ;;;; Monky Settings
 (global-set-key (kbd "C-c h") 'monky-status)
+(with-eval-after-load 'monky (add-hook monky-commit-mode-hook 'fill-at-70))
 
 (defun eshell/hr (&rest args)
   "Go to the current mercurial repositorys' root dir.
