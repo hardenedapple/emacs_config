@@ -12,12 +12,15 @@
 ;; version from solaris>.
 ;; Infortunately, we can't check for `tramp-version' before loading tramp, so we
 ;; check for the `emacs-version' that ship by default with these versions.
-(unless (and (string-prefix-p "24.5" emacs-version)
-             (with-temp-buffer
-               (call-process "nslookup" nil t nil "host.does.not.exist")
-               (goto-char (point-min))
-               (or (search-forward-regexp "can't find" nil t)
-                   (search-forward-regexp "No answer" nil t))))
+;; I know that 25.2 is fine, I'll assume for now that those older than this are
+;; fine too.
+(unless (or (string-lessp "25.2" emacs-version)
+         (and (string-prefix-p "24.5" emacs-version)
+              (with-temp-buffer
+                (call-process "nslookup" nil t nil "host.does.not.exist")
+                (goto-char (point-min))
+                (or (search-forward-regexp "can't find" nil t)
+                    (search-forward-regexp "No answer" nil t)))))
   (defvar tramp-ssh-controlmaster-options " -o ControlPath='tramp.%%r@%%h:%%p'"))
 
 (require 'cask "~/.emacs.d/cask/cask.el")
