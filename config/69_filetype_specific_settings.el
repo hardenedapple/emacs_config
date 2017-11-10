@@ -4,6 +4,20 @@
       c-basic-offset 4)
 (c-set-offset 'case-label '+)
 
+(with-eval-after-load 'cc-cmds
+  (defadvice c-indent-new-comment-line (around only-backslash-defines activate)
+    "Advice that ensures backslash continuations for C preprocessors are not added
+to #ifdef or #include lines.
+
+This advice is slightly hacky but it doesn't look like there's a better way."
+    ;; We have to remove the current cache, otherwise it would cause the
+    ;; backslash to be inserted on a freshly typed #include anyway.
+    (let ((c-opt-cpp-start c-opt-cpp-macro-define-start))
+      (setq c-macro-cache nil
+            c-macro-cache-start-pos nil
+            c-macro-cache-syntactic nil)
+      ad-do-it)))
+
 
 ;;;; Comint Mode
 ;;;;
