@@ -20,12 +20,14 @@
 (with-eval-after-load 'lisp-mode
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
+
 (with-eval-after-load 'inf-lisp
   (add-hook 'inferior-lisp-mode-hook 'keyswap-mode)
   (add-hook 'inferior-lisp-mode-hook 'keyswap-tac-underscore-exception))
 
 (with-eval-after-load 'scheme
   (add-hook 'scheme-mode-hook 'keyswap-tac-underscore-exception))
+
 (with-eval-after-load 'cmuscheme
   (add-hook 'inferior-scheme-mode-hook 'keyswap-tac-underscore-exception)
   (add-hook 'inferior-scheme-mode-hook 'keyswap-mode))
@@ -39,6 +41,10 @@
 
 ;; Python doesn't use semicolons very much, so make them all colons
 (add-hook 'python-mode-hook 'keyswap-colon-semicolon)
+
+(with-eval-after-load 'sh-script
+  (add-hook 'sh-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'sh-mode-hook 'keyswap-include-braces))
 
 (with-eval-after-load 'js
   (add-hook 'js-mode-hook 'keyswap-include-braces)
