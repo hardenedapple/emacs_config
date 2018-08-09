@@ -104,3 +104,17 @@ Then `apply' ARGS to FUNCTION."
   (run-function-other-window #'call-interactively window command))
 
 (define-key ctl-x-4-map (kbd "M-x") 'run-command-other-window)
+
+;;;; Swap Windows with window number X
+;;;;
+(defun swap-window-with-number (number)
+  "Swap window with window number NUMBER.
+
+Window number assigned in the same way as the \"C-x p %d\" command."
+  (interactive "P")
+  (if (integerp number)
+      (let ((window (nth (1- number) (window-number-list))))
+        (if (and window (or (not (window-minibuffer-p window))
+                            (minibuffer-window-active-p window)))
+            (swap-windows-properly window)
+          (error "No such window.")))))
