@@ -219,6 +219,15 @@
 ;;;;
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
+;;;; Mark word mapping
+;;;;
+;; Just makes sense for symmetry purposes that M-SPC should also perform
+;; mark-word if M-@ does.
+;;
+;; n.b. this overrides the default mapping for `just-one-space', which is
+;; actually a pretty useful command, so I move that onto the `ctl-x-map'
+(global-set-key (kbd "M-SPC") 'mark-word)
+(define-key ctl-x-map (kbd "M-SPC") 'just-one-space)
 
 ;;;; Minibuffer -- escape quits it
 (define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
