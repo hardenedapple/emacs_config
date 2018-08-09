@@ -480,14 +480,6 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
     ))
 
 
-;;;; Quoted Insert
-;;;;
-;; I've used the normal mapping for `quoted-insert' for the
-;; `move-to-window-line-top-bottom' function that `paredit' overwrites.
-;; It turns out that I sometimes need the function, so I'll map it somewhere in
-;; the global map.
-(global-set-key (kbd "C-c q") 'quoted-insert)
-
 ;;;; Recursive minibuffers
 ;;;;
 (setq enable-recursive-minibuffers t)
@@ -542,7 +534,11 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
 (global-set-key (kbd "M-v") 'View-scroll-half-page-backward)
 (global-set-key (kbd "C-S-v") 'scroll-up-command)
 (global-set-key (kbd "M-V") 'scroll-down-command)
-(global-set-key (kbd "C-q") 'move-to-window-line-top-bottom)
+(global-set-key (kbd "C-c m") 'move-to-window-line-top-bottom)
+;; Used to have this, but missed 'quoted-insert on a key that would still work
+;; within isearch (and other modes that quit when you type something outside of
+;; the map).
+;; (global-set-key (kbd "C-q") 'move-to-window-line-top-bottom)
 (setq scroll-conservatively 101
       scroll-margin 3
       auto-window-vscroll nil
