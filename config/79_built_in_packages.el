@@ -194,7 +194,16 @@ as yet."
 (add-hook 'eshell-mode-hook
           (lambda ()
             (define-key eshell-mode-map (kbd "M-.") 'eshell--get-last-input)
-            (define-key eshell-mode-map (kbd "C-c M-.") 'eshell-find-tag)))
+            (define-key eshell-mode-map (kbd "C-c M-.") 'eshell-find-tag)
+            (define-key eshell-mode-map (kbd "M-r") 'eshell-isearch-backward)
+            ;; TODO put `eshell-isearch-repeat-backward' under M-r somewhere in
+            ;; the `isearch' map so that I can find the next matching command.
+            ;; (it does work with "M-x eshell-isearch-repeat-backward" and then
+            ;; "C-x z" a few times, which shows that all I need to do is put a
+            ;; mapping accessible in the map, but I don't want the command
+            ;; accessible for `isearch' done in any buffers other than in
+            ;; `eshell'.
+            ))
 
 ;; Have the smart option set up how I like it, but not enabled by default.
 (setq eshell-where-to-jump 'after)

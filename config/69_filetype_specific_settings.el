@@ -1,8 +1,11 @@
 ;;;; C Settings
 ;;;;
-(setq c-default-style "linux"
-      c-basic-offset 4)
-(c-set-offset 'case-label '+)
+
+;; ;; The below is what I prefer, but I'm working on GNU at the moment so
+;; ;; use default.
+;; (setq c-default-style "linux"
+;;       c-basic-offset 4)
+;; (c-set-offset 'case-label '+)
 
 (with-eval-after-load 'cc-cmds
   (defadvice c-indent-new-comment-line (around only-backslash-defines activate)
