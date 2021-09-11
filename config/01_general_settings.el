@@ -10,7 +10,7 @@
 ;;;; Auto Save / Backups
 ;;;;
 (setq auto-save-default t
-      auto-save-interval 500)
+      auto-save-interval 5000)
 
 
 ;;;; No blinking cursor
@@ -558,13 +558,17 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
 ;;;; User Interface
 ;;;;
 (setq inhibit-startup-message t
-      default-frame-alist '((font . "Tamsyn-10"))
+      default-frame-alist '((font . "Tamsyn-12"))
       minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
-(set-frame-font "Tamsyn-10")
+;; XXX May need to change this back once go back into office.
+(set-frame-font "Tamsyn-12")
 (mouse-avoidance-mode 'none)
-(global-linum-mode t)
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode)
+  (global-linum-mode t))
+
 (defun linum-on ()
   "Override of the default `linum-on' function.
 
@@ -573,6 +577,18 @@ This doesn't enable `linum-mode' if in `org-mode' or in the
   (unless (or (minibufferp)
               (member major-mode '(org-mode)))
     (linum-mode 1)))
+
+;;;; I read in the wiki this suggested function.
+;;;; https://www.emacswiki.org/emacs/LineNumbers
+;;;; 
+;;;; Initial testing shows numbers aren't displaying in the minibuffer anyway,
+;;;; so I'm not yet turning it on.
+;; (defun display-line-numbers--turn-on ()
+;;   "Override of the default `display-line-numbers--turn-on' function.
+;;
+;; This avoids enabling line numbers in the minnibuffer."
+;;   (when (not (minibufferp))
+;;     (display-line-numbers-mode)))
 
 (show-paren-mode 1)
 (scroll-bar-mode -1)
@@ -586,7 +602,14 @@ This doesn't enable `linum-mode' if in `org-mode' or in the
 (global-set-key (kbd "<escape>") 'execute-extended-command)
 (global-set-key (kbd "TAB") 'completion-at-point)
 (global-set-key (kbd "C-M-i") 'indent-for-tab-command)
+;; Remove `downcase-region' keybinding since I only ever accidentally use it and
+;; that accident happens quite a lot.  Remove `upcase-region' keybinding too
+;; for symmetry.
+(global-unset-key (kbd "C-x C-l"))
+(global-unset-key (kbd "C-x C-u"))
 
+(setq x-select-enable-primary t)
+(setq x-select-enable-clipboard t)
 
 ;;;; Whitespace and indent
 ;;;;
@@ -596,7 +619,7 @@ This doesn't enable `linum-mode' if in `org-mode' or in the
 (setq-default auto-fill-function 'do-auto-fill
               indent-tabs-mode nil
               fill-column 80
-              tab-width 4
+              tab-width 8
               truncate-lines t
               visual-line-mode nil
               indent-line-function 'indent-relative)
@@ -621,7 +644,7 @@ called automatically on save."
   (indent-region (point-min) (point-max)))
 
 (global-set-key (kbd "C-c w") 'cleanup-buffer)
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
+;; (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
 ;; Some handy functions to wrap a currently highlighted region.
 ;;
