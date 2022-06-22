@@ -672,3 +672,15 @@ called automatically on save."
                   "Run `zap-to-char' case-sensitively."
                   (let ((case-fold-search nil))
                     (call-interactively 'zap-to-char))))
+
+;;;; Query search and replace to remove right-prompts from Zsh pasted sessions.
+;;;;
+;; This is something I do often enough that I want to easily remember how to do
+;; it.  Usually I have a session open where I've done it before and can just use
+;; that history.  However, sometimes I lose that session, and in losing that
+;; session have to remember the regex again.
+(defun config-remove-trailing-zsh-prompt ()
+  (interactive)
+  (let ((start (if (use-region-p) (region-beginning) (point-min)))
+        (end (if (use-region-p) (region-end) (point-max))))
+    (query-replace-regexp "\\s-*\[[[:digit:]]*,[[:digit:]]*\]$" "" nil start end)))
