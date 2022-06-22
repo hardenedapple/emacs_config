@@ -24,7 +24,7 @@
   (defvar tramp-ssh-controlmaster-options " -o ControlPath='tramp.%%r@%%h:%%p'"))
 
 (require 'cask "~/.emacs.d/cask/cask.el")
-(cask-initialize)
+(cask--initialize)
 
 ;;; I keep single file packages in this directory
 (add-to-list 'load-path "~/.emacs.d/packages/")
