@@ -6,6 +6,8 @@
       '(
         backward-kill-sexp
         backward-sexp
+        backward-to-whitespace
+        beginning-of-buffer
         beginning-of-line-or-indentation
         cua-clear-rectangle-mark
         cua-cut-region
@@ -13,6 +15,7 @@
         cua-exchange-point-and-mark
         cua-paste
         dabbrev-expand
+        delete-pair
         eval-defun
         eval-last-sexp
         evil-backward-char
@@ -39,11 +42,15 @@
         jump-char-backward
         jump-char-forward
         jump-char-process-char
+        kill-backward-up-list
         kill-region
         kill-sexp
         open-line-below
+        org-beginning-of-line
         org-delete-char
         org-end-of-line
+        org-fill-paragraph
+        org-kill-line
         org-self-insert-command
         org-yank
         paredit-backslash
@@ -51,6 +58,7 @@
         paredit-backward-kill-word
         paredit-backward-up
         paredit-close-round
+        paredit-close-round-and-newline
         paredit-forward
         paredit-forward-delete
         paredit-forward-down
@@ -75,4 +83,5 @@
         cua-set-rectangle-mark
         evil-goto-mark
         transpose-frame
+        smex
         ))
