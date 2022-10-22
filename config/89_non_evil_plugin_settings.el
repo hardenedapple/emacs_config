@@ -293,6 +293,24 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;;
 (setq nameses-ido-mode t)
 
+;;;; Org Mode Settings
+;;;;
+
+;; Redefinition of `org-comment-line-break-function' since the real
+;; implementation unconditionally uses `insert-before-markers-and-inherit' in
+;; with `fill-prefix' without checking if it is `nil'.
+(defun org-comment-line-break-function (&optional soft)
+  "Break line at point and indent, continuing comment if within one.
+The inserted newline is marked hard if variable
+`use-hard-newlines' is true, unless optional argument SOFT is
+non-nil."
+  (if soft (insert-and-inherit ?\n) (newline 1))
+  (save-excursion (forward-char -1) (delete-horizontal-space))
+  (delete-horizontal-space)
+  (indent-to-left-margin)
+  (if fill-prefix (insert-before-markers-and-inherit fill-prefix)
+    (insert-before-markers-and-inherit "")))
+
 
 ;;;; Rust Mode Settings
 ;;;;
