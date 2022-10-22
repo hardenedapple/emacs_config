@@ -679,8 +679,13 @@ called automatically on save."
 ;; it.  Usually I have a session open where I've done it before and can just use
 ;; that history.  However, sometimes I lose that session, and in losing that
 ;; session have to remember the regex again.
+;;
+;; N.b. there is the basic [<exit-code>,<history-number>] pattern which is at
+;; the end of every line, then there is an optional [git][<branch-name>] before
+;; it, and if the current git worktree is modified from the branch name we have
+;; a `U` in between the two.
 (defun config-remove-trailing-zsh-prompt ()
   (interactive)
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
-    (query-replace-regexp "\\s-*\[[[:digit:]]*,[[:digit:]]*\]$" "" nil start end)))
+    (query-replace-regexp "\\s-*\\(\\[git\\]\\[[^[:space:]]+\\]\\( U\\)? \\)?\\[[[:digit:]]+,[[:digit:]]+\\]$" "" nil start end)))
