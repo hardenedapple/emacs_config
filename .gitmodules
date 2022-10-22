@@ -1,6 +1,6 @@
 [submodule "packages/slime"]
 	path = packages/slime
-	url = git://github.com/slime/slime.git
+	url = git@github.com:slime/slime.git
 [submodule "cask"]
 	path = cask
-	url = git://github.com/cask/cask.git
+	url = git@github.com:cask/cask.git
