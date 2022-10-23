@@ -4,60 +4,6 @@
 ;;;; Splice Window Settings
 (define-key ctl-x-4-map "s" 'splice-window-upwards)
 
-;;;; Keyswap Mode Settings
-;; Binding things in `prog-mode-map', which have to be overridden by minor modes
-;; for special bindings.
-(add-hook 'prog-mode-hook 'keyswap-mode)
-
-;;; Use double quotes by default in awk, C, C++ and some others.
-(with-eval-after-load 'cc-vars
-  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
-
-(with-eval-after-load 'tex-mode
-  (add-hook 'latex-mode-hook 'keyswap-mode t)
-  (add-hook 'latex-mode-hook 'keyswap-include-braces t))
-
-(with-eval-after-load 'lisp-mode
-  (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
-
-(with-eval-after-load 'inf-lisp
-  (add-hook 'inferior-lisp-mode-hook 'keyswap-mode)
-  (add-hook 'inferior-lisp-mode-hook 'keyswap-tac-underscore-exception))
-
-(with-eval-after-load 'scheme
-  (add-hook 'scheme-mode-hook 'keyswap-tac-underscore-exception))
-
-(with-eval-after-load 'cmuscheme
-  (add-hook 'inferior-scheme-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'inferior-scheme-mode-hook 'keyswap-mode))
-
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-tac-underscore-exception)
-(add-hook 'eval-expression-minibuffer-setup-hook 'keyswap-mode)
-
-(with-eval-after-load 'ielm
-  (add-hook 'ielm-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'ielm-mode-hook 'keyswap-mode))
-
-;; Python doesn't use semicolons very much, so make them all colons
-(add-hook 'python-mode-hook 'keyswap-colon-semicolon)
-
-(with-eval-after-load 'sh-script
-  (add-hook 'sh-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'sh-mode-hook 'keyswap-include-braces))
-
-(with-eval-after-load 'js
-  (add-hook 'js-mode-hook 'keyswap-include-braces)
-  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
-
-(add-hook 'isearch-mode-hook 'keyswap-isearch-start-hook)
-
-(with-eval-after-load 'python
-  (add-hook 'inferior-python-mode-hook 'keyswap-colon-semicolon)
-  (add-hook 'inferior-python-mode-hook 'keyswap-mode))
-
-(with-eval-after-load 'avy (keyswap-avy-integrate))
-
 
 ;;;; Colour theme
 ;;;;
@@ -69,11 +15,11 @@
 (define-key goto-map (kbd "M-s") 'avy-goto-word-1)
 (define-key goto-map "s" 'avy-goto-word-1)
 (setq avy-all-windows 'nil)
-;; Dvorak order, plus allow all keys on the keyboard -- makes it more likely to
+;; Halmak order, plus allow all keys on the keyboard -- makes it more likely to
 ;; give just one value.
-(setq avy-keys '(?d ?h ?t ?n ?s ?a ?o ?e ?u ?i
-                    ?f ?g ?c ?r ?l ?, ?. ?- ?p ?y
-                    ?b ?m ?w ?v ?z ?' ?q ?j ?k ?x))
+(setq avy-keys '(?s ?h ?n ?t ?, ?. ?a ?e ?o ?i
+                    ?w ?l ?r ?b ?z ?- ?q ?u ?d ?j
+                    ?f ?m ?v ?c ?/ ?g ?p ?x ?k ?y))
 
 
 ;;;; Buffer Move Settings
