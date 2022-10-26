@@ -688,4 +688,4 @@ called automatically on save."
   (interactive)
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
-    (query-replace-regexp "\\s-*\\(\\[git\\]\\[[^[:space:]]+\\]\\( U\\)? \\)?\\[[[:digit:]]+,[[:digit:]]+\\]$" "" nil start end)))
+    (query-replace-regexp "\\s-*\\(\\[git\\]\\[[^[:space:]]+\\] \\(U\\)? \\)?\\[[[:digit:]]+,[[:digit:]]+\\]$" "" nil start end)))
