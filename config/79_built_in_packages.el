@@ -529,12 +529,6 @@ Sometimes you want to reselect the current area, run this function."
 (setq uniquify-buffer-name-style 'post-forward)
 
 
-;;;; Windmove Settings
-;;;;
-(windmove-default-keybindings)
-(setq windmove-wrap-around t)
-
-
 ;;;; Winner Mode Settings
 ;;;;
 (winner-mode 1)
