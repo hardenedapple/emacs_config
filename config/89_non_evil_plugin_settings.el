@@ -58,6 +58,35 @@
 
 (with-eval-after-load 'avy (keyswap-avy-integrate))
 
+;;;; Random settings for my keyboard tricks.
+;;;;
+;; I have a keyboard which switches the numbers and symbols.
+;; This can get a pain when I want to use prefix arguments.
+;; Just have all prefix arguments mapped on the control-symbol values too.
+;; The M-<symbol> things are largely mapped to things that I would use, but the
+;; C-<symbol> stuff is not, and that's the one that trips me up the most
+;; (especially C-0 C-k in org-mode).
+(defun digit-shifted-argument (arg index)
+  "Part of the numeric argument for the next command.
+\\[universal-argument] following digits or minus sign ends the argument."
+  (prefix-command-preserve-state)
+  (setq prefix-arg (cond ((integerp arg)
+                          (+ (* arg 10)
+                             (if (< arg 0) (- index) index)))
+                         ((eq arg '-)
+                          ;; Treat -0 as just -, so that -01 will work.
+                          (if (zerop index) '- (- index)))
+                         (t index)))
+  (universal-argument--mode))
+(let ((index 0))
+  (dolist (k '("C-)" "C-!" "C-@" "C-#" "C-$" "C-%" "C-^" "C-&" "C-*" "C-("))
+    (global-set-key (kbd k) `(lambda (arg) (interactive "P")
+                               (digit-shifted-argument arg ,index)))
+    (setq index (+ index 1))))
+
+(global-set-key (kbd "C-_") 'negative-argument)
+(global-set-key (kbd "M-_") 'negative-argument)
+
 
 ;;;; Colour theme
 ;;;;
@@ -310,6 +339,10 @@ non-nil."
   (indent-to-left-margin)
   (if fill-prefix (insert-before-markers-and-inherit fill-prefix)
     (insert-before-markers-and-inherit "")))
+;; Avoid overriding the control character digit argument mappings I have in the
+;; global map.
+(with-eval-after-load 'org-mode
+  (define-key org-mode-map (kbd "C-#") 'nil))
 
 
 ;;;; Rust Mode Settings
@@ -362,6 +395,9 @@ non-nil."
 ;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
 (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
 (define-key paredit-mode-map (kbd "C-j") 'nil)
+;; Remove mappings which interfere with prefix argument switching around above.
+(define-key paredit-mode-map (kbd "C-(") 'nil)
+(define-key paredit-mode-map (kbd "C-)") 'nil)
 ;; Keep M-s search commands by moving PAREDIT-SPLICE-SEXP, so the keymaps join
 (define-key paredit-mode-map (kbd "M-s") nil)
 (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
@@ -566,7 +602,9 @@ and run a command given by the user in that window.
         (set-marker p nil)
         (set-marker m nil))
     ad-do-it))
-
+;; Avoid overriding the global key-swapping maps I have above.
+(define-key undo-tree-map (kbd "C-_") nil)
+(define-key undo-tree-map (kbd "M-_") nil)
 
 ;;;; Vimrc Syntax Settings
 ;;;;
