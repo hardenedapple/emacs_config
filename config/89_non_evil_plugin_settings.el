@@ -674,84 +674,59 @@ and run a command given by the user in that window.
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map [(tab)] nil)
 
-;; The below is all about attempting to debug why the yas auto fill stuff
-;; misbehaves.  I've tried `debug-on-variable-change' but that seems to affect
-;; the behaviour too much to get useful information out of it.
-(defun message-on-yas-change (symbol newval operation where)
-  "Message that the yas--original-auto-fill-function has changed"
-  (message "yas variable has changed: is now %S (%S -> %S) %S %S" symbol
-           (symbol-value symbol)
-           newval
-           operation where))
-(add-variable-watcher 'yas--original-auto-fill-function #'message-on-yas-change)
+;;;; The below is all about attempting to debug why the yas auto fill stuff
+;;;; misbehaves.  I've tried `debug-on-variable-change' but that seems to affect
+;;;; the behaviour too much to get useful information out of it.
+;; (defun message-on-yas-change (symbol newval operation where)
+;;   "Message that the yas--original-auto-fill-function has changed"
+;;   (message "yas variable has changed: is now %S (%S -> %S) %S %S" symbol
+;;            (symbol-value symbol)
+;;            newval
+;;            operation where))
+;; (defun message-on-auto-fill-change (symbol newval operation where)
+;;   "Message that the auto-fill-function has changed"
+;;   (message "auto-fill-function changed: is now %S (%S -> %S) %S %S" symbol
+;;            (symbol-value symbol)
+;;            newval
+;;            operation where))
+;; (add-variable-watcher 'yas--original-auto-fill-function #'message-on-yas-change)
+;; (add-variable-watcher 'auto-fill-function #'message-on-auto-fill-change)
 
-(defun yas--auto-fill ()
-  ;; Preserve snippet markers during auto-fill.
-  (let* ((orig-point (point))
-         (end (progn (forward-paragraph) (point)))
-         (beg (progn (backward-paragraph) (point)))
-         (snippets (yas-active-snippets beg end))
-         (remarkers nil)
-         (reoverlays nil))
-    (dolist (snippet snippets)
-      (dolist (m (yas--collect-snippet-markers snippet))
-        (when (and (<= beg m) (<= m end))
-          (push (cons m (yas--snapshot-location m beg end)) remarkers)))
-      (push (yas--snapshot-overlay-location
-             (yas--snippet-control-overlay snippet) beg end)
-            reoverlays))
-    (goto-char orig-point)
-    (let ((yas--inhibit-overlay-hooks t))
-      (if yas--original-auto-fill-function
-          (funcall yas--original-auto-fill-function)
-        ;; Shouldn't happen, gather more info about it (see #873/919).
-        (let ((yas--fill-fun-values `((t ,(default-value 'yas--original-auto-fill-function))))
-              (fill-fun-values `((t ,(default-value 'auto-fill-function))))
-              ;; Listing 2 buffers with the same value is enough
-              (print-length 3))
-          (save-current-buffer
-            (dolist (buf (let ((bufs (buffer-list)))
-                           ;; List the current buffer first.
-                           (setq bufs (cons (current-buffer)
-                                            (remq (current-buffer) bufs)))))
-              (set-buffer buf)
-              (let* ((yf-cell (assq yas--original-auto-fill-function
-                                    yas--fill-fun-values))
-                     (af-cell (assq auto-fill-function fill-fun-values)))
-                (when (local-variable-p 'yas--original-auto-fill-function)
-                  (if yf-cell (setcdr yf-cell (cons buf (cdr yf-cell)))
-                    (push (list yas--original-auto-fill-function buf) yas--fill-fun-values)))
-                (when (local-variable-p 'auto-fill-function)
-                  (if af-cell (setcdr af-cell (cons buf (cdr af-cell)))
-                    (push (list auto-fill-function buf) fill-fun-values))))))
-          (lwarn '(yasnippet auto-fill bug) :error
-                 "`yas--original-auto-fill-function' unexpectedly nil in %S!  Disabling auto-fill.
-  %S
-  `auto-fill-function': %S\n%s"
-                 (current-buffer) yas--fill-fun-values fill-fun-values
-                 (if (fboundp 'backtrace--print-frame)
-                     (with-output-to-string
-                       (mapc (lambda (frame)
-                               (apply #'backtrace--print-frame frame))
-                             yas--watch-auto-fill-backtrace))
-                   ""))
-          ;; Try to avoid repeated triggering of this bug.
-          (setq yas--original-auto-fill-function 'do-auto-fill)
-          ;; Don't pop up more than once in a session (still log though).
-          (defvar warning-suppress-types) ; `warnings' is autoloaded by `lwarn'.
-          (add-to-list 'warning-suppress-types '(yasnippet auto-fill bug)))))
-    (save-excursion
-      (setq end (progn (forward-paragraph) (point)))
-      (setq beg (progn (backward-paragraph) (point))))
-    (save-excursion
-      (save-restriction
-        (narrow-to-region beg end)
-        (dolist (remarker remarkers)
-          (set-marker (car remarker)
-                      (yas--goto-saved-location (cdr remarker))))
-        (mapc #'yas--restore-overlay-location reoverlays))
-      (mapc (lambda (snippet)
-              (yas--letenv (yas--snippet-expand-env snippet)
-                (yas--update-mirrors snippet)))
-            snippets))))
+;; I've been "suffering" from yasnippet removing my `auto-fill-function`
+;; setting.  After a bit of debugging it seems that sometimes the `setq` in
+;; `yas--auto-fill-wrapper` (the one defined in yasnippet.el) sets both the
+;; buffer-local variable *and* the default value of `auto-fill-function` to
+;; `yas--auto-fill`.
+;;
+;; At the moment this happens nothing problematic is seen, but later on when
+;; opening a new buffer, or if I revert my buffer and `kill-all-local-variables'
+;; unsets `yas--original-auto-fill-function', we're left with a problematic
+;; scenario.
+;; Eventually `yas--auto-fill-wrapper' gets called, at that time the
+;; `auto-fill-function' is already `yas--auto-fill' (because the *default* got
+;; set with `setq` earlier), and it doesn't reset `kill-all-local-variables'.
+;;
+;; N.b. the `yas--watch-auto-fill' function is not getting anything useful for
+;; me because the `backtrace--print-frame' function is not available on my emacs
+;; version of
+;; "GNU Emacs 28.2 (build 1, x86_64-pc-linux-gnu, X toolkit, Xaw scroll bars) of 2022-11-18"
 
+;; https://github.com/joaotavora/yasnippet/issues/919
+(defun yas--auto-fill-wrapper ()
+  (cond ((and auto-fill-function
+              (not (eq auto-fill-function 'yas--auto-fill)))
+         (setq yas--original-auto-fill-function auto-fill-function)
+         (let ((tmp (default-value 'auto-fill-function)))
+           (setq auto-fill-function 'yas--auto-fill)
+           ;; Don't have a clue why, but sometimes the above set of
+           ;; `auto-fill-function' ends up setting the default value rather than
+           ;; the buffer-local one.  Detect when that happens and account for it.
+           (unless (eq tmp (default-value 'auto-fill-function))
+             (setq-default auto-fill-function tmp))))
+        ((and auto-fill-function
+              (eq (default-value 'auto-fill-function) 'yas--auto-fill)
+              (null yas--original-auto-fill-function))
+         (message "XXX Some new mechanism by which problem occurs seen")
+         (setq yas--original-auto-fill-function 'do-auto-fill)
+         (set-default-toplevel-value 'auto-fill-function 'do-auto-fill))
+        (t (message "yas--auto-fill-wrapper avoided action"))))
