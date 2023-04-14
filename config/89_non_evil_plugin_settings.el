@@ -461,7 +461,7 @@ paredit functions on the assumption they'll be more robust."
 (defadvice he-substitute-string (after he-paredit-fix activate)
   "Remove extra paren when expanding line in paredit"
   (if (and paredit-mode (member (substring str -1) '(")" "]" "\"" "}")))
-      (backward-delete-char 1)))
+      (delete-char -1)))
 
 
 ;;;; Projectile Settings
@@ -570,8 +570,10 @@ and run a command given by the user in that window.
 (require 'slime-autoloads)
 (setq slime-contribs '(slime-fancy slime-asdf))
 (setq slime-complete-symbol*-fancy t)
-;; note with this set up of info, also need to go inte the directory and run
+;; Note with this set up of info, also need to go into the directory and run
+;; make slime.info
 ;; install-info --dir=dir slime.info
+(info-initialize)
 (add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
 
 (global-set-key (kbd "C-c s") 'slime-selector)
