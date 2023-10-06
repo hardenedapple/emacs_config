@@ -117,12 +117,6 @@ stops the current python process using `delete-process' rather than
       (python-shell-get-or-create-process
        (mapconcat 'identity (process-command python-process) " ")))))
 
-;; This pretty much works, just have to make sure that I load a profile with
-;; c.TerminalInteractiveShell.simple_prompt = True
-;; in the ipython_config.py file.
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --profile=emacs")
-
 ;; Things to remember and/or fix in the future:
 ;;
 ;;    Fancy prompt not handled by emacs
