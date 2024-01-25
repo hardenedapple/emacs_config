@@ -628,11 +628,6 @@ and run a command given by the user in that window.
 (define-key undo-tree-map (kbd "C-_") nil)
 (define-key undo-tree-map (kbd "M-_") nil)
 
-;;;; Vimrc Syntax Settings
-;;;;
-(add-to-list 'auto-mode-alist '("vimrc$" . vimrc-mode))
-(add-to-list 'auto-mode-alist '("\\.vim$" . vimrc-mode))
-
 
 ;;;; Window Number Settings
 ;;;;
