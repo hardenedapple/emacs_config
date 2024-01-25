@@ -39,6 +39,7 @@
              keyswap
              transpose-frame
              window-number
+             vsh
              ))
   (require p))
 
