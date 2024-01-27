@@ -27,6 +27,15 @@
   :type 'hook
   :group 'vsh)
 
+(defcustom vsh-ignore-ansi-colors nil
+  "Define whether to ignore ansi color sequences coming from underlying terminal
+or to use them to specify text colors.
+
+`nil' implies that SGR control sequences are filtered, anything else means that
+SGR control sequences are interpreted as determining color and *not* filtered."
+  :type 'boolean
+  :group 'vsh)
+
 ;; Emacs has an in-built server that can be started with `server-start' or starting
 ;; emacs as a daemon (see `daemonp').  This is sufficient for most interaction
 ;; that underlying helpers in VSH would want to perform.
@@ -119,6 +128,8 @@ to send to readline processes in underlying terminal for
 ;; TODO
 ;;   - Add functionality to send to this buffer from some other buffer.
 ;;     - Including the python "send having de-dented this text" stuff.
+;;   - Change server-name if there is already a server running?
+;;     Unlikely to be a commonly hit thing, but certainly possible.
 ;;   - Add tests
 ;;   - Add something "joining" text together so that a single `undo' removes an
 ;;     entire output.
@@ -130,14 +141,15 @@ to send to readline processes in underlying terminal for
 ;;     - Use the `/proc' filesystem searching trick I used in vim.
 ;;     - Maybe introduce some sort of `hippie-complete-<special>' function that
 ;;       does this, as I don't think I want to override C-x C-f for vsh buffers.
+;;   - Think about what buffer-local symbols need to be marked as
+;;     `permanent-local' so they are not removed on changing major mode (see
+;;     "(elisp) Creating Buffer-Local").
 ;;   - Fix `vsh-next-command' to move to the start of current command line if at
 ;;     a prompt.
 ;;   - Add more colours
-;;     - Colourisation using shell control characters.
 ;;     - Highlight strings on special lines only (not in output).
-;;     - Maybe use `ansi-color-process-output'?
-;;     - I wonder whether it's also useful to make the filter function run a
-;;       hook so we can add actions to it as and when needed (see
+;;     - I wonder whether it's also useful to make the hook for our filter
+;;       function hook so we can add actions to it as and when needed (see
 ;;       `comint-output-filter-functions').
 ;;   - Documentation
 ;;     - Document the functions and variables in this file.
@@ -440,18 +452,25 @@ argument."
     ;; process on startup.
     (when (or vsh-buffer-initialised (seq-find (lambda (x) (= x ?\n)) output))
       (save-excursion
-        (goto-char (or (vsh-insert-point) (point-max)))
-        ;; When the underlying process outputs only part of a line I want to
-        ;; append the next bit of output to the end of that line.  However, when
-        ;; I have just ran `vsh-execute-command' I want the output to be added
-        ;; just below the current prompt.
-        ;; Rather than always add a newline into the buffer when I run
-        ;; `vsh-execute-command' I append a newline to the start of the first
-        ;; output ran after such a command.  This allows running multiple lines
-        ;; with `vsh-execute-command' (or similar) before any output comes and
-        ;; not having blank lines between the lines that were run.
-        (when vsh-new-output (insert-char ?\n) (setq-local vsh-new-output nil))
-        (insert output)))
+        (let* ((insert-point (or (vsh-insert-point) (point-max)))
+               (start-point (copy-marker insert-point nil)))
+          (goto-char insert-point)
+          ;; When the underlying process outputs only part of a line I want to
+          ;; append the next bit of output to the end of that line.  However, when
+          ;; I have just ran `vsh-execute-command' I want the output to be added
+          ;; just below the current prompt.
+          ;; Rather than always add a newline into the buffer when I run
+          ;; `vsh-execute-command' I append a newline to the start of the first
+          ;; output ran after such a command.  This allows running multiple lines
+          ;; with `vsh-execute-command' (or similar) before any output comes and
+          ;; not having blank lines between the lines that were run.
+          (when vsh-new-output (insert-char ?\n) (setq-local vsh-new-output nil))
+          (insert output)
+          (if vsh-ignore-ansi-colors
+              (ansi-color-filter-region start-point insert-point)
+            (ansi-color-apply-on-region start-point insert-point t))
+          ;; Leave temporary marker for GC.
+          (set-marker start-point nil))))
     (unless vsh-buffer-initialised (setq-local vsh-buffer-initialised t))))
 
 ;; To think about:
@@ -747,7 +766,16 @@ single-key commands and ignoring null bytes."
      ;; Ideally I would like to do that for emacs too, but for the moment
      ;; I'll be using this much simpler setup that at least gets the two
      ;; main parts colored as I want.
-     t)))
+     t))
+  (unless vsh-ignore-ansi-colors
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (if (looking-at-p (vsh-split-regexp))
+            (forward-line)
+          (let ((end-of-segment (vsh--segment-bound t)))
+            (ansi-color-apply-on-region (point) end-of-segment t)
+            (goto-char end-of-segment)))))))
 
 (defun vsh--initialise-settings ()
   "Default settings for behaviour in this major mode."
@@ -780,7 +808,11 @@ Entry to this mode runs the hooks on `vsh-mode-hook'."
   (make-local-variable 'vsh-buffer-initialised)
   (make-local-variable 'vsh-new-output)
   (make-local-variable 'vsh-completions-keys)
-  (unless (or (not vsh-may-start-server) (server-running-p))
+  (make-local-variable 'vsh-ignore-ansi-colors)
+  (unless (or (not vsh-may-start-server)
+              ;; Need to check this is `fboundp' because `server-start'
+              ;; autoloads the server package.
+              (and (fboundp 'server-running-p) (server-running-p)))
     (server-start)))
 
 (add-to-list 'auto-mode-alist '("\\.vsh\\'" . vsh-mode))
