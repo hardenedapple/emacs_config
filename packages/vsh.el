@@ -126,14 +126,33 @@ to send to readline processes in underlying terminal for
   "Has this current buffers process been initialised.")
 
 ;; TODO
+;;   - Add something "joining" text together so that a single `undo' removes an
+;;     entire output.
+;;     - Something with `buffer-modified-tick'?
+;;       N.b. interesting to note that this *decreases* when performing `undo'.
+;;       This means I can't simply check whether `buffer-modified-tick' has
+;;       changed since I last inserted some text (because the same tick could
+;;       happen due to some `undo' events plus changes elsewhere).
+;;       - I *think* I should be able to get away with using something like `eq'
+;;         because a changed list would have a different lisp object at its
+;;         head?  I don't think that `cons' cell itself would be re-used in the
+;;         `buffer-undo-list'.  Will have to think a little more about this.
+;;     - Looks like `undo-tree-undo' is not too much of a problem (in fact it
+;;       could help since it moves all undo descriptions into its own data
+;;       structure on an undo, which means that I won't have to worry about
+;;       the above situation of `buffer-modified-tick' matching even though
+;;       there's been an undo and actions in between -- if I only act on the
+;;       `buffer-undo-list' and the `undo' has been moved to another list, I
+;;        should be fine.
+;;   - Determine repository layout (i.e. is this emacs file going in the
+;;     originally vim repository).
 ;;   - Add functionality to send to this buffer from some other buffer.
+;;     - Include functionality to send region of text from this buffer to the
+;;       underlying process (is often quite useful too).
 ;;     - Including the python "send having de-dented this text" stuff.
 ;;   - Change server-name if there is already a server running?
 ;;     Unlikely to be a commonly hit thing, but certainly possible.
 ;;   - Add tests
-;;   - Add something "joining" text together so that a single `undo' removes an
-;;     entire output.
-;;     - Something with `buffer-modified-tick'?
 ;;   - Error handling
 ;;     - Alert when attempting to interact with an underlying process and the
 ;;       underlying process has been terminated.
@@ -154,8 +173,6 @@ to send to readline processes in underlying terminal for
 ;;   - Documentation
 ;;     - Document the functions and variables in this file.
 ;;     - Write adjustments for emacs in the demo VSH files in the VSH repo.
-;;   - Determine repository layout (i.e. is this emacs file going in the
-;;     originally vim repository).
 ;;   - Understand autoload things.
 ;;   - Allow buffer-local or user-specified prompt.
 ;;   - Maybe do something about the `repeat-mode' stuff.
@@ -248,6 +265,15 @@ command\"."
                   (list #'vsh-motion-marker #'vsh-comment-regexp))
       (goto-char (+ (line-beginning-position) (match-end 1)))
     (beginning-of-line)))
+
+(defun vsh-line-discard (remove-spaces)
+  "Delete command back to beginning of command line."
+  (interactive "P")
+  (let ((current-position (copy-marker (point))))
+    (vsh-bol)
+    (kill-region (point) current-position)
+    (set-marker current-position nil))
+  (when remove-spaces (just-one-space)))
 
 (defun vsh-next-command (&optional count)
   "Move to the next vsh prompt."
@@ -687,6 +713,7 @@ single-key commands and ignoring null bytes."
     (define-key map (kbd "C-c C-n") 'vsh-next-command)
     (define-key map (kbd "C-c C-p") 'vsh-prev-command)
     (define-key map (kbd "C-c C-a") 'vsh-bol)
+    (define-key map (kbd "C-c C-u") 'vsh-line-discard)
     (define-key map (kbd "C-c n") 'vsh-new-prompt)
     ;; Negative argument puts you at start of next block.
     ;; This is just `beginning-of-defun' function, but we can't use
