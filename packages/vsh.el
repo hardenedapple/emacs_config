@@ -128,8 +128,6 @@ to send to readline processes in underlying terminal for
 ;; TODO
 ;;   - Determine repository layout (i.e. is this emacs file going in the
 ;;     originally vim repository).
-;;   - Change server-name if there is already a server running?
-;;     Unlikely to be a commonly hit thing, but certainly possible.
 ;;   - Add tests
 ;;   - Error handling
 ;;     - Alert when attempting to interact with an underlying process and the
@@ -889,7 +887,17 @@ Entry to this mode runs the hooks on `vsh-mode-hook'."
               ;; Need to check this is `fboundp' because `server-start'
               ;; autoloads the server package.
               (and (fboundp 'server-running-p) (server-running-p)))
-    (server-start)))
+    ;; Attempt to make different server name if there is already one running.
+    ;; Should only happen when there is two different emacs sessions running a
+    ;; server.  When this happens `emacsclient' is given the relevant address
+    ;; for this particular emacs session via the `EMACS_SOCKET_NAME' environment
+    ;; variable.
+    (server-start)
+    (let ((suffix-count 0))
+      (while (not server-mode)
+        (setq server-name (format "vsh-server-%d" suffix-count))
+        (incf suffix-count)
+        (server-start)))))
 
 (add-to-list 'auto-mode-alist '("\\.vsh\\'" . vsh-mode))
 
