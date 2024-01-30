@@ -126,24 +126,6 @@ to send to readline processes in underlying terminal for
   "Has this current buffers process been initialised.")
 
 ;; TODO
-;;   - Add something "joining" text together so that a single `undo' removes an
-;;     entire output.
-;;     - Something with `buffer-modified-tick'?
-;;       N.b. interesting to note that this *decreases* when performing `undo'.
-;;       This means I can't simply check whether `buffer-modified-tick' has
-;;       changed since I last inserted some text (because the same tick could
-;;       happen due to some `undo' events plus changes elsewhere).
-;;       - I *think* I should be able to get away with using something like `eq'
-;;         because a changed list would have a different lisp object at its
-;;         head?  I don't think that `cons' cell itself would be re-used in the
-;;         `buffer-undo-list'.  Will have to think a little more about this.
-;;     - Looks like `undo-tree-undo' is not too much of a problem (in fact it
-;;       could help since it moves all undo descriptions into its own data
-;;       structure on an undo, which means that I won't have to worry about
-;;       the above situation of `buffer-modified-tick' matching even though
-;;       there's been an undo and actions in between -- if I only act on the
-;;       `buffer-undo-list' and the `undo' has been moved to another list, I
-;;        should be fine.
 ;;   - Determine repository layout (i.e. is this emacs file going in the
 ;;     originally vim repository).
 ;;   - Add functionality to send to this buffer from some other buffer.
@@ -472,14 +454,46 @@ argument."
 ;; means that `process-mark' is not going to get lost, which means the fallback
 ;; mechanisms seem unnecessary.
 
+
+(defvar vsh--undo-list-at-last-insertion nil
+  "Internal variable recording the value of `buffer-undo-list' at the time of
+last change upon which we would want output from underlying process to \"merge\"
+with into a single `undo' unit.")
+;; Working on this ...
+;; Without doing anything special with the undo stuff:
+;;    - At some point we introduce a `nil' after this function.
+;;    - After that we record the `insert' again, under a new change.
+;;    - A `delete-line' sometimes doesn't add an `undo-boundary'.
+;;    - While typing, sometimes there is no `undo-boundary' between that and
+;;      text that we add.
+;;    - While typing, sometimes emacs doesn't insert an `undo-boundary' between
+;;      the text that we added and the text added by typing.
+;; Solution:
+;;   - Manually add an `undo-boundary' before and after the modification we make
+;;     here.
+;;     - This ensures that between this modification and any other modification
+;;       there is always some boundary (and hence `undo' never gets rid of
+;;       manual changes and insertions from the underlying buffer).
+;;  - Whenever that `undo-boundary' is all there is between the state we
+;;    finished the last insertion and the state we entered this function, then
+;;    remove it.
+;;
+;; Should be fine with `undo'/`redo' since that either adds to the
+;; `buffer-undo-list' (in the case of standard emacs) or it almost clears the
+;; undo list (in the case of `undo-tree').
 (defun vsh--process-filter (proc output)
   (with-current-buffer (process-buffer proc)
     ;; Horrible hack to avoid the very first prompt given by the underlying
     ;; process on startup.
     (when (or vsh-buffer-initialised (seq-find (lambda (x) (= x ?\n)) output))
+      (undo-boundary)
       (save-excursion
         (let* ((insert-point (or (vsh-insert-point) (point-max)))
                (start-point (copy-marker insert-point nil)))
+          (when (and (not (car buffer-undo-list))
+                     (eq vsh--undo-list-at-last-insertion
+                         (cdr buffer-undo-list)))
+            (setq buffer-undo-list vsh--undo-list-at-last-insertion))
           (goto-char insert-point)
           ;; When the underlying process outputs only part of a line I want to
           ;; append the next bit of output to the end of that line.  However, when
@@ -496,7 +510,9 @@ argument."
               (ansi-color-filter-region start-point insert-point)
             (ansi-color-apply-on-region start-point insert-point t))
           ;; Leave temporary marker for GC.
-          (set-marker start-point nil))))
+          (set-marker start-point nil)
+          (setq-local vsh--undo-list-at-last-insertion buffer-undo-list)
+          (undo-boundary))))
     (unless vsh-buffer-initialised (setq-local vsh-buffer-initialised t))))
 
 ;; To think about:
@@ -584,6 +600,7 @@ argument."
   (kill-region (vsh--segment-bound nil) (vsh--segment-bound t))
   (vsh--set-markers proc)
   (setq-local vsh-new-output t)
+  (setq-local vsh--undo-list-at-last-insertion buffer-undo-list)
   (process-send-string proc text-to-send))
 
 (defun vsh-execute-command ()
@@ -836,6 +853,7 @@ Entry to this mode runs the hooks on `vsh-mode-hook'."
   (make-local-variable 'vsh-new-output)
   (make-local-variable 'vsh-completions-keys)
   (make-local-variable 'vsh-ignore-ansi-colors)
+  (make-local-variable 'vsh--undo-list-at-last-insertion)
   (unless (or (not vsh-may-start-server)
               ;; Need to check this is `fboundp' because `server-start'
               ;; autoloads the server package.
