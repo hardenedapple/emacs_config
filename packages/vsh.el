@@ -128,10 +128,6 @@ to send to readline processes in underlying terminal for
 ;; TODO
 ;;   - Determine repository layout (i.e. is this emacs file going in the
 ;;     originally vim repository).
-;;   - Add functionality to send to this buffer from some other buffer.
-;;     - Include functionality to send region of text from this buffer to the
-;;       underlying process (is often quite useful too).
-;;     - Including the python "send having de-dented this text" stuff.
 ;;   - Change server-name if there is already a server running?
 ;;     Unlikely to be a commonly hit thing, but certainly possible.
 ;;   - Add tests
@@ -145,6 +141,12 @@ to send to readline processes in underlying terminal for
 ;;   - Think about what buffer-local symbols need to be marked as
 ;;     `permanent-local' so they are not removed on changing major mode (see
 ;;     "(elisp) Creating Buffer-Local").
+;;   - Add the `python' text sending functions.
+;;     - Python REPL treats newlines different to the python interpreter when
+;;       reading a file.  Vim version of VSH introduces a function to send from
+;;       the current buffer to the process of some VSH buffer but with all
+;;       newlines removed and then an extra newline added at the end of the
+;;       text.
 ;;   - Fix `vsh-next-command' to move to the start of current command line if at
 ;;     a prompt.
 ;;   - Add more colours
@@ -717,6 +719,35 @@ single-key commands and ignoring null bytes."
                         vsh-completions-keys)
              (alist-get 'unix-line-discard vsh-completions-keys)))))
       (vsh--delete-and-send text-to-send (vsh--get-process)))))
+
+(defun vsh-send-region (rbeg rend &optional buffer)
+  "Send region to the underlying process."
+  (interactive "r")
+  ;; If in a `vsh-mode' buffer, use this as the default to send to.
+  ;; Else, ask user to choose from `vsh-mode' buffers.
+  ;; ???? Question whether to perform operation `linewise'.
+  ;; I.e. should I add an automatic newline to the end of the string if there is
+  ;; none in the region we've highlighted.
+  ;; Doesn't quite "feel right" for emacs region operations, but it's what I did
+  ;; in vim.  Leaving it for now, will see whether this becomes something I want
+  ;; to change later.
+  ;;
+  ;; Another thing to look into would be the "dedent" functionality, this is
+  ;; something I added in vim but I don't really use.
+  (process-send-string
+   (vsh--get-process
+    (or buffer
+        (if (eq major-mode 'vsh-mode)
+            (current-buffer)
+          (get-buffer
+           (completing-read
+            "Send region to which buffer: "
+            (mapcar #'buffer-name
+                    (seq-filter
+                     (lambda (x)
+                       (eq (buffer-local-value 'major-mode x) 'vsh-mode))
+                     (buffer-list))))))))
+   (buffer-substring-no-properties rbeg rend)))
 
 ;; TODO
 ;; (defun vsh-send-region-other-buffer (rbeg rend &optional buffer)
