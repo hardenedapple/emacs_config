@@ -350,8 +350,10 @@ command\"."
       (zero-or-one (regexp (vsh--comment-marker buffer)))
       (regexp (vsh--command-marker buffer))))
 
-(defun vsh--current-line ()
-  (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+(defun vsh--current-line (&optional count)
+  (if count
+      (save-excursion (forward-line count) (vsh--current-line))
+    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
 
 (defun vsh-bol ()
   "Move to beginning of command line or comment if this line is not output."
@@ -1012,13 +1014,26 @@ the CWD of the underlying process."
             (ansi-color-apply-on-region (point) end-of-segment t)
             (goto-char end-of-segment)))))))
 
+(defun vsh-indent-function ()
+  "Indent according to line above if and only if the current line is of the same
+type of line as the one above (i.e. either a comment or a command)."
+  (let ((current-line (vsh--current-line))
+        (prev-line (vsh--current-line -1))
+        (comment-regexp (vsh-comment-regexp))
+        (command-regexp (vsh-command-regexp)))
+    (if (or (and (string-match-p comment-regexp current-line)
+                 (string-match-p comment-regexp prev-line))
+            (and (string-match-p command-regexp current-line)
+                 (string-match-p command-regexp prev-line)))
+        (indent-relative nil t)
+      (just-one-space))))
 (defun vsh--initialise-settings ()
   "Default settings for behaviour in this major mode."
   ;; Settings for customisation of this particular major-mode.
   (auto-fill-mode nil)
   (setq-local comment-start (vsh-prompt))
   (setq-local comment-end "")
-  (setq-local indent-line-function (lambda () (indent-relative nil t)))
+  (setq-local indent-line-function 'vsh-indent-function)
   (setq-local beginning-of-defun-function 'vsh--beginning-of-block-fn)
   (setq-local end-of-defun-function 'vsh--end-of-block-fn))
 
