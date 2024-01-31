@@ -257,10 +257,22 @@ to send to readline processes in underlying terminal for
 ;;     a prompt.
 ;;     - Similarly `vsh-prev-command' should move to line above if ran anywhere
 ;;       on a command line.
+;;   - Ensure that `comment-indent-new-line' gives us a hash comment when
+;;     invoked on a comment and gives us a command when invoked on a command.
+;;     - As it stands it always gives the command prefix rather than
+;;       distinguishing.
+;;   - Take something in the current
 ;;   - At some point I ended up with a vsh process on an "*info*" buffer.
 ;;     I have no idea why this happened, and didn't think of any way to debug it
 ;;     at the time.
 ;;     - Worth remembering and hopefully attempting to fix this.
+;;   - Fix `vsh-line-discard' to handle the case when run as the point is in the
+;;     spaces between the prompt and the start of the command.
+;;     - As it stands, without prefix this removes spaces *up to* the command,
+;;       with prefix it removes all spaces before the command.
+;;       I'm not 100% sure what it *should* do, but would guess nothing without
+;;       prefix and with prefix remove spaces down to the one just after the
+;;       prompt.
 ;;   - Add more colours
 ;;     - Highlight strings on special lines only (not in output).
 ;;     - I wonder whether it's also useful to make the hook for our filter
