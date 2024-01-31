@@ -943,8 +943,8 @@ the CWD of the underlying process."
     ;; Decided against putting this on a keybinding.
     ;; (define-key map TO-CHOOSE 'vsh-make-cmd)
 
-    (define-key map (kbd "C-c C-s") 'vsh-save-command)
-    (define-key map (kbd "C-c C-x") 'vsh-activate-command)
+    (define-key map (kbd "C-c s") 'vsh-save-command)
+    (define-key map (kbd "C-c x") 'vsh-activate-command)
 
     (define-key map (kbd "C-M-x") 'vsh-execute-block)
     (define-key map (kbd "C-c RET") 'vsh-execute-command)
