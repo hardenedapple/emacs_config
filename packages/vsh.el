@@ -132,10 +132,6 @@ to send to readline processes in underlying terminal for
 ;;   - Error handling
 ;;     - Alert when attempting to interact with an underlying process and the
 ;;       underlying process has been terminated.
-;;   - File search using directory of underlying process.
-;;     - Use the `/proc' filesystem searching trick I used in vim.
-;;     - Maybe introduce some sort of `hippie-complete-<special>' function that
-;;       does this, as I don't think I want to override C-x C-f for vsh buffers.
 ;;   - Think about what buffer-local symbols need to be marked as
 ;;     `permanent-local' so they are not removed on changing major mode (see
 ;;     "(elisp) Creating Buffer-Local").
@@ -147,6 +143,12 @@ to send to readline processes in underlying terminal for
 ;;       text.
 ;;   - Fix `vsh-next-command' to move to the start of current command line if at
 ;;     a prompt.
+;;     - Similarly `vsh-prev-command' should move to line above if ran anywhere
+;;       on a command line.
+;;   - At some point I ended up with a vsh process on an "*info*" buffer.
+;;     I have no idea why this happened, and didn't think of any way to debug it
+;;     at the time.
+;;     - Worth remembering and hopefully attempting to fix this.
 ;;   - Add more colours
 ;;     - Highlight strings on special lines only (not in output).
 ;;     - I wonder whether it's also useful to make the hook for our filter
@@ -718,6 +720,51 @@ single-key commands and ignoring null bytes."
              (alist-get 'unix-line-discard vsh-completions-keys)))))
       (vsh--delete-and-send text-to-send (vsh--get-process)))))
 
+(defun vsh-find-foreground-cwd (&optional buffer)
+  "Find the cwd of the foreground process group in a given `vsh' buffer.
+
+This is the process group most likely to be printing to stdout, and hence most
+likely to have printed relative path names that the user wants to work with."
+  (let* ((proc-pid
+          (process-id (get-buffer-process (or buffer (current-buffer)))))
+         (proc-filename
+          (file-name-concat "/proc" (format "%d" proc-pid) "stat"))
+         (status-data (with-temp-buffer
+                        (insert-file-contents proc-filename)
+                        (buffer-string)))
+         (foreground-pid (nth 7 (split-string status-data))))
+    (file-truename
+     (file-name-concat "/proc" foreground-pid "cwd"))))
+
+(defmacro vsh-with-current-directory (&rest body)
+  "Convenience macro, this allows running lisp code as if it were in the
+directory of the underlying `vsh-mode' process.
+
+Often useful to do things like `find-file' in the relevant directory so that
+relative filenames printed from the process can provide hints.  Similar for
+filename completion."
+  `(let ((default-directory (vsh-find-foreground-cwd)))
+     ,@body))
+
+(defcustom vsh-find-file-function 'find-file
+  "Function that `vsh' should run when attempting to open a file \"as if\" in
+the CWD of the underlying process."
+  :type 'function
+  :group 'vsh)
+(defun vsh-find-file ()
+  (interactive)
+  (vsh-with-current-directory
+   (call-interactively vsh-find-file-function)))
+
+(fset 'vsh--complete-file-name-func (make-hippie-expand-function
+                                     '(try-complete-file-name-partially
+                                       try-complete-file-name)))
+(defun vsh-complete-file-name (arg)
+  (interactive "P")
+  (vsh-with-current-directory
+   (funcall-interactively #'vsh--complete-file-name-func arg)))
+
+
 (defun vsh-send-region (rbeg rend &optional buffer)
   "Send region to the underlying process."
   (interactive "r")
@@ -802,6 +849,9 @@ single-key commands and ignoring null bytes."
 
     ;; Decided against putting the below on a keybinding
     ;; (define-key map TO-CHOOSE 'vsh-send-password)
+
+    (define-key map (kbd "C-c M-/") 'vsh-complete-file-name)
+    (define-key map (kbd "C-c C-x C-f") 'vsh-find-file)
     map))
 
 ;; (defvar-keymap vsh-repeat-map
