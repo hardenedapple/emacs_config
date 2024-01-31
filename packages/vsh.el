@@ -528,10 +528,6 @@ with into a single `undo' unit.")
 ;; line before reading anything back (hence leaving all commands in the region
 ;; next to each other and all output from them underneath).
 
-(defun vsh--server-advertise-env ()
-  (string-join (list (if server-use-tcp "EMACS_SERVER_FILE" "EMACS_SOCKET_NAME")
-                     "=" (server--file-name))))
-
 ;; Decided to make this interactive so can run with `M-x'.  Mainly for when
 ;; I've done something silly in the underlying process and want to fix it.
 (defun vsh-start-process ()
@@ -542,40 +538,44 @@ with into a single `undo' unit.")
   ;; directory (which is what we want).
   ;; `process-environment' just needs to include that the terminal is dumb and
   ;; some mechanism via which to communicate back to emacs.
-  (let* ((process-environment
-          (list "TERM=dumb" (vsh--server-advertise-env)
-                (string-join (list "VSH_EMACS_BUFFER="
-                                   (prin1-to-string (sxhash-eq (current-buffer)))))))
-         (proc (make-process
-                :name "vsh-proc"
-                :buffer (current-buffer)
-                ;; TODO Going to have to ship a copy of this shell script.
-                ;; Maybe a shared subrepo in order to ensure consistency between
-                ;; the vim and emacs versions.
-                ;; Alternatively I wonder whether I could just include the
-                ;; vsh.el file in the same repo as the vim plugin.  That way the
-                ;; shell scripts etc are all the same.
-                :command (list "/home/matmal01/.vim/bundle/vsh/autoload/vsh/vsh_shell_start"
-                               "/home/matmal01/.vim/bundle/vsh/autoload/vsh" "bash")
-                :connection-type 'pty
-                :noquery t
-                :filter 'vsh--process-filter
-                ;;  Default sentinel seems good enough (because I'm using
-                ;;  `process-mark' of the underlying process as my mark for
-                ;;  where to add text).  It doesn't have the check for adding a
-                ;;  newline to the start of output if we are inserting a
-                ;;  new-output, but since this is a rare event and is likely to
-                ;;  happen after there has been some output anyway.
-                ;; :sentinel vsh--process-sentinel
-                )))
-    ;; When insert *at* the process mark, marker will advance.
-    (set-marker-insertion-type (process-mark proc) t)
-    (set-marker (process-mark proc)
-                (save-excursion
-                  (goto-char (point-min))
-                  (when (looking-at-p (vsh-prompt)) (end-of-line))
-                  (point)))
-    (setq-local vsh-new-output t)
+  (let ((process-environment process-environment))
+    ;; Copy current environment, then extend (to ensure things like $PATH and
+    ;; $HOME are kept in the environment for the underlying process.
+    (setenv "TERM" "dumb")
+    (setenv
+     (if server-use-tcp "EMACS_SERVER_FILE" "EMACS_SOCKET_NAME")
+     (server--file-name))
+    (setenv "VSH_EMACS_BUFFER" (prin1-to-string (sxhash-eq (current-buffer))))
+    (let ((proc (make-process
+                 :name "vsh-proc"
+                 :buffer (current-buffer)
+                 ;; TODO Going to have to ship a copy of this shell script.
+                 ;; Maybe a shared subrepo in order to ensure consistency between
+                 ;; the vim and emacs versions.
+                 ;; Alternatively I wonder whether I could just include the
+                 ;; vsh.el file in the same repo as the vim plugin.  That way the
+                 ;; shell scripts etc are all the same.
+                 :command (list "/home/matmal01/.vim/bundle/vsh/autoload/vsh/vsh_shell_start"
+                                "/home/matmal01/.vim/bundle/vsh/autoload/vsh" "bash")
+                 :connection-type 'pty
+                 :noquery t
+                 :filter 'vsh--process-filter
+                 ;;  Default sentinel seems good enough (because I'm using
+                 ;;  `process-mark' of the underlying process as my mark for
+                 ;;  where to add text).  It doesn't have the check for adding a
+                 ;;  newline to the start of output if we are inserting a
+                 ;;  new-output, but since this is a rare event and is likely to
+                 ;;  happen after there has been some output anyway.
+                 ;; :sentinel vsh--process-sentinel
+                 )))
+      ;; When insert *at* the process mark, marker will advance.
+      (set-marker-insertion-type (process-mark proc) t)
+      (set-marker (process-mark proc)
+                  (save-excursion
+                    (goto-char (point-min))
+                    (when (looking-at-p (vsh-prompt)) (end-of-line))
+                    (point)))
+      (setq-local vsh-new-output t))
     proc))
 
 (defun vsh-goto-last-prompt ()
