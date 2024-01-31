@@ -628,6 +628,10 @@ and run a command given by the user in that window.
 (define-key undo-tree-map (kbd "C-_") nil)
 (define-key undo-tree-map (kbd "M-_") nil)
 
+;;;; Vsh-mode settings
+;;;;
+(setq vsh-find-file-function 'ido-find-file)
+
 
 ;;;; Window Number Settings
 ;;;;
