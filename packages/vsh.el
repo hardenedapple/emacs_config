@@ -856,7 +856,7 @@ single-key commands and ignoring null bytes."
   (auto-fill-mode nil)
   (setq-local comment-start (vsh-prompt))
   (setq-local comment-end "")
-  (setq-local indent-line-function (lambda () (indent-region nil t)))
+  (setq-local indent-line-function (lambda () (indent-relative nil t)))
   (setq-local beginning-of-defun-function 'vsh--beginning-of-block-fn)
   (setq-local end-of-defun-function 'vsh--end-of-block-fn))
 
