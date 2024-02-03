@@ -241,6 +241,13 @@ to send to readline processes in underlying terminal for
 ;;   - Determine repository layout (i.e. is this emacs file going in the
 ;;     originally vim repository).
 ;;   - Add tests
+;;   - Ensure that `comment-indent-new-line' gives us a hash comment when
+;;     invoked on a comment and gives us a command when invoked on a command.
+;;     - As it stands it always gives the command prefix rather than
+;;       distinguishing.
+;;   - Would be nice to make the "automatically add command prefix"
+;;     functionality not based on comments, and only set what I call comments
+;;     to be comments according to `newcomment.el'.
 ;;   - Error handling
 ;;     - Alert when attempting to interact with an underlying process and the
 ;;       underlying process has been terminated.
@@ -253,26 +260,10 @@ to send to readline processes in underlying terminal for
 ;;       the current buffer to the process of some VSH buffer but with all
 ;;       newlines removed and then an extra newline added at the end of the
 ;;       text.
-;;   - Fix `vsh-next-command' to move to the start of current command line if at
-;;     a prompt.
-;;     - Similarly `vsh-prev-command' should move to line above if ran anywhere
-;;       on a command line.
-;;   - Ensure that `comment-indent-new-line' gives us a hash comment when
-;;     invoked on a comment and gives us a command when invoked on a command.
-;;     - As it stands it always gives the command prefix rather than
-;;       distinguishing.
-;;   - Take something in the current
 ;;   - At some point I ended up with a vsh process on an "*info*" buffer.
 ;;     I have no idea why this happened, and didn't think of any way to debug it
 ;;     at the time.
 ;;     - Worth remembering and hopefully attempting to fix this.
-;;   - Fix `vsh-line-discard' to handle the case when run as the point is in the
-;;     spaces between the prompt and the start of the command.
-;;     - As it stands, without prefix this removes spaces *up to* the command,
-;;       with prefix it removes all spaces before the command.
-;;       I'm not 100% sure what it *should* do, but would guess nothing without
-;;       prefix and with prefix remove spaces down to the one just after the
-;;       prompt.
 ;;   - Add more colours
 ;;     - Highlight strings on special lines only (not in output).
 ;;     - I wonder whether it's also useful to make the hook for our filter
@@ -369,23 +360,35 @@ command\"."
       (save-excursion (forward-line count) (vsh--current-line))
     (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
 
+(defun vsh--line-beginning-position ()
+  (let* ((funclist (list #'vsh-command-regexp #'vsh-motion-marker #'vsh-comment-regexp))
+         (match (cl-find-if (lambda (fn)
+                              (string-match (funcall fn) (vsh--current-line)))
+                            funclist)))
+    (cons (+ (line-beginning-position) (if match (match-end 1) 0))
+          match)))
 (defun vsh-bol ()
   "Move to beginning of command line or comment if this line is not output."
   (interactive)
-  (if (cl-find-if (lambda (fn)
-                    (string-match (funcall fn) (vsh--current-line)))
-                  (list #'vsh-motion-marker #'vsh-comment-regexp))
-      (goto-char (+ (line-beginning-position) (match-end 1)))
-    (beginning-of-line)))
+  (goto-char (car (vsh--line-beginning-position))))
 
 (defun vsh-line-discard (remove-spaces)
   "Delete command back to beginning of command line."
   (interactive "P")
-  (let ((current-position (copy-marker (point))))
-    (vsh-bol)
-    (kill-region (point) current-position)
-    (set-marker current-position nil))
-  (when remove-spaces (just-one-space)))
+  (let* ((vsh-line-beg-spec (vsh--line-beginning-position))
+         (start-point (if (not remove-spaces)
+                          (car vsh-line-beg-spec)
+                        (+
+                         (line-beginning-position)
+                         (cl-case (cdr vsh-line-beg-spec)
+                           (#'vsh-command-regexp (length (vsh-prompt)))
+                           (#'vsh-motion-marker (+ (length (vsh-prompt))
+                                                   (length (vsh--comment-marker))))
+                           (#'vsh-comment-regexp (length
+                                                  (vsh--comment-marker)))
+                           (t 0))))))
+    (when (< start-point (point))
+      (kill-region start-point (point)))))
 
 (defun vsh-next-command (&optional count)
   "Move to the next vsh prompt."
@@ -399,12 +402,46 @@ command\"."
   ;; (depending on direction).
   ;; If the first/last line of the buffer is a prompt and we have moved there,
   ;; then get to the start of a prompt.
+
+  ;; These two clauses handle special cases.
+  ;; When searching *forwards* the special case is in order to handle the
+  ;; possibility that we are in the middle of a prompt (where
+  ;; `re-search-forward' will not match that prompt, but we want to behave as if
+  ;; it matches.  We check this by going to the start of the line and seeing if
+  ;; there is a prompt directly after this point.  If there is a prompt and the
+  ;; position that we would want to move to is after where we are, then we move
+  ;; to the start of the line in order to accomodate the `re-search-forward'
+  ;; behaviour.
+  (when (and (> count 0)
+             (not (bolp))
+             (save-excursion (beginning-of-line)
+                             (looking-at (vsh-motion-marker)))
+             (> (match-end 1) (point)))
+    (beginning-of-line))
+  ;; When searching *backwards* the special case is in order to handle the
+  ;; possibility that we are *just after* a motion marker, but we would not want
+  ;; to move to this particular motion marker and instead would like to move to
+  ;; the previous one.
+  ;; Because of the regexp I've defined for the motion marker this only happens
+  ;; when the line is empty (otherwise the regexp matches the first character of
+  ;; the command).
+  (when (and (< count 0)
+             (eolp)
+             (save-excursion
+                  (re-search-backward (vsh-motion-marker)
+                                      (line-beginning-position)
+                                      t))
+             (= (match-end 1) (point)))
+    (decf count))
+  ;; (when (< count 0) (ignore-errors (backward-char)))
   (if (re-search-forward (vsh-motion-marker) nil 'to-end-on-error count)
       ;; We have moved our point, but because there is no lookahead regexp in elisp
       ;; we may have moved it one character further than we wanted to (the character
       ;; we checked to ensure it was not a hash indicating a comment).
       ;; Hence just go directly to the relevant character we need.
       (goto-char (match-end 1))
+    ;; This clause handles ensuring that `point' ends up at the start of the
+    ;; prompt if the line at the start/end of the buffer is a command.
     (if (string-match (vsh-motion-marker) (vsh--current-line))
         (goto-char (+ (line-beginning-position) (match-end 1))))))
 
