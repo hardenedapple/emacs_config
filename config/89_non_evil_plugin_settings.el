@@ -19,7 +19,8 @@
 
 (with-eval-after-load 'lisp-mode
   (add-hook 'emacs-lisp-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception))
+  (add-hook 'lisp-mode-hook 'keyswap-tac-underscore-exception)
+  (add-hook 'erts-mode-hook 'keyswap-tac-underscore-exception))
 
 (with-eval-after-load 'inf-lisp
   (add-hook 'inferior-lisp-mode-hook 'keyswap-mode)
