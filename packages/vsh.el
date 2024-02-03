@@ -298,14 +298,16 @@ to send to readline processes in underlying terminal for
 ;; vshcmd: > #test
 
 (defun vsh-prompt (&optional buffer)
-  "Will eventually return the vsh prompt for the relevant buffer.
-As yet I've not implemented different prompts for different buffers, so this is
-essentially a literal."
+  "String defining command prefix.
+
+Will eventually return the vsh prompt for the relevant buffer.
+As yet I've not implemented different prompts for different
+buffers, so this is essentially a literal."
   vsh-default-prompt)
 
 ;;; Defining the different line types:
 (defun vsh--comment-marker (&optional buffer)
-  "Regexp defining comment prefix."
+  "String defining comment prefix."
   (string-join (list (vsh-prompt buffer) "# ")))
 
 (defun vsh--command-marker (&optional buffer)
@@ -341,7 +343,7 @@ whitespace stripped."
 
 (defun vsh-comment-regexp (&optional buffer)
   "Regexp defining lines which are comments"
-  (rx bol (group-n 1 (regexp (vsh--comment-marker buffer)))))
+  (rx bol (group-n 1 (literal (vsh--comment-marker buffer)))))
 
 (defun vsh-motion-marker (&optional buffer)
   "Regexp defining what we move to with up/down motions.
@@ -359,7 +361,7 @@ at the start of a line are \"saved commands\".
 This function returns a regexp that matches either a \"command\" or a \"saved
 command\"."
   (rx bol
-      (zero-or-one (regexp (vsh--comment-marker buffer)))
+      (zero-or-one (literal (vsh--comment-marker buffer)))
       (regexp (vsh--command-marker buffer))))
 
 (defun vsh--current-line (&optional count)
