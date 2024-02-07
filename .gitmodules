@@ -4,3 +4,6 @@
 [submodule "cask"]
 	path = cask
 	url = git@github.com:cask/cask.git
+[submodule "vsh"]
+	path = vsh
+	url = git@github.com:hardenedapple/vsh.git
