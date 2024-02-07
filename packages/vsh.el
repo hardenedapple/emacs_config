@@ -297,27 +297,41 @@ buffers, so this is essentially a literal."
   vsh-default-prompt)
 
 ;;; Defining the different line types:
-(defun vsh--comment-marker (&optional buffer)
+(defun vsh--command-header (&optional buffer) (vsh-prompt))
+(defun vsh--comment-header (&optional buffer)
   "String defining comment prefix."
   (string-join (list (vsh-prompt buffer) "# ")))
 
+;; N.b. Using `blank' rather than `whitespace' because the syntax classes are
+;; user controlled while the `blank' character class is dependent on unicode
+;; properties.  Now `blank' does not match newline, so we ensure that the
+;; newline is also directly mentioned in our regexp.
+(defun vsh--comment-marker (&optional buffer)
+  "Regexp defining comment prefix."
+  (rx (group-n 1 (literal (vsh-prompt buffer))
+               (zero-or-more blank)
+               "#"
+               (optional " "))
+      (group-n 2 (zero-or-more blank))))
 (defun vsh--command-marker (&optional buffer)
   "Regexp defining command prefix."
-  (rx (group-n 1 (literal (vsh-prompt buffer))
-               (zero-or-more blank))
-      ;; N.b. Using `blank' rather than `whitespace' because the syntax classes
-      ;; are user controlled while the `blank' character class is dependent on
-      ;; unicode properties.  Now `blank' does not match newline, so we ensure
-      ;; that the newline is also directly mentioned in our regexp.
-      (group-n 2 (or eol (not (any ?# blank ?\n))))))
-
+  (rx (group-n 1 (literal (vsh-prompt buffer)))
+      (group-n 2 (zero-or-more blank))
+      (group-n 3 (or eol (not (any ?# blank ?\n))))))
+(defun vsh--blank-prompt (&optional buffer)
+  "Prompt without trailing whitespace."
+  (replace-regexp-in-string "\\s-+$" "" (vsh-prompt buffer)))
+(defun vsh-blank-comment-regexp (&optional buffer)
+  "Regexp defining a \"blank\" comment."
+  (rx (group-n 1 (literal (vsh--blank-prompt buffer)))
+      (group-n 2 eol)))
 (defun vsh-split-regexp (&optional buffer)
   "Regexp defining lines which are not classed as output (and are hence a
 \"split\" of output).
 
 These are all lines which start with the `vsh-prompt' with any trailing
 whitespace stripped."
-  (string-join (list "^" (replace-regexp-in-string "\\s-+$" "" (vsh-prompt buffer))))
+  (rx bol (regexp (vsh--blank-prompt buffer)))
   ;; The reason for defining things with whitespcae stripped is that in *vim*
   ;; (where this file format was defined) there was an unfortunate interaction
   ;; between automatic removal of trailing whitespace and that turning some
@@ -334,7 +348,7 @@ whitespace stripped."
 
 (defun vsh-comment-regexp (&optional buffer)
   "Regexp defining lines which are comments"
-  (rx bol (group-n 1 (literal (vsh--comment-marker buffer)))))
+  (rx bol (regexp (vsh--comment-marker buffer))))
 
 (defun vsh-motion-marker (&optional buffer)
   "Regexp defining what we move to with up/down motions.
@@ -352,7 +366,7 @@ at the start of a line are \"saved commands\".
 This function returns a regexp that matches either a \"command\" or a \"saved
 command\"."
   (rx bol
-      (zero-or-one (literal (vsh--comment-marker buffer)))
+      (zero-or-one (literal (vsh--comment-header buffer)))
       (regexp (vsh--command-marker buffer))))
 
 (defun vsh--current-line (&optional count)
@@ -361,12 +375,13 @@ command\"."
     (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
 
 (defun vsh--line-beginning-position ()
-  (let* ((funclist (list #'vsh-command-regexp #'vsh-motion-marker #'vsh-comment-regexp))
+  (let* ((funclist (list #'vsh-command-regexp #'vsh-motion-marker
+                         #'vsh-comment-regexp #'vsh-blank-comment-regexp))
          (match (cl-find-if (lambda (fn)
                               (string-match (funcall fn) (vsh--current-line)))
                             funclist)))
-    (cons (+ (line-beginning-position) (if match (match-end 1) 0))
-          match)))
+    (cons (+ (line-beginning-position) (if match (match-end 2) 0))
+          (+ (line-beginning-position) (if match (match-end 1) 0)))))
 (defun vsh-bol ()
   "Move to beginning of command line or comment if this line is not output."
   (interactive)
@@ -378,15 +393,7 @@ command\"."
   (let* ((vsh-line-beg-spec (vsh--line-beginning-position))
          (start-point (if (not remove-spaces)
                           (car vsh-line-beg-spec)
-                        (+
-                         (line-beginning-position)
-                         (cl-case (cdr vsh-line-beg-spec)
-                           (#'vsh-command-regexp (length (vsh-prompt)))
-                           (#'vsh-motion-marker (+ (length (vsh-prompt))
-                                                   (length (vsh--comment-marker))))
-                           (#'vsh-comment-regexp (length
-                                                  (vsh--comment-marker)))
-                           (t 0))))))
+                        (cdr vsh-line-beg-spec))))
     (when (< start-point (point))
       (kill-region start-point (point)))))
 
@@ -416,22 +423,16 @@ command\"."
              (not (bolp))
              (save-excursion (beginning-of-line)
                              (looking-at (vsh-motion-marker)))
-             (> (match-end 1) (point)))
+             (> (match-end 2) (point)))
     (beginning-of-line))
   ;; When searching *backwards* the special case is in order to handle the
-  ;; possibility that we are *just after* a motion marker, but we would not want
-  ;; to move to this particular motion marker and instead would like to move to
-  ;; the previous one.
-  ;; Because of the regexp I've defined for the motion marker this only happens
-  ;; when the line is empty (otherwise the regexp matches the first character of
-  ;; the command).
+  ;; possibility that we are *after* a motion marker and hence would like to
+  ;; move to the previous one.
   (when (and (< count 0)
-             (eolp)
              (save-excursion
                   (re-search-backward (vsh-motion-marker)
                                       (line-beginning-position)
-                                      t))
-             (= (match-end 1) (point)))
+                                      t)))
     (decf count))
   ;; (when (< count 0) (ignore-errors (backward-char)))
   (if (re-search-forward (vsh-motion-marker) nil 'to-end-on-error count)
@@ -439,11 +440,11 @@ command\"."
       ;; we may have moved it one character further than we wanted to (the character
       ;; we checked to ensure it was not a hash indicating a comment).
       ;; Hence just go directly to the relevant character we need.
-      (goto-char (match-end 1))
+      (goto-char (match-end 2))
     ;; This clause handles ensuring that `point' ends up at the start of the
     ;; prompt if the line at the start/end of the buffer is a command.
     (if (string-match (vsh-motion-marker) (vsh--current-line))
-        (goto-char (+ (line-beginning-position) (match-end 1))))))
+        (goto-char (+ (line-beginning-position) (match-end 2))))))
 
 (defun vsh-prev-command (&optional count)
   "Move to the previous vsh prompt."
@@ -565,7 +566,8 @@ argument."
      (save (if (looking-at-p (vsh-command-regexp))
                (insert (vsh--comment-marker))
              (message "Output is not Active")))
-     (t (if (looking-at (rx (regexp (vsh-comment-regexp)) (literal (vsh-prompt))))
+     (t (if (looking-at (rx (group-n 2 (literal (vsh--comment-marker)))
+                            (regexp (vsh--command-marker))))
             (delete-region (match-beginning 1) (match-end 1))
           (message "Output is not currently Saved"))))))
 (defun vsh-save-command ()
@@ -779,12 +781,11 @@ Returns `true' when we saw a command for programming convenience."
   (interactive)
   (let ((segment-start (vsh--segment-bound nil t))
         (proc (vsh--get-process)))
-    (unless (not (save-excursion
-                   (goto-char segment-start)
-                   (looking-at-p (vsh-command-regexp))))
+    (when (save-excursion
+            (goto-char segment-start)
+            (looking-at (vsh-command-regexp)))
       (unless (= segment-start (line-beginning-position))
-        (goto-char segment-start)
-        (vsh-bol))
+        (goto-char (match-end 1)))
       (vsh--delete-and-send
        (string-join
         (list
@@ -1165,11 +1166,15 @@ Inserts the following local variables in the scope for `body' to use:
   '((0 0 "Test output line")
     (10 10 "vshcmd: > command no space")
     (12 10 "vshcmd: >   command with space")
-    (0  0 "vshcmd: >  # space before hash, only a split marker")
+    (13 13 "vshcmd: >  # space before hash")
+    (12 12 "vshcmd: >  #space before hash, not after hash")
     (12 12 "vshcmd: > # comment no space")
+    (11 11 "vshcmd: > #comment no space")
+    (13 12 "vshcmd: > #  comment with space")
     (22 22 "vshcmd: > # vshcmd: > deactivated command")
     (23 22 "vshcmd: > # vshcmd: >  deactivated with space")
-    (0 0 "vshcmd: >")                   ; Split that is not a motion marker.
+    (9  9 "vshcmd: >")                   ; Comment with no hash (because no space)
+    (0  0 "vshcmd: ")                    ; Output line -- not quite a prompt.
     (10 10 "vshcmd: > ")                 ; Command line no text.
     ))
 
