@@ -3,13 +3,19 @@
 ;; Copyright (C) 2024 Matthew Malcomson
 
 ;; Author: Matthew Malcomson <hardenedapple@gmail.com>
+;; Maintainer: Matthew Malcomson <hardenedapple@gmail.com>
 ;; Version: 1.0
 ;; Keywords: processes
 ;; URL: https://github.com/hardenedapple/vsh
 
+;; This file is NOT part of GNU Emacs.
+
 ;;; Commentary:
 
 ;; This package provides a major mode for running terminal sessions.
+;; One can think of it similarly to Jupyter notebooks, but general to a terminal
+;; session and with less special features in order to only work with plain text.
+;;
 ;; When running experimental terminal sessions (where one does not know exactly
 ;; how to do what they are attempting) one can find themselves repeating parts
 ;; of that session multiple times with slight variation.
@@ -277,17 +283,6 @@ to send to readline processes in underlying terminal for
 ;;   - Maybe do something about the `repeat-mode' stuff.
 ;;   - Handle `case-fold-search' (ensure it doesn't change things)
 
-;; N.b. have noticed that the below (i.e. a command line with a hash but that
-;; does not have a space between the hash and the text on it) is not counted as
-;; a comment proper and is not counted as a command proper either.
-;; In vim there is very little problem with that -- seems very little uses the
-;; comment marker for any behaviour.
-;; Will keep an eye out for how I implement things in emacs to ensure nothing
-;; too problematic comes out from it.  If there is something problematic then I
-;; expect I'll define what should happen in both the vim and emacs versions.
-;;
-;; vshcmd: > #test
-
 (defun vsh-prompt (&optional buffer)
   "String defining command prefix.
 
@@ -318,6 +313,7 @@ buffers, so this is essentially a literal."
   (rx (group-n 1 (literal (vsh-prompt buffer)))
       (group-n 2 (zero-or-more blank))
       (group-n 3 (or eol (not (any ?# blank ?\n))))))
+
 (defun vsh--blank-prompt (&optional buffer)
   "Prompt without trailing whitespace."
   (replace-regexp-in-string "\\s-+$" "" (vsh-prompt buffer)))
@@ -1069,6 +1065,11 @@ the CWD of the underlying process."
 (defun vsh-indent-function ()
   "Indent according to line above if and only if the current line is of the same
 type of line as the one above (i.e. either a comment or a command)."
+  ;; Question about what I want:
+  ;;   - Should we indent words after the first one according to above?
+  ;;   - Should we indent the command line a second third etc time?
+  ;; To be honest I doubt I care about the differences here, so just going with
+  ;; what `indent-relative' decides.
   (let ((current-line (vsh--current-line))
         (prev-line (vsh--current-line -1))
         (comment-regexp (vsh-comment-regexp))
@@ -1078,7 +1079,11 @@ type of line as the one above (i.e. either a comment or a command)."
             (and (string-match-p command-regexp current-line)
                  (string-match-p command-regexp prev-line)))
         (indent-relative nil t)
-      (just-one-space))))
+      (let ((position-info (vsh--line-beginning-position)))
+        (when (and (not (eql (car position-info) (line-beginning-position)))
+                   (<= (cdr position-info) (point))
+                   (<= (point) (car position-info)))
+          (just-one-space))))))
 (defun vsh--initialise-settings ()
   "Default settings for behaviour in this major mode."
   ;; Settings for customisation of this particular major-mode.
@@ -1163,19 +1168,26 @@ Inserts the following local variables in the scope for `body' to use:
                  ,@body))))))))
 
 (defvar vsh--internal-testing-lines
-  '((0 0 "Test output line")
-    (10 10 "vshcmd: > command no space")
-    (12 10 "vshcmd: >   command with space")
-    (13 13 "vshcmd: >  # space before hash")
-    (12 12 "vshcmd: >  #space before hash, not after hash")
-    (12 12 "vshcmd: > # comment no space")
-    (11 11 "vshcmd: > #comment no space")
-    (13 12 "vshcmd: > #  comment with space")
-    (22 22 "vshcmd: > # vshcmd: > deactivated command")
-    (23 22 "vshcmd: > # vshcmd: >  deactivated with space")
-    (9  9 "vshcmd: >")                   ; Comment with no hash (because no space)
-    (0  0 "vshcmd: ")                    ; Output line -- not quite a prompt.
-    (10 10 "vshcmd: > ")                 ; Command line no text.
+  '((0 0 "Test output line" output)
+    (10 10 "vshcmd: > command no space" command)
+    (12 10 "vshcmd: >   command with space" command)
+    (13 13 "vshcmd: >  # space before hash" comment)
+    (13 13 "vshcmd: >  # " comment)
+    (12 12 "vshcmd: >  #" comment)
+    (12 12 "vshcmd: > # " comment)
+    (11 11 "vshcmd: > #" comment)
+    (15 13 "vshcmd: >  #   " comment)
+    (14 12 "vshcmd: > #   " comment)
+    (12 12 "vshcmd: >  #space before hash, not after hash" comment)
+    (12 12 "vshcmd: > # comment no space" comment)
+    (11 11 "vshcmd: > #comment no space" comment)
+    (13 12 "vshcmd: > #  comment with space" comment)
+    (22 22 "vshcmd: > # vshcmd: > deactivated command" saved-command)
+    (23 22 "vshcmd: > # vshcmd: >  deactivated with space" saved-command)
+    (9  9 "vshcmd: >" empty-comment)     ; Comment with no hash (because no space)
+    (0  0 "vshcmd: "  output)            ; Output line -- not quite a prompt.
+    (10 10 "vshcmd: > " command)   ; Command line no text.
+    (12 10 "vshcmd: >   " command)   ; Command line no text.
     ))
 
 (ert-deftest vsh-bol-test ()

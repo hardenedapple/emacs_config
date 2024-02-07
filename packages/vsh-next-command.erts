@@ -334,24 +334,245 @@ Name: Prev command 14
 vshcmd: > ls
 vshcmd: > l|s
 =-=
-vshcmd: > ls
 vshcmd: > |ls
+vshcmd: > ls
 =-=-=
 
 Name: Prev command 15
 =-=
 vshcmd: > ls
-vshcmd: > ls|
-=-=
-vshcmd: > ls
 vshcmd: > |ls
+=-=
+vshcmd: > |ls
+vshcmd: > ls
 =-=-=
 
-Name: Prev command 15
+Name: Prev command 16
 =-=
 vshcmd: > ls
 vshcmd: >| ls
 =-=
 vshcmd: > |ls
 vshcmd: > ls
+=-=-=
+
+Name: Mark command block 1
+Code: (lambda () (call-interactively 'vsh-mark-command-block)
+                 (goto-char (mark))
+                 (deactivate-mark))
+=-=
+vshcmd: > ls
+vshcmd: > ls|
+=-=
+|vshcmd: > ls
+vshcmd: > ls
+=-=-=
+
+Name: Mark command block 2
+=-=
+Test output line
+vshcmd: > ls
+vshcmd: > ls|
+=-=
+Test output line
+|vshcmd: > ls
+vshcmd: > ls
+=-=-=
+
+Name: Indent function 1
+Code: (lambda () (vsh-indent-function))
+=-=
+Output above
+|vshcmd: > ls
+=-=
+Output above
+|vshcmd: > ls
+=-=-=
+
+Name: Indent function 2
+=-=
+Output above
+|vshcmd: >    ls
+=-=
+Output above
+|vshcmd: >    ls
+=-=-=
+
+Name: Indent function 3
+=-=
+Output above
+vshcmd: > |   ls
+=-=
+Output above
+vshcmd: > |ls
+=-=-=
+
+Name: Indent function 4
+=-=
+Output above
+vshcmd: >    |ls
+=-=
+Output above
+vshcmd: > |ls
+=-=-=
+
+Name: Indent function 5
+=-=
+Output above
+vshcmd: >    l|s
+=-=
+Output above
+vshcmd: >    l|s
+=-=-=
+
+Name: Indent function 6
+=-=
+Output above
+vshcmd: >|
+=-=
+Output above
+vshcmd: > |
+=-=-=
+
+Name: Indent function 7
+=-=
+|Output above
+vshcmd: >
+=-=
+|Output above
+vshcmd: >
+=-=-=
+
+Name: Indent function 8
+=-=
+Out|put above
+vshcmd: >
+=-=
+Out|put above
+vshcmd: >
+=-=-=
+
+Name: Indent function 9
+=-=
+vshcmd: > Command above without indentation
+vshcmd: >   |Command below with indentation
+=-=
+vshcmd: > Command above without indentation
+vshcmd: >         |Command below with indentation
+=-=-=
+
+Name: Indent function 10
+=-=
+vshcmd: > Command above without indentation
+vshcmd: > |Command below without indentation
+=-=
+vshcmd: > Command above without indentation
+vshcmd: >         |Command below without indentation
+=-=-=
+
+Name: Indent function 11
+=-=
+vshcmd: >    Command above without indentation
+vshcmd: > |Command below without indentation
+=-=
+vshcmd: >    Command above without indentation
+vshcmd: >    |Command below without indentation
+=-=-=
+
+Name: Indent function 12
+=-=
+vshcmd: > Command above without indentation
+vshcmd: > Comm| below without indentation
+=-=
+vshcmd: > Command above without indentation
+vshcmd: > Comm    | below without indentation
+=-=-=
+
+Name: Indent function 13
+Does not get affected by a a line above that does not "match" the type of the
+current line.
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > Comm| below without indentation
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > Comm| below without indentation
+=-=-=
+
+Name: Indent function 14
+Similar, but for comments being the "active" line.
+=-=
+vshcmd: > Comm below without indentation
+vshcmd: > # |Command above without indentation
+=-=
+vshcmd: > Comm below without indentation
+vshcmd: > # |Command above without indentation
+=-=-=
+
+Name: Indent function 15
+Does not get affected by a line below it.
+=-=
+vshcmd: > Comm below without indentation
+vshcmd: > # |Comment below
+vshcmd: > #    Comment below
+=-=
+vshcmd: > Comm below without indentation
+vshcmd: > # |Comment below
+vshcmd: > #    Comment below
+=-=-=
+
+Name: Indent function 16
+Does not get affected by a line below it.
+=-=
+vshcmd: > |Command below
+vshcmd: > Comment below.
+=-=
+vshcmd: > |Command below
+vshcmd: > Comment below.
+=-=-=
+
+Name: Indent function 17
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > #   |Command below with indentation
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > #         |Command below with indentation
+=-=-=
+
+Name: Indent function 18
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > # |Command below without indentation
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > #         |Command below without indentation
+=-=-=
+
+Name: Indent function 19
+=-=
+vshcmd: > #    Command above without indentation
+vshcmd: > # |Command below without indentation
+=-=
+vshcmd: > #    Command above without indentation
+vshcmd: > #    |Command below without indentation
+=-=-=
+
+Name: Indent function 20
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > # Comm| below without indentation
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: > # Comm    | below without indentation
+=-=-=
+
+Name: Indent function 21
+Whitespace before the hash does not change much.
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: >    # Comm| below without indentation
+=-=
+vshcmd: > # Command above without indentation
+vshcmd: >    # Comm | below without indentation
 =-=-=
