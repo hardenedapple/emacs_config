@@ -34,6 +34,18 @@
 
 (global-set-key (kbd "C-M-q") 'fill-sentence)
 
+;;;; Goto-error / next-error but using line numbers
+;;;;
+(defun goto-error-on-linenum (linenum)
+  (interactive "P")
+  (if (numberp linenum)
+      (with-current-buffer (next-error-find-buffer)
+        (goto-line linenum)
+        (compile-goto-error))
+    (first-error)))
+(global-set-key (kbd "M-g M-t") 'goto-error-on-linenum)
+(global-set-key (kbd "M-g t") 'goto-error-on-linenum)
+
 
 ;;;; Word motion
 ;;;;
@@ -201,7 +213,7 @@
   (end-of-line)
   (when (member indent-line-function '(insert-tab indent-relative))
     (delete-horizontal-space t))
-  (unless (eq indent-line-function 'insert-tab)
+  (unless (memq indent-line-function '(insert-tab vsh-indent-function))
     ;; Don't call `indent-for-tab-command' because the setting of
     ;; `tab-always-indent' can make it start completion instead of just
     ;; indenting.
