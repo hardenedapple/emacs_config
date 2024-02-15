@@ -22,6 +22,14 @@
 (setq ring-bell-function (lambda () nil))
 
 
+;;;; Clipboard
+;;;;
+;; Don't want selecting a region to set the clipboard.
+;; This has confused me enough times, and I'm not getting used to it -- just
+;; thinking hard to remember to not activate the region while I have something I
+;; want in the clipboard.
+(setq select-active-regions 'only)
+
 ;;;; Fill Sentence
 ;;;;
 (defun fill-sentence (&optional arg)
