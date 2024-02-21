@@ -42,18 +42,6 @@
 
 (global-set-key (kbd "C-M-q") 'fill-sentence)
 
-;;;; Goto-error / next-error but using line numbers
-;;;;
-(defun goto-error-on-linenum (linenum)
-  (interactive "P")
-  (if (numberp linenum)
-      (with-current-buffer (next-error-find-buffer)
-        (goto-line linenum)
-        (compile-goto-error))
-    (first-error)))
-(global-set-key (kbd "M-g M-t") 'goto-error-on-linenum)
-(global-set-key (kbd "M-g t") 'goto-error-on-linenum)
-
 
 ;;;; Word motion
 ;;;;
@@ -86,8 +74,19 @@
 ;;;;
 (global-set-key (kbd "<f9>") 'compile)
 (global-set-key (kbd "<C-f9>") 'recompile)
-(define-key goto-map (kbd "M-t") 'first-error)
-(define-key goto-map "t" 'first-error)
+(defun goto-error-on-linenum (linenum)
+  "Implementation of `first-error' that goes based on line number rather than
+how many errors.  This means that some arguments are not valid, but it means you
+can simply find the argument for the item you want based on the line numbers
+shown in a given compile buffer."
+  (interactive "P")
+  (if (numberp linenum)
+      (with-current-buffer (next-error-find-buffer)
+        (goto-line linenum)
+        (compile-goto-error))
+    (first-error)))
+(define-key goto-map (kbd "M-t") 'goto-error-on-linenum)
+(define-key goto-map "t" 'goto-error-on-linenum)
 (define-key minibuffer-local-map (kbd "M-i")
   (lambda ()
     (interactive)
