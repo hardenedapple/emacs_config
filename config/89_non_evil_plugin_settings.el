@@ -413,18 +413,35 @@ non-nil."
     (paredit-newline)
     (paredit-forward)))
 
-;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
-(define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
-(define-key paredit-mode-map (kbd "C-j") 'nil)
-;; Remove mappings which interfere with prefix argument switching around above.
-(define-key paredit-mode-map (kbd "C-(") 'nil)
-(define-key paredit-mode-map (kbd "C-)") 'nil)
-;; Keep M-s search commands by moving PAREDIT-SPLICE-SEXP, so the keymaps join
-(define-key paredit-mode-map (kbd "M-s") nil)
-(define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
-(define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
-(define-key paredit-mode-map (kbd "<escape>") nil)
+(defun paredit-downsexp-newline-and-parenthesis (&optional arg)
+  "Do same as `downlist-newline-and-parentheses', but using
+paredit functions on the assumption they'll be more robust."
+  (interactive "^p")
+  (paredit-forward-up arg)
+  (paredit-newline)
+  (paredit-open-round))
 
+;;; Add keybinding C-c d to run paredit-duplicate-closest-sexp in paredit
+(with-eval-after-load 'paredit
+  (define-key paredit-mode-map (kbd "C-c d") 'paredit-duplicate-closest-list)
+  (define-key paredit-mode-map (kbd "C-j") 'nil)
+  ;; Remove mappings which interfere with prefix argument switching around above.
+  (define-key paredit-mode-map (kbd "C-(") 'nil)
+  (define-key paredit-mode-map (kbd "C-)") 'nil)
+  ;; Keep M-s search commands by moving PAREDIT-SPLICE-SEXP, so the keymaps join
+  (define-key paredit-mode-map (kbd "M-s") nil)
+  (define-key paredit-mode-map (kbd "M-s M-s") 'paredit-splice-sexp)
+  (define-key paredit-mode-map (kbd "M-s s") 'paredit-splice-sexp)
+  (define-key paredit-mode-map (kbd "<escape>") nil)
+  (define-key paredit-mode-map (kbd "<C-return>")
+              'paredit-downsexp-newline-and-parenthesis)
+  ;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
+  ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
+  ;; emacs wiki page)
+  (defadvice he-substitute-string (after he-paredit-fix activate)
+    "Remove extra paren when expanding line in paredit"
+    (if (and paredit-mode (member (substring str -1) '(")" "]" "\"" "}")))
+        (delete-char -1))))
 ;; When this hook is being run, sometimes the keys have already been
 ;; swapped.
 ;; This would mean that the `keyswap-map' created when `keyswap-minor-mode' was
@@ -444,25 +461,6 @@ non-nil."
  'paredit-backward-delete
  'paredit-close-round)
 
-(defun paredit-downsexp-newline-and-parenthesis (&optional arg)
-  "Do same as `downlist-newline-and-parentheses', but using
-paredit functions on the assumption they'll be more robust."
-  (interactive "^p")
-  (paredit-forward-up arg)
-  (paredit-newline)
-  (paredit-open-round))
-
-(define-key paredit-mode-map (kbd "<C-return>")
-  'paredit-downsexp-newline-and-parenthesis)
-
-
-;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
-;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
-;; emacs wiki page)
-(defadvice he-substitute-string (after he-paredit-fix activate)
-  "Remove extra paren when expanding line in paredit"
-  (if (and paredit-mode (member (substring str -1) '(")" "]" "\"" "}")))
-      (delete-char -1)))
 
 
 ;;;; Projectile Settings
@@ -472,20 +470,6 @@ paredit functions on the assumption they'll be more robust."
 (setq projectile-completion-system 'ido)
 (setq projectile-use-git-grep t)
 (setq projectile-remember-window-configs t)
-
-
-;;;; Smart Tab
-;;;;
-(global-smart-tab-mode 1)
-(setq smart-tab-disabled-major-modes
-      (append smart-tab-disabled-major-modes '(lisp-mode
-                                               slime-repl-mode
-                                               inferior-python-mode)))
-(setq smart-tab-using-hippie-expand t)
-(setq smart-tab-completion-functions-alist
-      '((emacs-lisp-mode . completion-at-point)
-        (inferior-emacs-lisp-mode . completion-at-point)))
-
 
 ;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
@@ -567,15 +551,8 @@ and run a command given by the user in that window.
 
 ;;;; Slime Settings
 ;;;;
-(add-to-list 'load-path "~/.emacs.d/packages/slime")
-(require 'slime-autoloads)
 (setq slime-contribs '(slime-fancy slime-asdf))
 (setq slime-complete-symbol*-fancy t)
-;; Note with this set up of info, also need to go into the directory and run
-;; make slime.info
-;; install-info --dir=dir slime.info
-(info-initialize)
-(add-to-list 'Info-directory-list "~/.emacs.d/packages/slime/doc")
 
 (global-set-key (kbd "C-c s") 'slime-selector)
 
@@ -632,6 +609,15 @@ and run a command given by the user in that window.
 ;;;; Vsh-mode settings
 ;;;;
 (setq vsh-find-file-function 'ido-find-file)
+;; I introduced a special mapping for C-j to accomodate for the fact that I lost
+;; it when defining two C-c keys.  I currently use this mapping to trigger
+;; execution in the minibuffer.  I find it a little confusing that I have
+;; different but similar mappings to "execute" between the eval-expression and
+;; vsh modes.  Hence add this in vsh.
+;; (Would *like* to remove the problem with the `eval-expression' thing, working
+;; on it).
+(with-eval-after-load 'vsh
+  (define-key vsh-mode-map (kbd "C-j") 'vsh-execute-command))
 
 
 ;;;; Window Number Settings
@@ -660,75 +646,3 @@ and run a command given by the user in that window.
 ;;;;
 (add-hook 'c-mode-hook 'cscope-setup)
 (add-hook 'c++-mode-hook 'cscope-setup)
-
-
-;;;; Yasnippet Settings
-;;;;
-(yas-global-mode t)
-(setq yas-also-auto-indent-first-line t
-      yas-use-menu nil
-      yas/prompt-functions '(yas/completing-prompt
-                             yas/ido-prompt))
-
-(define-key yas-keymap (kbd "C-;") 'yas-next-field-or-maybe-expand)
-(define-key yas-keymap (kbd "C-:") 'yas-prev-field)
-(define-key yas-minor-mode-map (kbd "C-;") 'yas-expand)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map [(tab)] nil)
-
-;;;; The below is all about attempting to debug why the yas auto fill stuff
-;;;; misbehaves.  I've tried `debug-on-variable-change' but that seems to affect
-;;;; the behaviour too much to get useful information out of it.
-;; (defun message-on-yas-change (symbol newval operation where)
-;;   "Message that the yas--original-auto-fill-function has changed"
-;;   (message "yas variable has changed: is now %S (%S -> %S) %S %S" symbol
-;;            (symbol-value symbol)
-;;            newval
-;;            operation where))
-;; (defun message-on-auto-fill-change (symbol newval operation where)
-;;   "Message that the auto-fill-function has changed"
-;;   (message "auto-fill-function changed: is now %S (%S -> %S) %S %S" symbol
-;;            (symbol-value symbol)
-;;            newval
-;;            operation where))
-;; (add-variable-watcher 'yas--original-auto-fill-function #'message-on-yas-change)
-;; (add-variable-watcher 'auto-fill-function #'message-on-auto-fill-change)
-
-;; I've been "suffering" from yasnippet removing my `auto-fill-function`
-;; setting.  After a bit of debugging it seems that sometimes the `setq` in
-;; `yas--auto-fill-wrapper` (the one defined in yasnippet.el) sets both the
-;; buffer-local variable *and* the default value of `auto-fill-function` to
-;; `yas--auto-fill`.
-;;
-;; At the moment this happens nothing problematic is seen, but later on when
-;; opening a new buffer, or if I revert my buffer and `kill-all-local-variables'
-;; unsets `yas--original-auto-fill-function', we're left with a problematic
-;; scenario.
-;; Eventually `yas--auto-fill-wrapper' gets called, at that time the
-;; `auto-fill-function' is already `yas--auto-fill' (because the *default* got
-;; set with `setq` earlier), and it doesn't reset `kill-all-local-variables'.
-;;
-;; N.b. the `yas--watch-auto-fill' function is not getting anything useful for
-;; me because the `backtrace--print-frame' function is not available on my emacs
-;; version of
-;; "GNU Emacs 28.2 (build 1, x86_64-pc-linux-gnu, X toolkit, Xaw scroll bars) of 2022-11-18"
-
-;; https://github.com/joaotavora/yasnippet/issues/919
-(defun yas--auto-fill-wrapper ()
-  (cond ((and auto-fill-function
-              (not (eq auto-fill-function 'yas--auto-fill)))
-         (setq yas--original-auto-fill-function auto-fill-function)
-         (let ((tmp (default-value 'auto-fill-function)))
-           (setq auto-fill-function 'yas--auto-fill)
-           ;; Don't have a clue why, but sometimes the above set of
-           ;; `auto-fill-function' ends up setting the default value rather than
-           ;; the buffer-local one.  Detect when that happens and account for it.
-           (unless (eq tmp (default-value 'auto-fill-function))
-             (setq-default auto-fill-function tmp))))
-        ((and auto-fill-function
-              (eq (default-value 'auto-fill-function) 'yas--auto-fill)
-              (null yas--original-auto-fill-function))
-         (message "XXX Some new mechanism by which problem occurs seen")
-         (setq yas--original-auto-fill-function 'do-auto-fill)
-         (set-default-toplevel-value 'auto-fill-function 'do-auto-fill))
-        (t (message "yas--auto-fill-wrapper avoided action"))))

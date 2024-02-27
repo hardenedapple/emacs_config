@@ -564,15 +564,12 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
       next-screen-context-lines 3)
 
 
-;;;; Customize/Abbreviation/Backups/Autosave Directory Settings
+;;;; Abbreviation/Backups/Autosave Directory Settings
 ;;;;
-(setq custom-file "~/.emacs.d/customize.el"
-      abbrev-file-name "~/.emacs.d/abbrev_defs"
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs"
       backup-directory-alist `((".*" . "~/.emacs.d/backups/"))
       backup-by-copying-when-linked t
       auto-save-file-name-transforms `((".*" "~/.emacs.d/autosaves/" t)))
-(load custom-file)
-
 
 ;;;; User Interface
 ;;;;
