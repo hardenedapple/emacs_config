@@ -616,7 +616,7 @@ This doesn't enable `linum-mode' if in `org-mode' or in the
 (global-unset-key (kbd "C-x C-z"))
 ;; Some general key bindings
 (global-set-key (kbd "<escape>") 'execute-extended-command)
-(global-set-key (kbd "TAB") 'completion-at-point)
+(setq tab-always-indent 'complete)
 (global-set-key (kbd "C-M-i") 'indent-for-tab-command)
 ;; Remove `downcase-region' keybinding since I only ever accidentally use it and
 ;; that accident happens quite a lot.  Remove `upcase-region' keybinding too

@@ -289,23 +289,6 @@ as yet."
 (with-eval-after-load 'ibuffer
     (define-key ibuffer-mode-map (kbd "M-g") nil))
 
-;;;; Ido Settings
-;;;;
-(setq ido-enable-flex-matching 1)
-(setq ido-use-filename-at-point 'guess)
-(setq buffer-choose-default-function 'ido-switch-buffer)
-(setq ido-everywhere 1)
-(setq ido-default-buffer-method 'selected-window)
-(ido-mode 1)
-;; While this works initially, every time `ido-init-completion-maps' is run (and
-;; hence every time `ido-common-initialisation' is run), then
-;; `ido-common-completion-map' is redefined.
-;; Hence I need to add a hook, and am doing in the recommended hook
-;; `ido-setup-hook' (which is the one used in `ido-read-internal')
-(add-hook 'ido-setup-hook
-          (lambda ()
-            (define-key ido-common-completion-map (kbd "C-q") 'ido-select-text)))
-
 
 ;;;; Imenu Settings
 ;;;;
@@ -438,7 +421,6 @@ don't have the package installed."
       org-startup-indented t
       org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
-      org-completion-use-ido t
       org-default-notes-file (concat org-directory "/notes.org")
       org-agenda-files (list "~/TODO/Today.org"
                              "~/TODO/Soon.org"

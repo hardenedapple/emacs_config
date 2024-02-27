@@ -160,37 +160,6 @@
 (global-set-key (kbd "C-.") 'goto-last-change)
 (global-set-key (kbd "C-,") 'goto-last-change-reverse)
 
-
-;;;; Ido at point Settings
-;;;;
-(ido-at-point-mode)
-
-
-;;;; Ido Ubiquitous Settings
-;;;;
-(ido-ubiquitous-mode)
-
-
-;;;; Ido Vertical Mode
-;;;;
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
-
-;;;; Ido completing read +
-;;;;
-;; Want to have completing read in Info menu entries
-(with-eval-after-load 'info
-  (defun ido-info-menu ()
-    (interactive)
-    (let ((ido-cr+-force-on-functional-collection t))
-      (call-interactively 'Info-menu)))
-  (defun ido-info-index ()
-    (interactive)
-    (let ((ido-cr+-force-on-functional-collection t))
-      (call-interactively 'Info-index)))
-  (define-key Info-mode-map "m" 'ido-info-menu)
-  (define-key Info-mode-map "i" 'ido-info-index))
-
 ;;;; Jump Char Settings
 ;;;;
 (global-set-key (kbd "M-m") 'jump-char-forward)
@@ -317,11 +286,6 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
-
-;;;; Nameses Settins
-;;;;
-(setq nameses-ido-mode t)
 
 ;;;; Org Mode Settings
 ;;;;
@@ -467,7 +431,6 @@ paredit functions on the assumption they'll be more robust."
 ;;;;
 (projectile-global-mode)
 (setq projectile-enable-caching t)
-(setq projectile-completion-system 'ido)
 (setq projectile-use-git-grep t)
 (setq projectile-remember-window-configs t)
 
@@ -532,23 +495,6 @@ and run a command given by the user in that window.
      ((> (car arg) 4)
       (call-interactively (run-command-split-window 'right))))))
 
-
-;;;; Smex Settings
-;;;;
-(setq smex-history-length 20)
-(setq smex-save-file "~/.emacs.d/smex-items")
-(smex-initialize)
-;; Want to remap the keys I'm currently using for `execute-extended-command',
-;; but leave one just in case everything goes wrong (e.g. my keymappings have
-;; all broken somehow, and `smex' isn't opening, I want to be able to run some
-;; kind of command, so leave <menu> as `execute-extended-command' for this
-;; hypothetical scenario)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "<escape>") 'smex)
-;;(global-set-key (kbd "<menu>") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-
-
 ;;;; Slime Settings
 ;;;;
 (setq slime-contribs '(slime-fancy slime-asdf))
@@ -608,7 +554,6 @@ and run a command given by the user in that window.
 
 ;;;; Vsh-mode settings
 ;;;;
-(setq vsh-find-file-function 'ido-find-file)
 ;; I introduced a special mapping for C-j to accomodate for the fact that I lost
 ;; it when defining two C-c keys.  I currently use this mapping to trigger
 ;; execution in the minibuffer.  I find it a little confusing that I have
