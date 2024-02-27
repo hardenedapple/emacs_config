@@ -28,7 +28,7 @@
         (mode . python-mode))))))
  '(icomplete-vertical-mode t)
  '(package-selected-packages
-   '(vsh slime register-list magit buffer-move window-number multiple-cursors markdown-mode jump-char paredit keyswap avy goto-chg feature-mode c-eldoc wrap-region xcscope expand-region rust-mode transpose-mark monokai-theme monky dot-mode elisp-slime-nav undo-tree move-text projectile smart-window vimrc-mode))
+   '(transpose-frame vsh slime register-list magit buffer-move window-number multiple-cursors markdown-mode jump-char paredit keyswap avy goto-chg feature-mode c-eldoc wrap-region xcscope expand-region rust-mode transpose-mark monokai-theme monky dot-mode elisp-slime-nav undo-tree move-text projectile smart-window vimrc-mode))
  '(safe-local-variable-values
    '((epa-file-encript-to "hardenedapple@gmail.com")
      (Base . 10)
