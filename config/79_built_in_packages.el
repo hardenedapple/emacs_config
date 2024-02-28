@@ -161,25 +161,6 @@ Ignore any files that aren't in the fileset."
                 (format-time-string " [%H:%M:%S]")
                 (if (= (user-uid) 0) " # " " $ "))))
 
-;; These commands are the ones I don't want running in eshell.
-;; I either want them to be run in ansi-term or by some personally defined
-;; function
-(setq eshell-visual-subcommands (list
-                                 (list "git" "log" "diff" "show" "graph")
-                                 (list "hg" "log" "diff")))
-
-(defun eshell/emacs (&rest args)
-  "Open a file in emacs."
-  (if (null args)
-      ;; If I just ran "emacs", I probably expect to be launching
-      ;; Emacs, which is rather silly since I'm already in Emacs.
-      ;; So just pretend to do what I ask.
-      (bury-buffer)
-    ;; We have to expand the file names or else naming a directory in an
-    ;; argument causes later arguments to be looked for in that directory,
-    ;; not the starting directory
-    (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
-
 (defun eshell--get-last-input ()
   "Inserts the last command argument at point.
 
@@ -248,6 +229,9 @@ as yet."
 (add-hook 'flymake-allowed-file-name-masks
           '("\\.py\\'" flymake-pylint-init))
 
+;;;; HideShow Settings
+;;;;
+(add-hook 'prog-mode-hook 'hs-minor-mode)
 
 ;;;; Hippie Expand Settings
 ;;;;
