@@ -270,40 +270,6 @@ shown in a given compile buffer."
 (define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
 
 
-;;;; Generalise finding definition
-;;;;
-(defvar-local find-definition-function 'find-tag
-  "Function which `find-this-definition' calls to move to the
-  definition of the `symbol-at-point'.
-
-The default is `find-tag', but should be changed for each mode.
-
-Think `completion-at-point' functions, but only one function at a time")
-
-(defun find-this-definition-helper (&optional symbol function)
-  (if symbol
-      (funcall function symbol)
-    (call-interactively function)))
-
-(defun find-this-definition (&optional symbol)
-  (interactive)
-  (find-this-definition-helper symbol find-definition-function))
-
-(defun find-this-definition-other-window (&optional symbol)
-  (interactive)
-  (let ((existing-function
-         (intern-soft (format "%s-other-window"
-                              (symbol-name find-definition-function)))))
-    (if existing-function
-        (find-this-definition-helper symbol existing-function)
-      (let ((current-symbol (thing-at-point 'symbol t)))
-        (run-function-other-window #'find-this-definition nil
-                               current-symbol)))))
-
-(global-set-key (kbd "M-.") 'find-this-definition)
-(global-set-key (kbd "C-x 4 .") 'find-this-definition-other-window)
-
-
 ;;;; Mouse navigation
 ;;;;
 (defmacro mouse-function-on-symbol (&rest body)
