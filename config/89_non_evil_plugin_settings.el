@@ -171,88 +171,12 @@
 ;; Strange things about jump-char
 ;; C-c C-c  comes out as C-j C-c
 
-
-;;;; List Registers Settings
-;;;;
-(define-key ctl-x-r-map "v" 'list-register)
-
-
 ;;;; Magit Settings
 ;;;;
-(setq magit-repo-dirs '("~/.emacs.d" "~/share/repos/useful-files"))
-(defun magit-stage-this-file ()
-  "Stage file the current buffer is visiting."
-  (interactive)
-  (magit-stage-item (buffer-file-name)))
-
-(global-set-key (kbd "C-c g") 'magit-status)
-;; git commit mode usually starts flyspell
-(defun fill-at-70 () (setq fill-column 70) (turn-on-auto-fill))
+(defun fill-at-70 () (setq-local fill-column 70))
 (with-eval-after-load 'git-commit (add-hook 'git-commit-setup-hook 'fill-at-70))
-(setq magit-last-seen-setup-instructions "1.4.0")
-
 
 ;;; Intercept calling git in Eshell and parse some into Magit
-;;
-;; NOTE:
-;;     Some of these functions are taken directly from magit.el, while changing
-;;     the SWITCH-FUNC argument to `magit-mode-setup' macro so that always use
-;;     the current window.
-;;
-;; TODO:
-;;     Add something for my shell aliases gr and hr
-;;     Possibly get the output from 'start-file-process, then use that in the
-;;     function to change directory
-(defun eshell--magit-log-function (range &optional type arguments)
-  "Runs `magit-log', but with optional arguments.
-
-Just a reworking of `magit-log' and `magit-log-long' for my
-`eshell' customisation ease."
-  (let ((range (cadr range))
-        (type (if type type 'oneline)))
-    (cond ((not range) (setq range "HEAD"))
-          ;; Forward compatibility kludge.
-          ((listp range) (setq range (car range))))
-    (magit-mode-setup magit-log-buffer-name
-                      #'switch-to-buffer
-                      #'magit-log-mode
-                      #'magit-refresh-log-buffer
-                      type range arguments)))
-
-(setq eshell-magit->git-transformations
-      (list
-       '("log" . eshell--magit-log-function)
-       '("diff" . (lambda (args)
-                    (magit-mode-setup magit-diff-buffer-name
-                                      #'switch-to-buffer
-                                      #'magit-diff-mode
-                                      #'magit-refresh-diff-buffer
-                                      (or (cadr args) "HEAD") nil nil)
-                    nil))
-       '("status" . (lambda (args)
-                      (magit-status default-directory
-                                    #'switch-to-buffer)))
-       '("graph" . (lambda (range)
-                     (eshell--magit-log-function range 'long (list "--graph"))))))
-
-(defun eshell-delegate-external (command args)
-  "Call external command "
-  (eshell-wait-for-process (eshell-external-command command args)))
-
-(defun eshell/git (&rest args)
-  "Function to use some of `magit' abilities in `eshell'.
-
-Checks if the subcommand is one of the keys in the assoc list
-`eshell-magit->git-transformations' if it isn't, we simply pass
-it on to the external git command, otherwise, do something almost
-equivalent with `magit'"
-  (let ((function-to-call
-         (or (cdr (assoc (car args) eshell-magit->git-transformations))
-             (lambda (args)
-               (eshell-delegate-external (eshell-search-path "git") args)))))
-    (funcall function-to-call args)
-    nil))
-
 (defun eshell/gr (&rest args)
   "Go to the current repositorys' root dir.
 
@@ -266,20 +190,6 @@ Calls `eshell/cd' to the value of `magit-get-top-dir'"
 ;;;;
 (global-set-key (kbd "C-s-<up>") 'move-text-up)
 (global-set-key (kbd "C-s-<down>") 'move-text-down)
-
-
-;;;; Monky Settings
-(global-set-key (kbd "C-c h") 'monky-status)
-(with-eval-after-load 'monky (add-hook monky-commit-mode-hook 'fill-at-70))
-
-(defun eshell/hr (&rest args)
-  "Go to the current mercurial repositorys' root dir.
-
-Calls `eshell/cd' to the value of `magit-get-top-dir'"
-  (let ((hg-root (monky-get-root-dir)))
-    (when hg-root
-      (eshell/cd hg-root))))
-
 
 ;;;; Multiple Cursors Settings
 ;;;;
@@ -424,8 +334,6 @@ paredit functions on the assumption they'll be more robust."
 (eldoc-add-command
  'paredit-backward-delete
  'paredit-close-round)
-
-
 
 ;;;; Projectile Settings
 ;;;;
