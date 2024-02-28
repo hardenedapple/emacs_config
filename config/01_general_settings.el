@@ -148,11 +148,25 @@ shown in a given compile buffer."
 (define-key help-map "A" 'apropos)
 
 
-;;;; Tab completion
+;;;; Completion (both minibuffer *and* in-buffer).
 ;;;;
-(setq tab-always-indent 'complete
-      completion-styles '(basic partial-completion emacs22 initials)
-      minibuffer-completion-confirm 'confirm-after-completion)
+(setq ;; icomplete-in-buffer t ; <-- doesn't seem quite right
+      tab-always-indent 'complete
+      completion-styles '(basic partial-completion initials)
+      minibuffer-completion-confirm 'confirm-after-completion
+      completion-auto-select 'second-tab)
+(fido-mode t)
+(icomplete-vertical-mode t)
+
+;; Up/down when completing in the minibuffer
+(define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
+(define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion)
+
+;; Up/down when competing in a normal buffer
+(define-key completion-in-region-mode-map (kbd "C-p") 'minibuffer-previous-completion)
+(define-key completion-in-region-mode-map (kbd "C-n") 'minibuffer-next-completion)
+(define-key completion-in-region-mode-map (kbd "RET") #'minibuffer-choose-completion)
+
 ;; N.b. reminder: icomplete-fido-exit is on M-j, that's what you use in order to
 ;; accept current input even if there is no matching completion.
 
@@ -620,7 +634,6 @@ This doesn't enable `linum-mode' if in `org-mode' or in the
 (global-unset-key (kbd "C-x C-z"))
 ;; Some general key bindings
 (global-set-key (kbd "<escape>") 'execute-extended-command)
-(global-set-key (kbd "C-M-i") 'indent-for-tab-command)
 ;; Remove `downcase-region' keybinding since I only ever accidentally use it and
 ;; that accident happens quite a lot.  Remove `upcase-region' keybinding too
 ;; for symmetry.

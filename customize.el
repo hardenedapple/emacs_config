@@ -83,7 +83,6 @@
       (null-device . "/dev/null"))))
  '(custom-safe-themes
    '("37c8c2817010e59734fe1f9302a7e6a2b5e8cc648cf6a6cc8b85f3bf17fececf" "78e6be576f4a526d212d5f9a8798e5706990216e9be10174e3f3b015b8662e27" "a800120841da457aa2f86b98fb9fd8df8ba682cebde033d7dbf8077c1b7d677a" "1fc1fdf975c8c8c3767c29787a063eee50cbceef903644a0771fa66568ee8777" "c567c85efdb584afa78a1e45a6ca475f5b55f642dfcd6277050043a568d1ac6f" "38ba6a938d67a452aeb1dada9d7cdeca4d9f18114e9fc8ed2b972573138d4664" "196cc00960232cfc7e74f4e95a94a5977cb16fd28ba7282195338f68c84058ec" "30b7087fdd149a523aa614568dc6bacfab884145f4a67d64c80d6011d4c90837" "05c3bc4eb1219953a4f182e10de1f7466d28987f48d647c01f1f0037ff35ab9a" "4e262566c3d57706c70e403d440146a5440de056dfaeb3062f004da1711d83fc" default))
- '(fido-mode t)
  '(ibuffer-saved-filter-groups '(("Split by files" ("with files" (filename . ".*")))))
  '(ibuffer-saved-filters
    '(("gnus"
@@ -102,7 +101,6 @@
         (mode . idl-mode)
         (mode . lisp-mode)
         (mode . python-mode))))))
- '(icomplete-vertical-mode t)
  '(package-selected-packages
    '(yasnippet-snippets yasnippet transpose-frame vsh slime register-list magit buffer-move window-number multiple-cursors markdown-mode jump-char paredit keyswap avy goto-chg feature-mode c-eldoc wrap-region xcscope expand-region rust-mode transpose-mark monokai-theme dot-mode elisp-slime-nav undo-tree move-text projectile smart-window vimrc-mode))
  '(safe-local-variable-values
