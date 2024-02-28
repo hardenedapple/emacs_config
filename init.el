@@ -15,10 +15,11 @@
 
 ;; Packages that I want to ensure are downloaded.
 ;; Point of this is to ensure setting emacs up on a new machine is very easy.
-;; TODO Need to do something about `package-refresh-contents' so don't have to
-;; do anything manual.
 (setq custom-file "~/.emacs.d/customize.el")
 (load custom-file)
+;; First level approximation of whether this is a fresh install or not.
+(unless (package-installed-p (car package-selected-packages))
+  (package-refresh-contents))
 (package-install-selected-packages t)
 
 ;;; I keep single file packages in this directory
