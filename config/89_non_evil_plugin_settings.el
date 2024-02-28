@@ -591,3 +591,15 @@ and run a command given by the user in that window.
 ;;;;
 (add-hook 'c-mode-hook 'cscope-setup)
 (add-hook 'c++-mode-hook 'cscope-setup)
+
+;;;; Yasnippet Settings
+;;;;
+(yas-global-mode t)
+(setq yas-also-auto-indent-first-line t
+      yas-use-menu nil)
+
+(define-key yas-keymap (kbd "C-;") 'yas-next-field-or-maybe-expand)
+(define-key yas-keymap (kbd "C-:") 'yas-prev-field)
+(define-key yas-minor-mode-map (kbd "C-;") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map [(tab)] nil)

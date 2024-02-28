@@ -7,6 +7,8 @@ Write down all the customisation I might have to change depending on machine
 ** Including external plugins
 ** Excluding external plugins
 * To Fix:
+find-file including line numbers in suffix (e.g. ~file-name:20: some-grep-match~)
+
 slime -- keybinding swapping -- sometimes gets back the paredit bindings after
          switching buffers
 Figure out why python-mode's inbuilt flymake settings aren't working.

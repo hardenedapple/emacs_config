@@ -151,7 +151,10 @@ shown in a given compile buffer."
 ;;;; Tab completion
 ;;;;
 (setq tab-always-indent 'complete
-      completion-styles '(basic partial-completion emacs22 initials))
+      completion-styles '(basic partial-completion emacs22 initials)
+      minibuffer-completion-confirm 'confirm-after-completion)
+;; N.b. reminder: icomplete-fido-exit is on M-j, that's what you use in order to
+;; accept current input even if there is no matching completion.
 
 ;;;; Indentation Motion
 ;;;;
