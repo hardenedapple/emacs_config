@@ -268,6 +268,7 @@ shown in a given compile buffer."
 
 ;;;; Minibuffer -- escape quits it
 (define-key minibuffer-local-map (kbd "<escape>") 'abort-recursive-edit)
+(add-hook 'minibuffer-setup-hook 'turn-off-auto-fill)
 
 
 ;;;; Mouse navigation
