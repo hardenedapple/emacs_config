@@ -53,7 +53,6 @@
    'compilation-shell-minor-mode
    'diff-minor-mode
    'overwrite-mode
-   'projectile-mode
    'undo-tree-visualizer-selection-mode
    'window-number-mode
    'keyswap-mode

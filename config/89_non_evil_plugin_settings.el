@@ -335,13 +335,6 @@ paredit functions on the assumption they'll be more robust."
  'paredit-backward-delete
  'paredit-close-round)
 
-;;;; Projectile Settings
-;;;;
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-(setq projectile-use-git-grep t)
-(setq projectile-remember-window-configs t)
-
 ;;;; Smart Window
 ;; Once loaded, overwrite with my own mappings
 (defun run-command-split-window (direction)
