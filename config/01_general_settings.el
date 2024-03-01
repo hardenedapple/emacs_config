@@ -84,7 +84,9 @@ shown in a given compile buffer."
       (with-current-buffer (next-error-find-buffer)
         (goto-line linenum)
         (compile-goto-error))
-    (first-error)))
+    (if linenum
+        (first-error)
+      (next-error 0))))
 (define-key goto-map (kbd "M-t") 'goto-error-on-linenum)
 (define-key goto-map "t" 'goto-error-on-linenum)
 (define-key minibuffer-local-map (kbd "M-i")
