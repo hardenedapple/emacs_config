@@ -464,6 +464,7 @@ and run a command given by the user in that window.
 ;; on it).
 (with-eval-after-load 'vsh
   (define-key vsh-mode-map (kbd "C-j") 'vsh-execute-command))
+(setq vsh-find-file-function 'find-file-at-point)
 
 
 ;;;; Window Number Settings

@@ -229,6 +229,10 @@ as yet."
 (add-hook 'flymake-allowed-file-name-masks
           '("\\.py\\'" flymake-pylint-init))
 
+;;;; Find File at Point
+;;;;
+(ffap-bindings)
+
 ;;;; HideShow Settings
 ;;;;
 (add-hook 'prog-mode-hook 'hs-minor-mode)
