@@ -25,6 +25,8 @@
     ("C-'" . "C-x")
     ;; Just to be able to still use the C-j key
     ;; It's not available because I map it away below.
+    ;; This ends up a little problematic, because while I have a way to press
+    ;; C-j, I have no way to insert C-j
     ("C-c j" . "C-j")))
 
 (defvar dvorak-key-translations
@@ -47,3 +49,6 @@
 (add-hook 'after-make-frame-functions
           (lambda (f) (with-selected-frame f
                         (apply-my-keyswaps))))
+
+(define-key minibuffer-local-map (kbd "C-c q")
+            (lambda () (interactive) (insert-and-inherit 10)))
