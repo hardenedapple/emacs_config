@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;; Calendar Settings
 ;;;;
 (setq calendar-week-start-day 1)
@@ -239,23 +240,27 @@ as yet."
 
 ;;;; Hippie Expand Settings
 ;;;;
-;; While I have no mapping for HIPPIE-EXPAND, I set up smart tab to use it by
-;; default whenever autocomplete is not available. Hence, when there isn't
-;; autocomplete, this is the default completion, available on the TAB key.
-(setq hippie-expand-try-functions-list
-      '(try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill
-        try-complete-file-name-partially
-        try-complete-file-name))
-
-(fset 'hippie-complete-file (make-hippie-expand-function
-                             '(try-complete-file-name-partially
-                               try-complete-file-name)))
-(fset 'hippie-expand-dabbrev (make-hippie-expand-function
-                              '(try-expand-dabbrev
-                                try-expand-dabbrev-all-buffers
-                                try-expand-dabbrev-from-kill)))
+;; The functionality here is taken from hippie-expand.  The only difference is
+;; that I tie things into the standard completion interface rather than
+;; inserting a string directly into the buffer.
+(defun hippie-complete-file-at-point (&optional arg)
+  (interactive "*P")
+  (let ((completion-at-point-functions '(hippie--complete-capf)))
+    (completion-at-point)))
+(defun hippie--complete-capf ()
+  (let* ((start-point (vsh--file-name-beg))
+         (prefix-string (buffer-substring-no-properties start-point (point)))
+         (name-part (file-name-nondirectory prefix-string))
+         (dir-part (or (file-name-directory prefix-string) ""))
+         (abs-dir (expand-file-name dir-part)))
+    (list start-point (point)
+          (completion-table-dynamic
+           (lambda (_)
+             ;; Need to return a list of strings to replace the *entire* region
+             ;; that we want to replace.
+             ;; TODO Would be nice to replace just the last element of the path.
+             (mapcar (lambda (x) (string-join (list dir-part x)))
+                    (file-name-all-completions name-part abs-dir)))))))
 ;; This is my default special HIPPIE-EXPANION function, default here means ready
 ;; for {e,}lisp (as that's what I mainly use emacs for).
 ;; The idea is this keybinding is set on a per buffer basis, with customisations
@@ -266,16 +271,14 @@ as yet."
                                 try-expand-list-all-buffers
                                 try-expand-line
                                 try-expand-line-all-buffers)))
-(global-set-key (kbd "M-/") 'hippie-complete-file)
-(global-set-key (kbd "M-\\") 'hippie-expand-dabbrev)
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
-(global-set-key (kbd "C-\\") 'dabbrev-completion)
-
+(global-set-key (kbd "M-/") 'hippie-complete-file-at-point)
+(global-set-key (kbd "M-\\") 'dabbrev-completion)
 
 ;;;; Ibuffer Settings
 ;;;;
 (with-eval-after-load 'ibuffer
-    (define-key ibuffer-mode-map (kbd "M-g") nil))
+  (define-key ibuffer-mode-map (kbd "M-g") nil))
 
 
 ;;;; Imenu Settings
