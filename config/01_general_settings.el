@@ -152,13 +152,12 @@ shown in a given compile buffer."
 
 ;;;; Completion (both minibuffer *and* in-buffer).
 ;;;;
-(setq ;; icomplete-in-buffer t ; <-- doesn't seem quite right
+(setq ;; icomplete-in-buffer t ; <-- doesn't seem quite what I want
       tab-always-indent 'complete
       completion-styles '(basic partial-completion initials)
       minibuffer-completion-confirm 'confirm-after-completion
       completion-auto-select 'second-tab)
-(fido-mode t)
-(icomplete-vertical-mode t)
+(fido-vertical-mode t)
 
 ;; Up/down when completing in the minibuffer
 (define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
