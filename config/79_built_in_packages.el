@@ -238,29 +238,8 @@ as yet."
 ;;;;
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 
-;;;; Hippie Expand Settings
+;;;; Special Expand Functions
 ;;;;
-;; The functionality here is taken from hippie-expand.  The only difference is
-;; that I tie things into the standard completion interface rather than
-;; inserting a string directly into the buffer.
-(defun hippie-complete-file-at-point (&optional arg)
-  (interactive "*P")
-  (let ((completion-at-point-functions '(hippie--complete-capf)))
-    (completion-at-point)))
-(defun hippie--complete-capf ()
-  (let* ((start-point (vsh--file-name-beg))
-         (prefix-string (buffer-substring-no-properties start-point (point)))
-         (name-part (file-name-nondirectory prefix-string))
-         (dir-part (or (file-name-directory prefix-string) ""))
-         (abs-dir (expand-file-name dir-part)))
-    (list start-point (point)
-          (completion-table-dynamic
-           (lambda (_)
-             ;; Need to return a list of strings to replace the *entire* region
-             ;; that we want to replace.
-             ;; TODO Would be nice to replace just the last element of the path.
-             (mapcar (lambda (x) (string-join (list dir-part x)))
-                    (file-name-all-completions name-part abs-dir)))))))
 ;; This is my default special HIPPIE-EXPANION function, default here means ready
 ;; for {e,}lisp (as that's what I mainly use emacs for).
 ;; The idea is this keybinding is set on a per buffer basis, with customisations
@@ -272,7 +251,7 @@ as yet."
                                 try-expand-line
                                 try-expand-line-all-buffers)))
 (global-set-key (kbd "C-M-/") 'hippie-expand-special)
-(global-set-key (kbd "M-/") 'hippie-complete-file-at-point)
+(global-set-key (kbd "M-/") 'comint-dynamic-complete-filename)
 (global-set-key (kbd "M-\\") 'dabbrev-completion)
 
 ;;;; Ibuffer Settings
@@ -283,7 +262,6 @@ as yet."
 
 ;;;; Imenu Settings
 ;;;;
-(global-set-key (kbd "C-c i") 'imenu)
 (defadvice imenu (after move-to-top activate)
   (recenter 10))
 
