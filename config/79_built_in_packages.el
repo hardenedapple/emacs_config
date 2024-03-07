@@ -381,15 +381,12 @@ don't have the package installed."
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
 ;; (setq org-drawers (cons "THOUGHTS" org-drawers))
-(setq org-directory "~/TODO"
+(setq org-directory "~/NOTES"
       org-hide-block-startup t
       org-startup-indented t
       org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
-      org-default-notes-file (concat org-directory "/notes.org")
-      org-agenda-files (list "~/TODO/Today.org"
-                             "~/TODO/Soon.org"
-                             "~/TODO/Someday.org"))
+      org-default-notes-file (concat org-directory "/Random.org"))
 
 (with-eval-after-load 'org
     ;; Remove the CYCLE-ORG-AGENDA-FILES mapping to leave the
