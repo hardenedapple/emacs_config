@@ -213,22 +213,18 @@ as yet."
 
 ;;;; Flymake Settings
 ;;;;
-;; Python flymake
-;; Manually set the flymake configuration
-;; At the moment the pylint flymake option in python-mode isn't doing anything
-(setq pylint "epylint")
-
-(when (load "flymake" t)
-  (defun flymake-pylint-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list pylint (list local-file)))))
-
-(add-hook 'flymake-allowed-file-name-masks
-          '("\\.py\\'" flymake-pylint-init))
+;;;; Eglot Settings
+;;;;
+;; Both the timers below are a bit of a trade-off.  I really don't like it when
+;; flymake and eglot start updating in the middle of my typing -- both delaying
+;; my typing and adding a bunch of unnecessary complaints about not finished
+;; code.  However, I can also imagine wanting to type then ask about something,
+;; and the server not having any way to tell me what's going on because it
+;; didn't understand.
+;; Setting both to the same thing so I never forget to update both at the same
+;; time.
+(setq eglot-send-changes-idle-time
+      (setq flymake-no-changes-timeout 2))
 
 ;;;; Find File at Point
 ;;;;
