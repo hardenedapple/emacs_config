@@ -233,6 +233,8 @@ as yet."
 ;;;; HideShow Settings
 ;;;;
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+(setq hs-allow-nesting t
+      hs-hide-comments-when-hiding-all nil)
 
 ;;;; Special Expand Functions
 ;;;;
