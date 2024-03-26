@@ -49,17 +49,13 @@
 (defvar minor-mode-show-list
   (list
    'compilation-in-progress
-   'compilation-minor-mode
-   'compilation-shell-minor-mode
    'diff-minor-mode
    'overwrite-mode
+   'eldoc-mode
    'undo-tree-visualizer-selection-mode
    'window-number-mode
    'keyswap-mode
-   'swift-motion-mode
-   'lisp-motion-mode
-   'paredit-motion-mode
-   'dot-mode
+   'ert--current-run-stats
    )
   "List of minor-modes to show in modeline")
 (setq minor-mode-alist

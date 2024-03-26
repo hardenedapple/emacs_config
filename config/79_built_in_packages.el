@@ -147,6 +147,9 @@ Ignore any files that aren't in the fileset."
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
+;; Not quite the same, but similar (used in similar way).
+(which-function-mode 1)
+
 
 ;;;; EPA File Settings
 ;;;;
