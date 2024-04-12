@@ -9,10 +9,6 @@
 ;; for special bindings.
 (add-hook 'prog-mode-hook 'keyswap-mode)
 
-;;; Use double quotes by default in awk, C, C++ and some others.
-(with-eval-after-load 'cc-vars
-  (add-hook 'c-mode-common-hook 'keyswap-include-quotes))
-
 (with-eval-after-load 'tex-mode
   (add-hook 'latex-mode-hook 'keyswap-mode t)
   (add-hook 'latex-mode-hook 'keyswap-include-braces t))
