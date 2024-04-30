@@ -164,9 +164,12 @@ shown in a given compile buffer."
 (define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion)
 
 ;; Up/down when competing in a normal buffer
-(define-key completion-in-region-mode-map (kbd "C-p") 'minibuffer-previous-completion)
-(define-key completion-in-region-mode-map (kbd "C-n") 'minibuffer-next-completion)
-(define-key completion-in-region-mode-map (kbd "RET") #'minibuffer-choose-completion)
+;; Originally wanted to use C-n and C-p, but that interferes normal typing too
+;; much when not in the minibuffer.  Similar for using RET to choose completion.
+;; Defaults are M-<down> and M-<up>, but I find those harder to use than the
+;; below.
+(define-key completion-in-region-mode-map (kbd "M-p") 'minibuffer-previous-completion)
+(define-key completion-in-region-mode-map (kbd "M-n") 'minibuffer-next-completion)
 
 ;; N.b. reminder: icomplete-fido-exit is on M-j, that's what you use in order to
 ;; accept current input even if there is no matching completion.
