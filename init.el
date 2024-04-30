@@ -51,13 +51,14 @@
    'compilation-in-progress
    'diff-minor-mode
    'overwrite-mode
-   'eldoc-mode
    'undo-tree-visualizer-selection-mode
    'window-number-mode
-   'keyswap-mode
-   'ert--current-run-stats
    )
   "List of minor-modes to show in modeline")
+;; Would be nice to understand why this doesn't happen late enough.  A bunch of
+;; other elements are left in the `minor-mode-alist' even though this code seems
+;; to work fine.  Hence I believe we run this then later add all those things to
+;; the list.  Don't know when or where.
 (setq minor-mode-alist
       (cl-remove-if-not
        (lambda (val)
