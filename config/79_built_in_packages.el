@@ -426,6 +426,9 @@ don't have the package installed."
       'python-shell-completion-complete-or-indent)
     (setq python-shell-process-environment (list "PAGER=")))
 
+;;;; Project Settings
+;;;;
+(add-to-list 'project-switch-commands '(project-switch-to-buffer "Buffer") t)
 
 ;;;; Regexp Builder
 ;;;;
