@@ -26,7 +26,12 @@
     ;; Just to be able to still use the C-j key
     ;; It's not available because I map it away below.
     ;; This ends up a little problematic, because while I have a way to press
-    ;; C-j, I have no way to insert C-j
+    ;; C-j, I have no way to insert C-j -- that's handled by the
+    ;; `minibuffer-local-map' binding at the bottom of this file.
+    ;; One related thing is that `paredit' overwrites `RET' when in the
+    ;; minibuffer eval mode which means that I need to press C-j in order to
+    ;; "exec" the lisp.  Need to solve that in my paredit config (but mentioning
+    ;; it here since I often come here when thinking about it).
     ("C-c j" . "C-j")))
 
 (defvar dvorak-key-translations

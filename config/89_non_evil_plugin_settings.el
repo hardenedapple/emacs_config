@@ -1,4 +1,4 @@
-;;;; My non-standard-stuff
+;;;; My non-standard-stuff   -*- lexical-binding: t -*-
 ;;;;
 
 ;;;; Splice Window Settings
@@ -243,26 +243,6 @@ non-nil."
                 inferior-scheme-mode-hook slime-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
-;; N.b. this seems to be causing problems now that I've updated to emacs 28.
-;; Looks like the paredit-RET is overriding the original RET for the minibuffer
-;; that was bound to `read--expression-try-read'.
-;; I would be interested in figuring out how to ensure that particular binding
-;; does not get priority, but for now I can use `C-j' (which can be used via the
-;; translation mapping from `C-c j') in order to execute the code in the
-;; minibuffer.
-;;
-;; You can't unmap RET in `paredit-mode-map' just for the minibuffer, so it
-;; seems the most natural option is to take the mapping that I *want* and put
-;; that in a higher-priority keymap for the minibuffer ... not yet done since I
-;; dislike adding extra layers and the `C-c j' approach is working enough for
-;; me.
-;; Used the below to test this out (observe that the RET mapping is also lost in
-;; standard lisp buffers).
-;; (defun temp-function () (define-key paredit-mode-map (kbd "RET") 'nil))
-;; (add-hook 'eval-expression-minibuffer-setup-hook #'temp-function 99)
-;; (remove-hook 'eval-expression-minibuffer-setup-hook #'temp-function)
-
-
 (defun paredit--is-at-end-of-list ()
   (and (looking-back ")\\|\\]")
        (not (nth 3 (syntax-ppss)))   ;; inside string
@@ -305,6 +285,38 @@ paredit functions on the assumption they'll be more robust."
   (define-key paredit-mode-map (kbd "<escape>") nil)
   (define-key paredit-mode-map (kbd "<C-return>")
               'paredit-downsexp-newline-and-parenthesis)
+  ;; Remove RET mapping for paredit when in
+  ;; `eval-expression-minibuffer-setup-hook'.  This allows me to press RET in
+  ;; order to run some lisp expression I've written in the minibuffer (rather
+  ;; than enter a newline in the minibuffer).
+  ;; I do wonder whether I'd like to use this in `ielm' and similar, but since
+  ;; those do have multiple line expressions much more often than the
+  ;; eval-expression minibuffer am not doing that quite yet.
+
+  ;; Without this paredit-RET overrides the original RET for the minibuffer that
+  ;; was bound to `read--expression-try-read'.
+  ;; You can't unmap RET in `paredit-mode-map' just for the minibuffer (because
+  ;; that would affect everything else using `paredit-mode-map', so it seems the
+  ;; most natural option is to take the mapping that I *want* and put that in a
+  ;; higher-priority keymap for the minibuffer
+  ;;
+  ;; For reference, the keymap order is:
+  ;; 0) Translation keymap
+  ;; 1) Keymap property on the relevant text.
+  ;; 2) Keymaps of enabled minor modes.
+  ;;    - emulation-mode-map-alists
+  ;;    - minor-mode-overriding-map-alist
+  ;;    - minor-mode-map-alist
+  ;; 3) Buffers local keymap.
+  ;;    - I *think* this would have `read--expression-try-read' in it.
+  ;; 4) Global keymap
+  (let ((m (copy-keymap paredit-mode-map)))
+    (define-key m (kbd "RET") nil)
+    (add-hook 'eval-expression-minibuffer-setup-hook
+              (lambda ()
+                (unless (assoc 'paredit-mode minor-mode-overriding-map-alist)
+                  (push (cons 'paredit-mode m)
+                        minor-mode-overriding-map-alist)))))
   ;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
   ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
   ;; emacs wiki page)
