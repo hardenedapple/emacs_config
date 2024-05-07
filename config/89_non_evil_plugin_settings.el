@@ -463,15 +463,20 @@ and run a command given by the user in that window.
 
 ;;;; Vsh-mode settings
 ;;;;
-;; I introduced a special mapping for C-j to accomodate for the fact that I lost
-;; it when defining two C-c keys.  I currently use this mapping to trigger
-;; execution in the minibuffer.  I find it a little confusing that I have
-;; different but similar mappings to "execute" between the eval-expression and
-;; vsh modes.  Hence add this in vsh.
-;; (Would *like* to remove the problem with the `eval-expression' thing, working
-;; on it).
+;; Using a macro rather than a lambda to make these remaps because that way I
+;; end up with a nice symbol in the map and at the same time don't have to write
+;; two `defun's that look exactly the same.
+(defmacro config-make-vsh-fill-prefix-wrapper (name)
+  (let ((new-fn (intern (format "vsh--%s" (symbol-name name)))))
+    `(defun ,new-fn ()
+       (interactive)
+       (let ((fill-prefix (vsh-adaptive-fill-function)))
+         (,name)))))
 (with-eval-after-load 'vsh
-  (define-key vsh-mode-map (kbd "C-j") 'vsh-execute-command))
+  (keymap-set vsh-mode-map "<remap> <open-line-below>"
+              (config-make-vsh-fill-prefix-wrapper open-line-below))
+  (keymap-set vsh-mode-map "<remap> <open-line-above>"
+              (config-make-vsh-fill-prefix-wrapper open-line-above)))
 (setq vsh-find-file-function 'find-file-at-point)
 
 
