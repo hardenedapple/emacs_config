@@ -83,7 +83,10 @@ shown in a given compile buffer."
   (if (numberp linenum)
       (with-current-buffer (next-error-find-buffer)
         (goto-line linenum)
-        (compile-goto-error))
+        ;; There are unfortunately a bunch of different functions that one might
+        ;; have to use.  Fortunately, they're all under <RET>.  So just find
+        ;; "whatever function is bound to RET" and call that.
+        (funcall (key-binding (kbd "RET"))))
     (if linenum
         (first-error)
       (next-error 0))))
