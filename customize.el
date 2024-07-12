@@ -102,7 +102,7 @@
         (mode . lisp-mode)
         (mode . python-mode))))))
  '(package-selected-packages
-   '(yasnippet-snippets yasnippet transpose-frame vsh slime register-list magit buffer-move window-number multiple-cursors markdown-mode jump-char paredit keyswap avy goto-chg feature-mode c-eldoc wrap-region xcscope expand-region rust-mode transpose-mark monokai-theme dot-mode elisp-slime-nav undo-tree move-text smart-window vimrc-mode))
+   '(lua-mode cmake-mode yasnippet-snippets yasnippet transpose-frame slime register-list magit buffer-move window-number multiple-cursors markdown-mode jump-char paredit keyswap avy goto-chg feature-mode c-eldoc wrap-region xcscope expand-region rust-mode transpose-mark monokai-theme dot-mode elisp-slime-nav undo-tree move-text smart-window vimrc-mode))
  '(safe-local-variable-values
    '((epa-file-encript-to "hardenedapple@gmail.com")
      (Base . 10)
