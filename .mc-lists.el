@@ -36,15 +36,19 @@
         evil-previous-line
         evil-visual-char
         exchange-point-and-mark-keep-activation
+        forward-sexp
         forward-to-whitespace
         indent-new-comment-line
         insert-pair
+        insert-register
         jump-char-backward
         jump-char-forward
         jump-char-process-char
         kill-backward-up-list
         kill-region
         kill-sexp
+        mark-word
+        open-line-above
         open-line-below
         org-beginning-of-line
         org-delete-char
@@ -74,6 +78,7 @@
         slime-autodoc-space
         slime-space
         smart-tab
+        tcl-electric-brace
         toggle-current-mark-activation
         transpose-sexps
         ))
@@ -82,6 +87,7 @@
       '(
         cua-set-rectangle-mark
         evil-goto-mark
-        transpose-frame
+        move-to-window-line-top-bottom
         smex
+        transpose-frame
         ))
