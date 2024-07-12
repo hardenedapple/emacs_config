@@ -472,7 +472,7 @@ and run a command given by the user in that window.
        (interactive)
        (let ((fill-prefix (vsh-adaptive-fill-function)))
          (,name)))))
-(with-eval-after-load 'vsh
+(with-eval-after-load 'vsh-mode
   (keymap-set vsh-mode-map "<remap> <open-line-below>"
               (config-make-vsh-fill-prefix-wrapper open-line-below))
   (keymap-set vsh-mode-map "<remap> <open-line-above>"
