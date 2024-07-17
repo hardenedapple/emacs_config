@@ -151,6 +151,14 @@ Ignore any files that aren't in the fileset."
 (which-function-mode 1)
 
 
+;;;; ERC (Emacs IRC) Settings
+;;;;
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(add-hook 'erc-mode-hook
+          (lambda ()
+            (auto-fill-mode -1)))
+
+
 ;;;; EPA File Settings
 ;;;;
 ;; Interface to gnupg
