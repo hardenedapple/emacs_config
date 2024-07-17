@@ -566,12 +566,12 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
 ;;;; User Interface
 ;;;;
 (setq inhibit-startup-message t
-      default-frame-alist '((font . "Tamsyn-12"))
+      default-frame-alist '((font . "Tamsyn-16"))
       minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
 ;; XXX May need to change this back once go back into office.
-(set-frame-font "Tamsyn-12")
+(set-frame-font "Tamsyn-16")
 (mouse-avoidance-mode 'none)
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode)
