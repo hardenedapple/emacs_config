@@ -566,12 +566,22 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
 ;;;; User Interface
 ;;;;
 (setq inhibit-startup-message t
-      default-frame-alist '((font . "Tamsyn-16"))
       minibuffer-message-timeout 0.8
       column-number-mode t)
 (setq-default major-mode nil)
-;; XXX May need to change this back once go back into office.
-(set-frame-font "Tamsyn-16")
+
+(defun adjust-for-home-monitor ()
+  (set-frame-font "Liberation Mono 8")
+  (setq default-frame-alist '((font . "Liberation Mono 8"))))
+;; This changes depending on the monitor I get given, but don't expect to change
+;; for a while so we should be fine for the moment.
+(defun adjust-for-work-monitor ()
+  (set-frame-font "Liberation Mono 11")
+  (setq default-frame-alist '((font . "Liberation Mono 11"))))
+;; N.b. Setting default for in the office (making a guess where is the most
+;; important).
+(adjust-for-work-monitor)
+
 (mouse-avoidance-mode 'none)
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode)
