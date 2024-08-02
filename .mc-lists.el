@@ -38,6 +38,7 @@
         exchange-point-and-mark-keep-activation
         forward-sexp
         forward-to-whitespace
+        indent-for-tab-command
         indent-new-comment-line
         insert-pair
         insert-register
@@ -63,6 +64,7 @@
         paredit-backward-up
         paredit-close-round
         paredit-close-round-and-newline
+        paredit-doublequote
         paredit-forward
         paredit-forward-delete
         paredit-forward-down
