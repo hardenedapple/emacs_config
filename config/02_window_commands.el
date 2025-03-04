@@ -119,3 +119,12 @@ Window number assigned in the same way as the \"C-x p %d\" command."
                             (minibuffer-window-active-p window)))
             (swap-windows-properly window)
           (error "No such window.")))))
+
+;;;; Tab bar handling
+;;;;
+;;; Only show tab bar while we have more than one tab.
+(setq tab-bar-show 1)
+;;; Map `<prefix-num> Ctrl-x t g' to specific tab choice.  Maps somewhat similar
+;;; to the tab choice mapping in vim which is `<count>gt' so I hope that will
+;;; make it easier to remember.
+(define-key tab-prefix-map (kbd "g") 'tab-select)
