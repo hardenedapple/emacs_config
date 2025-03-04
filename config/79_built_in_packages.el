@@ -7,6 +7,10 @@
 (setq calendar-longitude 0)
 
 
+;;;; ChangeLog Mode Settings
+;;;;
+(add-hook 'change-log-mode-hook 'bug-reference-mode)
+
 ;;;; Dired Additions
 ;;;;
 (defun dired-emacs-command-marked-files (command-form)
