@@ -129,6 +129,10 @@
 (global-dot-mode t)
 (setq dot-mode-verbose nil)
 
+;;;; Editorconfig Settings
+;;;;
+;; Turn on editorconfig.  At least this matters in libstdc++
+(editorconfig-mode 1)
 
 ;;;; Elisp Slime Nav Settings
 ;;;;
