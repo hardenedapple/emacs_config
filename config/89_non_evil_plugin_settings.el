@@ -308,11 +308,13 @@ paredit functions on the assumption they'll be more robust."
   ;; 4) Global keymap
   (let ((m (copy-keymap paredit-mode-map)))
     (define-key m (kbd "RET") nil)
-    (add-hook 'eval-expression-minibuffer-setup-hook
-              (lambda ()
-                (unless (assoc 'paredit-mode minor-mode-overriding-map-alist)
-                  (push (cons 'paredit-mode m)
-                        minor-mode-overriding-map-alist)))))
+    (let ((override-func
+           (lambda ()
+             (unless (assoc 'paredit-mode minor-mode-overriding-map-alist)
+               (push (cons 'paredit-mode m)
+                     minor-mode-overriding-map-alist)))))
+      (add-hook 'eval-expression-minibuffer-setup-hook override-func)
+      (add-hook 'ielm-mode-hook override-func)))
   ;; TRY-EXPAND-LINE and TRY-EXPAND-LIST add an extra ")" character when in
   ;; paredit-mode, fix this with an advice (as suggested on the HIPPIE-EXPAND
   ;; emacs wiki page)
