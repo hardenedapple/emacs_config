@@ -705,3 +705,9 @@ called automatically on save."
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
     (query-replace-regexp "\\s-*\\(\\[git\\]\\[[^[:space:]]+\\] \\(U\\)? \\)?\\[[[:digit:]]+,[[:digit:]]+\\]$" "" nil start end)))
+
+(defun config-remove-trailing-perf-tokens ()
+  (interactive)
+  (let ((start (if (use-region-p) (region-beginning) (point-min)))
+        (end (if (use-region-p) (region-end) (point-max))))
+    (query-replace-regexp "\\s-*\\(▒\\|◆\\)$" "" nil start end)))
