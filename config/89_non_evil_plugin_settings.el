@@ -39,14 +39,6 @@
 ;; Python doesn't use semicolons very much, so make them all colons
 (add-hook 'python-mode-hook 'keyswap-colon-semicolon)
 
-(with-eval-after-load 'sh-script
-  (add-hook 'sh-mode-hook 'keyswap-tac-underscore-exception)
-  (add-hook 'sh-mode-hook 'keyswap-include-braces))
-
-(with-eval-after-load 'js
-  (add-hook 'js-mode-hook 'keyswap-include-braces)
-  (add-hook 'js-mode-hook 'keyswap-tac-underscore-exception))
-
 (add-hook 'isearch-mode-hook 'keyswap-isearch-start-hook)
 
 (with-eval-after-load 'python
