@@ -7,11 +7,15 @@
 ;;  - LSP
 ;;    - Which should influence both the below.
 ;;    - Can it also add `eldoc` like functionality?
+;;      - Yes, and it naturally ties in with `eldoc', which means I don't have
+;;        to do very much to make this all work.
 ;;  - Folding
 ;;    - Probably origami -- not sure if anything else around.
+;;      - Currently using hideshow (`hs-show-block' etc).
 ;;  - Completion
 ;;    - Don't yet know what the options are, would like to avoid installing a
 ;;      package if possible.
+;;    - eglot does make this pretty nice out of the box.
 
 ;; Packages that I want to ensure are downloaded.
 ;; Point of this is to ensure setting emacs up on a new machine is very easy.

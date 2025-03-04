@@ -9,13 +9,18 @@
         backward-to-whitespace
         beginning-of-buffer
         beginning-of-line-or-indentation
+        c-electric-colon
+        c-electric-delete-forward
+        c-electric-semi&comma
         cua-clear-rectangle-mark
         cua-cut-region
         cua-delete-region
         cua-exchange-point-and-mark
         cua-paste
         dabbrev-expand
+        delete-indentation
         delete-pair
+        downcase-region
         eval-defun
         eval-last-sexp
         evil-backward-char
@@ -48,6 +53,8 @@
         kill-backward-up-list
         kill-region
         kill-sexp
+        mark-paragraph
+        mark-sexp
         mark-word
         open-line-above
         open-line-below
@@ -55,6 +62,7 @@
         org-delete-char
         org-end-of-line
         org-fill-paragraph
+        org-forward-sentence
         org-kill-line
         org-self-insert-command
         org-yank
@@ -71,25 +79,33 @@
         paredit-forward-kill-word
         paredit-join-sexps
         paredit-kill
+        paredit-meta-doublequote
         paredit-open-round
         paredit-raise-sexp
         paredit-reindent-defun
         paredit-splice-sexp
         paredit-splice-sexp-killing-backward
         paredit-wrap-round
+        query-replace
         slime-autodoc-space
         slime-space
         smart-tab
         tcl-electric-brace
         toggle-current-mark-activation
         transpose-sexps
+        vsh-bol
+        vsh-execute-command
+        vsh-join-line
         ))
 
 (setq mc/cmds-to-run-once
       '(
         cua-set-rectangle-mark
         evil-goto-mark
+        exit-recursive-edit
         move-to-window-line-top-bottom
+        shell-command
         smex
+        string-rectangle
         transpose-frame
         ))

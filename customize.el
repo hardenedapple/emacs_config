@@ -91,12 +91,12 @@
            (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)
            (mode . python-mode))))))
  '(package-selected-packages
-   '(avy buffer-move c-eldoc cmake-mode dot-mode elisp-slime-nav expand-region
-         feature-mode goto-chg jump-char keyswap lua-mode magit markdown-mode
-         monokai-theme move-text multiple-cursors paredit register-list
-         rust-mode slime smart-window transpose-frame transpose-mark undo-tree
-         vimrc-mode vsh-mode window-number wrap-region xcscope yasnippet
-         yasnippet-snippets))
+   '(avy buffer-move c-eldoc cmake-mode dot-mode editorconfig elisp-slime-nav
+         expand-region feature-mode goto-chg graphviz-dot-mode jump-char keyswap
+         lua-mode magit markdown-mode monokai-theme move-text multiple-cursors
+         notmuch paredit pueue register-list rust-mode slime smart-window
+         transpose-frame transpose-mark undo-tree vimrc-mode vsh-mode
+         window-number wrap-region xcscope yasnippet yasnippet-snippets))
  '(safe-local-variable-values
    '((epa-file-encript-to "hardenedapple@gmail.com") (Base . 10)
      (Package . LET-OVER-LAMBDA) (Syntax . COMMON-LISP)))
