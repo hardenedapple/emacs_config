@@ -272,6 +272,37 @@ as yet."
 (with-eval-after-load 'ibuffer
   (define-key ibuffer-mode-map (kbd "M-g") nil))
 
+(global-set-key [remap list-buffers] 'ibuffer)
+
+;; Sometimes it's easier to sort by something, then put some files in the region
+;; and mark all those.
+(defun ibuffer-mark-by-region (start end)
+  "Mark all files in the current region."
+  (interactive "r")
+  ;; `ibuffer-set-mark' inserts text, so save-excursion can't restore `point'
+  ;; properly. It doesn't change the number of characters in the buffer though,
+  ;; so we can easily reset the point.
+  (let ((old-point (point)))
+    (setq end (progn (goto-char end)
+                     (if (null (bolp))
+                         end
+                       (ibuffer-forward-line 0 t)
+                       (point))))
+    (goto-char start)
+    (ibuffer-forward-line 0 t)
+    (while (< (point) end)
+      (ibuffer-set-mark ibuffer-marked-char)
+      (ibuffer-forward-line 1 t))
+    (goto-char old-point)))
+
+(with-eval-after-load 'ibuffer
+  (define-key ibuffer-mode-map "m"
+    (lambda ()
+      (interactive)
+      (if mark-active
+          (call-interactively 'ibuffer-mark-by-region)
+        (call-interactively 'ibuffer-mark-forward)))))
+
 
 ;;;; Imenu Settings
 ;;;;
@@ -353,41 +384,6 @@ don't have the package installed."
       (message "Have replaced %d matches" counter))))
 
 (global-set-key (kbd "M-'") 'symbol-replace-this)
-
-
-;;;; List Buffer Settings
-;;;;
-(global-set-key [remap list-buffers] 'ibuffer)
-
-;; Sometimes it's easier to sort by something, then put some files in the region
-;; and mark all those.
-(defun ibuffer-mark-by-region (start end)
-  "Mark all files in the current region."
-  (interactive "r")
-  ;; `ibuffer-set-mark' inserts text, so save-excursion can't restore `point'
-  ;; properly. It doesn't change the number of characters in the buffer though,
-  ;; so we can easily reset the point.
-  (let ((old-point (point)))
-    (setq end (progn (goto-char end)
-                     (if (null (bolp))
-                         end
-                       (ibuffer-forward-line 0 t)
-                       (point))))
-    (goto-char start)
-    (ibuffer-forward-line 0 t)
-    (while (< (point) end)
-      (ibuffer-set-mark ibuffer-marked-char)
-      (ibuffer-forward-line 1 t))
-    (goto-char old-point)))
-
-(with-eval-after-load 'ibuffer
-  (define-key ibuffer-mode-map "m"
-    (lambda ()
-      (interactive)
-      (if mark-active
-          (call-interactively 'ibuffer-mark-by-region)
-        (call-interactively 'ibuffer-mark-forward)))))
-
 
 ;;;; Org Mode Settings
 ;;;;
