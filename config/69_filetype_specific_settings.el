@@ -22,6 +22,18 @@ This advice is slightly hacky but it doesn't look like there's a better way."
       ad-do-it)))
 
 
+;; Default <TAB> in C and C++ modes is configured completely different to the
+;; default tab in all other modes.  Small function that does much the same as
+;; `tab-always-indent' set to `complete' and put that in the C and C++ mode
+;; maps.
+(with-eval-after-load 'cc-mode
+  (defun c-indent-then-complete ()
+    (interactive)
+    (if (= 0 (c-indent-line-or-region))
+	(completion-at-point)))
+  (dolist (map (list c-mode-map c++-mode-map))
+    (keymap-set map "<remap> <c-indent-line-or-region>" #'c-indent-then-complete)))
+
 ;;;; Comint Mode
 ;;;;
 (add-hook 'comint-mode-hook
