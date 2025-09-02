@@ -59,6 +59,24 @@
    'window-number-mode
    )
   "List of minor-modes to show in modeline")
+;; Minimise the information in the mode line as a whole.
+;; There is information I want to see in `mode-line-misc-info' that I don't want
+;; to end up off the side of the screen.  However I also want all the standard
+;; information to stay in the same place.
+(setq-default mode-line-format
+              '("%e" mode-line-front-space
+                (:propertize ("" mode-line-mule-info mode-line-client mode-line-modified
+                              mode-line-remote mode-line-window-dedicated)
+                             display (min-width (3.0)))
+                ;; Some spaces in `mode-line-buffer-identification'
+                " " mode-line-buffer-identification
+                " " mode-line-position
+                " " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;; Would be nice to ensure that `eglot' puts its modeline information at the
+;; *end* of `mode-line-misc-info'.  As it stands it's hard-coded in eglot.el to
+;; put the information at the *start*, and that means the `which-function-mode'
+;; gets pushed out a bit more.
+
 ;; Would be nice to understand why this doesn't happen late enough.  A bunch of
 ;; other elements are left in the `minor-mode-alist' even though this code seems
 ;; to work fine.  Hence I believe we run this then later add all those things to
@@ -68,3 +86,4 @@
        (lambda (val)
          (member (car val) minor-mode-show-list))
        minor-mode-alist))
+
