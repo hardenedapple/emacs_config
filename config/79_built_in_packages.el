@@ -450,8 +450,8 @@ don't have the package installed."
       remote-file-name-inhibit-auto-save t
       kill-buffer-delete-auto-save-files t)
 
-;;; Transient Mark Mode Settings
-;;;
+;;;; Transient Mark Mode Settings
+;;;;
 (transient-mark-mode 1)
 (defun push-mark-no-activate ()
   "Push `point' to `mark-ring' and does not activate the region.
