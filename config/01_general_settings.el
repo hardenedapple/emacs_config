@@ -22,6 +22,21 @@
 (setq ring-bell-function (lambda () nil))
 
 
+;;;; Binary stuff
+;;;;
+;; Taken from
+;; https://stackoverflow.com/questions/20568684/converting-number-to-base-2-binary-string-representation
+;; because I'm too lazy to write it myself.
+(defun config--int-to-binary-string (i)
+  "convert an integer into it's binary representation in string format"
+  (let ((res ""))
+    (while (not (= i 0))
+      (setq res (concat (if (= 1 (logand i 1)) "1" "0") res))
+      (setq i (lsh i -1)))
+    (if (string= res "")
+        (setq res "0"))
+    res))
+
 ;;;; Clipboard
 ;;;;
 ;; Don't want selecting a region to set the clipboard.
