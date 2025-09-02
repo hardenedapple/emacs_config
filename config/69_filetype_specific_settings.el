@@ -158,3 +158,11 @@ stops the current python process using `delete-process' rather than
 ;;;;
 ;; I'm using guile at the moment
 (setq scheme-program-name "guile")
+
+;;;; Vsh Settings
+(with-eval-after-load 'vsh-mode
+  (define-key
+   vsh-mode-map (kbd "M-j")
+   (lambda () (interactive)
+     (let ((fill-prefix (or (vsh-adaptive-fill-function) (vsh-prompt))))
+       (apply #'join-line '(-1))))))
