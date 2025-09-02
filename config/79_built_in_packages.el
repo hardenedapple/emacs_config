@@ -442,6 +442,47 @@ don't have the package installed."
 ;;;;
 (setq reb-re-syntax 'string)
 
+;;;; Tab bar settings
+;;;;
+;; I'm currently a little confounded by the fact that the size of the button in
+;; the tab bar seems to *sometimes* be much larger than the size of the text.
+;; On top of this the size sometimes changes depending on whether the tab is
+;; focussed or not, and the difference here is a strange amount.
+;; I would like to understand why this is, and minimise the size of the tab
+;; buttons.  Especially because sometimes the unnecessarily large sizes mean
+;; that the tabs extend past the end of their line and mean the tab line has to
+;; roll over to a second line.
+;;
+;; (setq tab-bar-format '(tab-bar-format))
+;; Inspection code.  Looking at tab-bar.el.gz, following the variable
+;; `tab-bar-format' it seems that we call `tab-bar--format-tab' on each tab
+;; returned by `tab-bar-tabs-function'.
+;;
+;; When I see this behaviour again, I want to use the below to insert the values
+;; of the tab output into the current buffer.
+;; N.b. Using `M-0 C-x C-e' inserts without any abbreviation (i.e. ellipses).
+;; (let ((i 0))
+;;   (mapcar
+;;    (lambda (tab)
+;;      (setq i (1+ i))
+;;      (tab-bar--format-tab tab i))
+;;    (funcall tab-bar-tabs-function)))
+;; (#("79_built_in_packages.el " 0 23 (face tab-bar-tab) 23 24 (display (image :type svg :file "/home/mmalcomson/bin/emacs/share/emacs/30.0.92/etc/images/symbols/cross_16.svg" :height (1 . em) :scale 1 :margin 1 :ascent center :transform-smoothing t) face (shadow tab-bar-tab) help-echo "Click to close tab" rear-nonsticky t close-tab t)) #("general-py.vsh " 0 14 (face tab-bar-tab-inactive) 14 15 (display (image :type svg :file "/home/mmalcomson/bin/emacs/share/emacs/30.0.92/etc/images/symbols/cross_16.svg" :height (1 . em) :scale 1 :margin 1 :ascent center :transform-smoothing t) face (shadow tab-bar-tab-inactive) help-echo "Click to close tab" rear-nonsticky t close-tab t)))
+;;
+;; I see a difference in the length of the tab button when I've enabled
+;; `doom-dark+' theme, but not when I've enabled `monokai' theme.
+;; Interestingly I don't see any difference in this structure with the different
+;; themes enabled.  Hence I'm guessing the behaviour is something to do with
+;; `(face tab-bar-tab)', `(face tab-bar-tab-inactive)' etc.
+;; (Or possibly the `face (shadow tab-bar-tab-inactive)' stuff).
+;;
+;; Interestingly, when I look at these faces with `list-faces-display' some of
+;; the text sizes are different than the default when *not* using `doom-dark+'.
+;; I.e. the size difference of tab buttons between `doom-dark+' and (`monokai' &
+;; no theme) is due to there being a strange text size for tabs in the default
+;; instead of in the `doom-dark+'.
+
+
 ;;;; Tramp Settings
 ;;;;
 (setq remote-file-name-inhibit-locks t
