@@ -585,14 +585,23 @@ e.g. ((\"interactive\" \"Iswapped\")(\"concat\" \"Cswapped\"))
       column-number-mode t)
 (setq-default major-mode nil)
 
+(defun adjust-very-small-text ()
+  (set-frame-font "Liberation Mono 7")
+  (modify-all-frames-parameters '((font . "Liberation Mono 7"))))
 (defun adjust-for-home-monitor ()
   (set-frame-font "Liberation Mono 8")
   (modify-all-frames-parameters '((font . "Liberation Mono 8"))))
 ;; This changes depending on the monitor I get given, but don't expect to change
 ;; for a while so we should be fine for the moment.
+
+;; Honestly can never decide which of these I like the best.
 (defun adjust-for-work-monitor ()
   (set-frame-font "Liberation Mono 11")
   (modify-all-frames-parameters '((font . "Liberation Mono 11"))))
+;; (defun adjust-for-work-monitor ()
+;;   (set-frame-font "Liberation Mono 10")
+;;   (modify-all-frames-parameters '((font . "Liberation Mono 10"))))
+
 ;; N.b. Setting default for in the office (making a guess where is the most
 ;; important).
 (adjust-for-work-monitor)
