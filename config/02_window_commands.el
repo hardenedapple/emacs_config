@@ -40,16 +40,13 @@
 Otherwise try `display-buffer-use-some-window'."
   (if (one-window-p)
       (display-buffer-pop-up-window buffer alist)
-    ;; Note below uses the LEAST recencly used window
-    ;;
-    ;; For some things this might be wanted (only notice things that are
-    ;; annoying -- haven't had this the other way round), I know for helm
-    ;; buffers, this is annoying as it means the window the buffer comes up in
-    ;; cycles through all other windows in turn.
-    ;;
-    ;; Have changed `helm-display-function', so this isn't a problem, just
-    ;; leaving a note here for the future.
-    (display-buffer-use-some-window buffer alist)))
+    ;; Recently switched from LRU to MRU.
+    ;; Am liking this at the moment.  Will see whether I like it going forward.
+    ;; Am not perfectly happy with the mechanism by which I'm doing this, but
+    ;; it does look like this is somewhat the "standard" way to handle
+    ;; association lists.
+    (let ((alist (cons '(some-window . mru) alist)))
+      (display-buffer-use-some-window buffer alist))))
 
 (defvar display-buffer-here-commands
   (list 'previous-error 'next-error 'first-error 'push-button
