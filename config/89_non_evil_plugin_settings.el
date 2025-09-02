@@ -499,12 +499,6 @@ and run a command given by the user in that window.
     (format "p%d" (1+ winnum))
     (window-number-select-call (1+ winnum))))
 
-
-;;;; Xcscope Settings
-;;;;
-(add-hook 'c-mode-hook 'cscope-setup)
-(add-hook 'c++-mode-hook 'cscope-setup)
-
 ;;;; Yasnippet Settings
 ;;;;
 (yas-global-mode t)
