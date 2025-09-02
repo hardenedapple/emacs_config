@@ -442,6 +442,13 @@ don't have the package installed."
 ;;;;
 (setq reb-re-syntax 'string)
 
+;;;; Tramp Settings
+;;;;
+(setq remote-file-name-inhibit-locks t
+      ;; N.b. I don't use auto-save often, and it's not worth the extra hang for
+      ;; remote files.
+      remote-file-name-inhibit-auto-save t
+      kill-buffer-delete-auto-save-files t)
 
 ;;; Transient Mark Mode Settings
 ;;;
